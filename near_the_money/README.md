@@ -1,8 +1,5 @@
 This monitors for a peak in option call premium at the highs and peak in option put premium at the lows.
 
-![](https://user-images.githubusercontent.com/75052782/203615892-6a8d4477-7390-4cd4-b159-6fccad4ae399.jpg | width=50)
-
-![near_the_money_spy](https://user-images.githubusercontent.com/75052782/203615892-6a8d4477-7390-4cd4-b159-6fccad4ae399.jpg)
-
+<img src="[https://your-image-url.type](https://user-images.githubusercontent.com/75052782/203615892-6a8d4477-7390-4cd4-b159-6fccad4ae399.jpg)" width="100" height="100">
 
 
