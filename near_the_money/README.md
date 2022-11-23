@@ -56,10 +56,10 @@ Lower:
 ```bash
 1 Theory:
 
-As the stock price decreases eventually some market participants sell large amounts of puts. Betting that the stock won't continue to decrease.
+As the stock price decreases eventually some market participants sell large amounts of puts. Betting that the stock will not continue to decrease.
 
-As the stock price increases eventually some market participants sell large amounts of calls. Betting that the stock won't continue to increase.
+As the stock price increases eventually some market participants sell large amounts of calls. Betting that the stock will not continue to increase.
 
-Warning: If it is not in a mean reverting day. Then you can easily get ran over. 
+Warning: If it is not a mean reverting day. Then you can easily get ran over. 
 
 ```
