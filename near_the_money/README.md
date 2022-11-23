@@ -12,6 +12,7 @@ Chart requirements for optimal use:
 
 This does work on a historical look back.
 
+🚀
 Settings:
 
 Upper:
@@ -25,9 +26,11 @@ Lower:
   3. Lowline Millions: -1000000; (Allows you to plot a green line at the $ value in Millions for puts)
 
 
+🚀
 How this works:
 
   Calculates the option premium(purchased or sold) for 5 strikes. ( itm +1, itm, atm, otm, otm +1)
+   
    A. Option premium =  Volume x Price.  ( 1 minute volume  x  close price)
        Example:   SPY 400 Call Option.  Volume: 1000.  Close Price: $1.50;   Option Premium = $150K.  (For that 1 min period)
   
