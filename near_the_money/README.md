@@ -12,8 +12,10 @@ Designed for SPY and QQQ.
   Time frame: 1 Day
 
   Aggregation Period: 1 Minute
+  
+  Note: This does work on a historical look back.
 ```
-This does work on a historical look back.
+
 
 
 
