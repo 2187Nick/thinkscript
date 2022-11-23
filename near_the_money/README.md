@@ -1,10 +1,12 @@
 This monitors for a peak in option call premium at the highs and peak in option put premium at the lows.
 
+#Category: Mean Reversion
+
 <img src="https://user-images.githubusercontent.com/75052782/203618629-3c0bf2ba-da5e-4a4f-8d98-67cf2a929846.png" width="450" height="800">
 
-Designed for SPY and QQQ.
+#Designed for SPY and QQQ.
 
-Chart requirements for optimal use:
+#Chart requirements for optimal use:
 
   Time frame: 1 Day
 
@@ -13,7 +15,7 @@ Chart requirements for optimal use:
 This does work on a historical look back.
 
 🚀
-Settings:
+#Settings:
 
 Upper:
   1. Strike Spacing: 1;  (This sets the space between strikes. Ex: Current SPY price is 400. It will monitor calls
@@ -26,8 +28,9 @@ Lower:
   3. Lowline Millions: -1000000; (Allows you to plot a green line at the $ value in Millions for puts)
 
 
-🚀
-How this works:
+
+🧪
+#How this works:
 
   Calculates the option premium(purchased or sold) for 5 strikes. ( itm +1, itm, atm, otm, otm +1)
    
