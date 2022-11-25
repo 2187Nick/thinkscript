@@ -50,6 +50,8 @@ Lower:
    B. Sum the Call Option Premium for the 5 strikes. 
     
    C. If the total amount is greater than Premium Extreme Level. Then alert bubble "Sell" will appear on that candle.
+   
+   Note: I avoid the signals during roughly the first 15 minutes of market open.  
  ```
  
 > 🦖 Why this works:
