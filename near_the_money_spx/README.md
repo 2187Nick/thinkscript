@@ -29,7 +29,7 @@ Upper:
   1. Strike Spacing: 25;(This sets the space between strikes. Ex: Current SPX price is 4000. It will monitor calls
      and puts at strikes 3950, 3975, 4000, 4025 and 4050)
   2. Premium Extreme Level: 1000000;  (This sets the $ amount to exceed for the Alert to activate)
-  3. Symbol: SPXW; (Use NDXW for NDX options)
+  3. Symbol: SPXW; (Use NDXP for NDX options)
   4. Set base strike manually: No; (Default is set to automatically set the base strike. Select Yes to manually set)
   5. Manual base strike: 4025; (If #4 is set to Yes then you can enter the desired base strike)
   
