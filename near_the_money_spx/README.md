@@ -38,7 +38,7 @@ Lower:
   1. Strike Spacing: 1;
   2. Highline Millions: 1000000; (Allows you to plot a red line at the $ value in Millions for calls)
   3. Lowline Millions: -1000000; (Allows you to plot a green line at the $ value in Millions for puts)
-  3. Symbol: SPXW; (Use NDXW for NDX options)
+  3. Symbol: SPXW; (Use NDXP for NDX options)
   4. Set base strike manually: No; (Default is set to automatically set the base strike. Select Yes to manually set)
   5. Manual base strike: 4025; (If #4 is set to Yes then you can enter the desired base strike)
   
@@ -60,6 +60,9 @@ Lower:
    B. Sum the Call Option Premium for the 5 strikes. 
     
    C. If the total amount is greater than Premium Extreme Level. Then alert bubble "Sell" will appear on that candle.
+   
+   Note: The upper indicator checks if price is moving up by comparing previous close price vs current price. It will only alert a "Sell"
+   if we are moving up.  It will fail to alert if that requirement is not met. ( I will improve on this in the future).
    
    Note: I avoid the signals during roughly the first 15 minutes of market open.  
  ```
