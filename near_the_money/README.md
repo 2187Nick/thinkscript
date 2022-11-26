@@ -51,6 +51,9 @@ Lower:
     
    C. If the total amount is greater than Premium Extreme Level. Then alert bubble "Sell" will appear on that candle.
    
+   Note: The upper indicator checks if price is moving up by comparing previous close price vs current price. It will only alert a "Sell"
+   if we are moving up.  It will fail to alert if that requirement is not met. ( I will improve on this in the future).
+   
    Note: I avoid the signals during roughly the first 15 minutes of market open.  
  ```
  
