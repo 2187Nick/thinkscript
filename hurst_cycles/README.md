@@ -1,4 +1,4 @@
-🚀 This attempts to plot the Hurst cycle and project the next cycle peak or trough.
+# 🚀 This attempts to plot the Hurst cycle and display the next cycle peak or trough range.
 
 Category: Cycles
 
@@ -37,34 +37,41 @@ Upper:
 
 > 🧪 How this works(Most Basic Version): 
 
-```bash
-Looking at the price graph of some instruments we can see that at times the price can move in repetitive waves. 
+![spy_hurst1](https://user-images.githubusercontent.com/75052782/204617147-2ac20707-0721-41fa-a070-24118aca21c0.png)
 
-   
-   A.
-   
-   Example:  
+# Shift the price graph forward in time by half the length of the average cycle.
+
+![spy_hurst3](https://user-images.githubusercontent.com/75052782/204618239-95b0cd04-0cab-4542-85f8-81f9ec80af49.png)
+# Measure the distance from the cycle low up to where the graphs intersect. This gives us the potential magnitude of the cycle peak.
+
+```bash
+
+   1. Husrt indentified common cycles and their average wave length.
   
-   B. 
+      A. David Hickson(Sentient Trader) extended Hurst model to include more common cycles at different time frames
     
-   C. 
+      B. These indicators will use the common wave lengths they identified.
+    
+   2. When price crosses the projection line the script measures the distance of the price movement. It then adds that amount to the
+      current price(or subtracts if we are starting a down cycle).  
    
-   Note: 
+   3. 50% of the cycle magnitude is used as target 1 and target 2 is the full magnitude.
    
-   Note: .  
+   4. The chart will display this range highlighted in green or red.
+   
+   Note: Different instruments have different wave lengths. Feel free to dig into Hurst material for more details.
+   
  ```
  
 > 🦖 Why this works:
 ```bash
-1 Theory:
-
-
-
-Warning: 
+1 Theory:  
 
 ```
 
 > 🐰 Down the Rabbit Hole 🐇:
+
+Hurst analyzed price data using Fourier and spectral analysis.
 
 Intro to the Fourier Series and Joseph Fourier:
 
