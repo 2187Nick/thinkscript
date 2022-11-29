@@ -8,8 +8,7 @@ https://twitter.com/SentientTrader
 
 https://twitter.com/TradingHurst
 
-<img src="https://user-images.githubusercontent.com/75052782/203618629-3c0bf2ba-da5e-4a4f-8d98-67cf2a929846.png" width="450" height="800">
-
+<img src="https://user-images.githubusercontent.com/75052782/204443062-7849dd11-9528-4823-9a11-34652f346a6f.png" width="1000" height="750">
 
 > Chart requirements for optimal use:
 ```bash
