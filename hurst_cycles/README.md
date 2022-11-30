@@ -13,11 +13,11 @@ https://twitter.com/TradingHurst
 > Chart requirements for optimal use:
 ```bash
 
-  Time frame: Check the notes at the top of each indicator.
-
-  Aggregation Period: Check the notes at the top of each indicator.
+  Time Frame: 4 Hour
   
-  Note: This does only displays in the lookback range.
+  Extended Hours: On
+  
+  Note: This only displays in the lookback range.
 ```
 
 
@@ -28,7 +28,7 @@ https://twitter.com/TradingHurst
 ```bash
 
 Upper:
-  1. Lookback: 48;  (This defaults to the current ES cycle length. Adjust as desired.)
+  1. Cycle: TenDay;  (Ten Day is default. Select Twenty Day to monitor 20 day cycles)
 
  ```
 
