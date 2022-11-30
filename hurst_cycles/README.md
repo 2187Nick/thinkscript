@@ -1,6 +1,6 @@
 # 🚀 This attempts to plot the Hurst cycle and display the next cycle peak or trough range.
 
-Category: Cycles
+Category: Cycles  (This is a work in progress)
 
 To learn more follow the current Hurst Cycles Experts:
 
