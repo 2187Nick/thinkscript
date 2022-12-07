@@ -1,4 +1,4 @@
-# 🚀 This attempts to plot the Hurst cycle and display the next cycle peak or trough range.
+# 🚀 This attempts to plot the Hurst cycle and display the next cycle peak or trough range. ** Use V2
 
 Category: Cycles  (This is a work in progress)
 
@@ -13,11 +13,11 @@ https://twitter.com/TradingHurst
 > Chart requirements for optimal use:
 ```bash
 
-  Time Frame: 4 Hour
+  Time Frame Aggregation Period: Day 
   
   Extended Hours: On
   
-  Note: This only displays in the lookback range.
+  Note: V2 now works on historical look back.
 ```
 
 
