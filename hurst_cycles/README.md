@@ -13,7 +13,7 @@ https://twitter.com/TradingHurst
 > Chart requirements for optimal use:
 ```bash
 
-  Time Frame Aggregation Period: Day 
+  Time Frame Aggregation Period: Day.  Except for 1 day cycle. Use 15 min time frame.
   
   Extended Hours: On
   
@@ -29,6 +29,7 @@ https://twitter.com/TradingHurst
 
 Upper:
   1. Cycle: TenDay;  (Ten Day is default. Select Twenty Day to monitor 20 day cycles)
+  
 
  ```
 
