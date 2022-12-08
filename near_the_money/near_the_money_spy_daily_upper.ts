@@ -71,7 +71,7 @@ def put_itm_volumexclose = if isNaN(put_volume_itm1 * put_close_price_itm1 * 100
 def put_itm_volumexclose1 = if isNaN(put_volume_itm2 * put_close_price_itm2 * 100) then 0 else put_volume_itm2 * put_close_price_itm2 * 100;
 def put_volumexclose = if isNaN(put_volume * put_close_price * 100) then 0 else put_volume * put_close_price * 100;
 def put_minusone_volumexclose = if isNaN(put_volume1 * put_close_otm1 * 100) then 0 else put_volume1 * put_close_otm1 * 100;
-def put_minustwo_volumexclose = if isNaN(put_volume1 * put_close_otm2 * 100) then 0 else put_volume2 * put_close_otm2 * 100;
+def put_minustwo_volumexclose = if isNaN(put_volume2 * put_close_otm2 * 100) then 0 else put_volume2 * put_close_otm2 * 100;
 
 def puts_current_total =  put_itm_volumexclose + put_itm_volumexclose1 + put_volumexclose + put_minusone_volumexclose + put_minustwo_volumexclose;
 
