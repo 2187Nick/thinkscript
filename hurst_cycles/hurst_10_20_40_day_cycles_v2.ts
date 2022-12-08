@@ -1,7 +1,7 @@
 # FLD Cross 10, 20, 40 Day Cycles Futures V2
 # This version doesn't repaint!
 # @2187Nick
-# Use 4hr chart. Extended hours.
+# Use aggregation period: "Day". Extended hours on.
 declare upper;
 declare once_per_bar;
 input cycle = {default "TenDay", "TwentyDay", "FortyDay"};
