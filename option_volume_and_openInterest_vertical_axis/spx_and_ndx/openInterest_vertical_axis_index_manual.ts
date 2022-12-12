@@ -8,7 +8,7 @@ input strikeSpacing = 5.0;
 input roundup = no;
 input shift_line_right = 100; # negative numbers plot in candle area, positive in expansion 
 input division = 100; # divides the open interest by this number. Gives user option to reduce size of bar plots.
-input space = .05; # the vertical space between the put open interest bar and call open interest bar.
+input space = .5; # the vertical space between the put open interest bar and call open interest bar.
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
