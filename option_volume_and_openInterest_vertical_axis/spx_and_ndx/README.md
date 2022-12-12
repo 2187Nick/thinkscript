@@ -3,7 +3,7 @@
 Category: Option Volume/Open Interest
 
 
-<img src="https://user-images.githubusercontent.com/75052782/204035580-ab8c13b2-acaf-4ab3-85f9-a7dfd8685551.png" width="450" height="800">
+<img src="https://user-images.githubusercontent.com/75052782/207080966-65f7967e-07d9-4a3a-a3c6-bee5139022a3.png" width="450" height="800">
 
 Designed for SPX and NDX
 
@@ -33,7 +33,7 @@ Designed for SPX and NDX
   3. Roundup: No;  (Set this to "Yes" if you want to adjust the range monitored to higher strikes)
   4. Shift line right: 10; (This controls where the vertical line will plot on your chart. Larger # pushes it to the right)
   5. Division: 100; (The volume or open interest is divided by this number. Gives user adjustability depending on chart size)
-  6. Space: 0.05; (This sets the space between the call and put bars)
+  6. Space: 0.5; (This sets the space between the call and put bars)
   
   Manual Version:
   1. Option series yymmdd: 221226; (Enter the specific expiration date you want to monitor)
