@@ -57,9 +57,9 @@ Designed for SPY and QQQ. (Use manual version for any other instrument)
 ```bash
 
   1. Large one sided open interest levels. When there is a strike with large call open interest compared to put open interest.
-     It's possible that dealers are at risk if the equity price starts moving towards that strike.
+     Its possible that dealers are at risk if the equity price starts moving towards that strike.
      a. The dealer previously sold the calls to a trader to collect the premium. The dealer has to protect his position.
-     b. As the equity price moves towards this strike price(call option value increases) the dealer would have to buy the               equity.
+     b. As the equity price moves towards this strike price(call option value increases) the dealer would have to buy the equity.
      c. This dynamic can cause these strike levels to act like a magnet. Possible pinning effect.
      d. If the equity price moves above this strike and the dealer doesnt have exposure at higher strikes. 
         Then the dealer doesnt need to continue buying. Which could allow the price to fall back to the strike.
