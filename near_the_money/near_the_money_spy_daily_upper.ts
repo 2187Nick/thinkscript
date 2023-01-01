@@ -6,7 +6,7 @@ declare once_per_bar;
 input Strike_Spacing = 1;
 input Premium_Extreme_Level = 1000000;
 
-def CurrentYear = 22;
+def CurrentYear = GetYear() - 2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
