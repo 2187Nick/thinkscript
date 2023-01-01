@@ -10,7 +10,7 @@ input set_base_strike_maunually = no;
 input manual_base_strike = 4025;
 
 
-def CurrentYear = 22;
+def CurrentYear = GetYear() - 2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
