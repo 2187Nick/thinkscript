@@ -2,7 +2,7 @@
 # Twitter 2187Nick
 declare upper;
 declare once_per_bar;
-def CurrentYear = 22;
+def CurrentYear =  GetYear() - 2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
