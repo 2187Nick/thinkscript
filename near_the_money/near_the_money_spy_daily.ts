@@ -11,7 +11,7 @@ plot lowline = lowline_millions;
 highline.SetDefaultColor(Color.red);
 lowline.SetDefaultColor(Color.green);
 
-def CurrentYear = 22;
+def CurrentYear = GetYear() - 2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
