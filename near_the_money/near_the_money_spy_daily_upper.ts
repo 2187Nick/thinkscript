@@ -1,4 +1,4 @@
-# near_the_money_spy_daily_v2
+# near_the_money_spy_daily_upper_v2
 # 2187Nick
 declare upper;
 declare once_per_bar;
