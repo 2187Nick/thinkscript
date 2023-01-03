@@ -11,13 +11,14 @@ plot lowline = lowline_millions;
 highline.SetDefaultColor(Color.red);
 lowline.SetDefaultColor(Color.green);
 
-def CurrentYear = GetYear() - 2000;
+def CurrentYear = GetYear()-2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
 def rounding_factor = if Strike_Spacing > 1 and Strike_Spacing < 25 then -1 else if Strike_Spacing > 24 then -2 else 0;
 
 def base = Round(close, rounding_factor);
+addlabel(yes, "ATM: " + base);
 
 def strike_atm = base;
 def strike_itm1_call = base - Strike_Spacing;
@@ -33,35 +34,35 @@ def strike_otm2_put = base - Strike_Spacing - Strike_Spacing * 1;
 #def strike_otm3_put = base - Strike_Spacing - Strike_Spacing * 2;
 
 
-def call_close_itm1 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm1_call);
-def call_volume_itm1 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm1_call);
+def call_close_itm1 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm1_call);
+def call_volume_itm1 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm1_call);
 
-def call_close_itm2 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm2_call);
-def call_volume_itm2 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm2_call);
+def call_close_itm2 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm2_call);
+def call_volume_itm2 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_itm2_call);
 
-def call_close_price = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_atm);
-def call_volume = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_atm);
+def call_close_price = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_atm);
+def call_volume = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_atm);
 
-def call_close_otm1 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm1_call);
-def call_volume1 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm1_call);
+def call_close_otm1 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm1_call);
+def call_volume1 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm1_call);
 
-def call_close_otm2 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm2_call); 
-def call_volume2 = volume("." + GetSymbol() + CurrentYear + CurrentMonth +(if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm2_call);
+def call_close_otm2 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm2_call); 
+def call_volume2 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) +(if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + strike_otm2_call);
 
-def put_close_price_itm1 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm1_put);
-def put_volume_itm1 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm1_put);
+def put_close_price_itm1 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm1_put);
+def put_volume_itm1 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm1_put);
 
-def put_close_price_itm2 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm2_put);
-def put_volume_itm2 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm2_put);
+def put_close_price_itm2 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm2_put);
+def put_volume_itm2 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_itm2_put);
 
-def put_close_price = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_atm);
-def put_volume = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_atm);
+def put_close_price = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_atm);
+def put_volume = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_atm);
 
-def put_close_otm1 = close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm1_put);
-def put_volume1 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm1_put);
+def put_close_otm1 = close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm1_put);
+def put_volume1 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm1_put);
 
-def put_close_otm2= close("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm2_put);
-def put_volume2 = volume("." + GetSymbol() + CurrentYear + CurrentMonth + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm2_put);
+def put_close_otm2= close("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm2_put);
+def put_volume2 = volume("." + GetSymbol() + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + strike_otm2_put);
 
 
 
