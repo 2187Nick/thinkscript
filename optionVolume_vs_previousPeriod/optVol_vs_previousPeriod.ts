@@ -7,16 +7,15 @@ def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
 input strikeSpacing = 1;
-input roundup = no;
 input percent_minimum = 1000;
 def percent_min = percent_minimum/100;
+def roundup = no;
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
 AddLabel(yes,  "Vol: " + AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0, (CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0, (CurrentDOM + "C")) else Concat(CurrentDOM, "C")), GlobalColor("CallColor"));
 AddLabel(yes,  "Vol: " +  AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0, (CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0, (CurrentDOM + "P")) else Concat(CurrentDOM, "P")), GlobalColor("PutColor"));
 def agg = GetAggregationPeriod();
-
 
 def openlevel = close(period = AggregationPeriod.DAY); # AggregationPeriod.day
 def floor_or_ceiling = if roundup then Ceil(openlevel / 10) * 10 else Floor(openlevel / 10) * 10;
