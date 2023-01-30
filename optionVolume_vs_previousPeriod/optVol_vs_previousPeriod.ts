@@ -8,7 +8,8 @@ def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 
 input strikeSpacing = 1;
 input roundup = no;
-input percent_min = 1.0;
+input percent_minimum = 1000;
+def percent_min = percent_minimum/100;
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
