@@ -2,8 +2,7 @@
 
 Category: Option Volume/Open Interest
 
-
-<img src="https://user-images.githubusercontent.com/75052782/207080966-65f7967e-07d9-4a3a-a3c6-bee5139022a3.png" width="450" height="800">
+![image](https://user-images.githubusercontent.com/75052782/223157070-59930589-b2fd-4b79-930d-47b31f4318a2.png)
 
 Designed for SPX and NDX
 
