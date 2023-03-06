@@ -1,4 +1,4 @@
-# volume_vertical_axis_v3
+# volume_vertical_axis_v3_labels
 # Twitter 2187Nick
 declare upper;
 declare once_per_bar;
@@ -9,13 +9,13 @@ def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 input strikeSpacing = 1;
 input roundup = no;
 input shift_line_right = 10;# negative numbers plot in candle area, positive in expansion 
-input division = 1000; # divides the open interest by this number. Gives user option to reduce size of bar plots.
+input division = 3000; # divides the open interest by this number. Gives user option to reduce size of bar plots.
 input space = .05; # the vertical space between the put open interest bar and call open interest bar.
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
-AddLabel(yes,  "Vol: " + AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")), GlobalColor("CallColor"));
-AddLabel(yes,  "Vol: " +  AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")), GlobalColor("PutColor"));
+AddLabel(yes,  "EXP: " + AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")), GlobalColor("CallColor"));
+AddLabel(yes,  "EXP: " +  AsPrice(GetYear()) + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")), GlobalColor("PutColor"));
 def agg = AggregationPeriod.DAY;
 
 def openlevel = close(period = agg);
@@ -130,89 +130,180 @@ AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarN
 def atmcallstrike = CallStrike;
 plot atmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume / division, 0)) then atmcallstrike else Double.NaN;
 
+
+
+
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume / division, 0)) then yes else no, atmcallstrike, callOptionVolume, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume / division, 0)) then yes else no, atmcallstrike-space, putOptionVolume, Color.red, no);
+
 def otmcallstrike1 = CallStrike + strikeSpacing;
 plot otmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1 / division, 0)) then otmcallstrike1 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume1 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1 / division, 0)) then yes else no, otmcallstrike1, callOptionVolume1, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume1a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume1a / division, 0)) then yes else no, otmcallstrike1-space, putOptionVolume1a, Color.red, no);
+
 def otmcallstrike2 = CallStrike + strikeSpacing * 2;
 plot otmcall1 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume2 / division, 0)) then otmcallstrike2 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume2 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume2 / division, 0)) then yes else no, otmcallstrike2, callOptionVolume2, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume2a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume2a / division, 0)) then yes else no, otmcallstrike2-space, putOptionVolume2a, Color.red, no);
+
 def otmcallstrike3 = CallStrike + strikeSpacing * 3;
 plot otmcall2 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume3 / division, 0)) then otmcallstrike3 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume3 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume3 / division, 0)) then yes else no, otmcallstrike3, callOptionVolume3, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume3a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume3a / division, 0)) then yes else no, otmcallstrike3-space, putOptionVolume3a, Color.red, no);
+
 def otmcallstrike4 = CallStrike + strikeSpacing * 4;
 plot otmcall3 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume4 / division, 0)) then otmcallstrike4 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume4 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume4 / division, 0)) then yes else no, otmcallstrike4, callOptionVolume4, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume4a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume4a / division, 0)) then yes else no, otmcallstrike4-space, putOptionVolume4a, Color.red, no);
+
 def otmcallstrike5 = CallStrike + strikeSpacing * 5;
 plot otmcall4 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume5 / division, 0)) then otmcallstrike5 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume5 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume5 / division, 0)) then yes else no, otmcallstrike5, callOptionVolume5, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume5a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume5a / division, 0)) then yes else no, otmcallstrike5-space, putOptionVolume5a, Color.red, no);
+
 def otmcallstrike6 = CallStrike + strikeSpacing * 6;
 plot otmcall5 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume6 / division, 0)) then otmcallstrike6 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume6 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume6 / division, 0)) then yes else no, otmcallstrike6, callOptionVolume6, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume6a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume6a / division, 0)) then yes else no, otmcallstrike6-space, putOptionVolume6a, Color.red, no);
 def otmcallstrike7 = CallStrike + strikeSpacing * 7;
 plot otmcall6 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume7 / division, 0)) then otmcallstrike7 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume7 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume7 / division, 0)) then yes else no, otmcallstrike7, callOptionVolume7, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume7a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume7a / division, 0)) then yes else no, otmcallstrike7-space, putOptionVolume7a, Color.red, no);
 def otmcallstrike8 = CallStrike + strikeSpacing * 8;
 plot otmcall7 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume8 / division, 0)) then otmcallstrike8 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume8 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume8 / division, 0)) then yes else no, otmcallstrike8, callOptionVolume8, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume8a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume8a / division, 0)) then yes else no, otmcallstrike8-space, putOptionVolume8a, Color.red, no);
 def otmcallstrike9 = CallStrike + strikeSpacing * 9;
 plot otmcall8 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume9 / division, 0)) then otmcallstrike9 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume9 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume9 / division, 0)) then yes else no, otmcallstrike9, callOptionVolume9, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume9a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume9a / division, 0)) then yes else no, otmcallstrike9-space, putOptionVolume9a, Color.red, no);
 def otmcallstrike10 = CallStrike + strikeSpacing * 10;
 plot otmcall9 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume10 / division, 0)) then otmcallstrike10 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume10 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume10 / division, 0)) then yes else no, otmcallstrike10, callOptionVolume10, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume10a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume10a / division, 0)) then yes else no, otmcallstrike10-space, putOptionVolume10a, Color.red, no);
 def otmcallstrike11 = CallStrike + strikeSpacing * 11;
 plot otmcall10 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume11 / division, 0)) then otmcallstrike11 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume11 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume11 / division, 0)) then yes else no, otmcallstrike11, callOptionVolume11, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume11a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume11a / division, 0)) then yes else no, otmcallstrike11-space, putOptionVolume11a, Color.red, no);
 def otmcallstrike12 = CallStrike + strikeSpacing * 12;
 plot otmcall11 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume12 / division, 0)) then otmcallstrike12 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume12 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume12 / division, 0)) then yes else no, otmcallstrike12, callOptionVolume12, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume12a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume12a / division, 0)) then yes else no, otmcallstrike12-space, putOptionVolume12a, Color.red, no);
 def otmcallstrike13 = CallStrike + strikeSpacing * 13;
 plot otmcall12 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume13 / division, 0)) then otmcallstrike13 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume13 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume13 / division, 0)) then yes else no, otmcallstrike13, callOptionVolume13, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume13a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume13a / division, 0)) then yes else no, otmcallstrike13-space, putOptionVolume13a, Color.red, no);
 def otmcallstrike14 = CallStrike + strikeSpacing * 14;
 plot otmcall13 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume14 / division, 0)) then otmcallstrike14 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume14 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume14 / division, 0)) then yes else no, otmcallstrike14, callOptionVolume14, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume14a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume14a / division, 0)) then yes else no, otmcallstrike14-space, putOptionVolume14a, Color.red, no);
 def otmcallstrike15 = CallStrike + strikeSpacing * 15;
 plot otmcall14 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume15 / division, 0)) then otmcallstrike15 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume15 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume15 / division, 0)) then yes else no, otmcallstrike15, callOptionVolume15, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume15a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume15a / division, 0)) then yes else no, otmcallstrike15-space, putOptionVolume15a, Color.red, no);
 def otmcallstrike16 = CallStrike + strikeSpacing * 16;
 plot otmcall15 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume16 / division, 0)) then otmcallstrike16 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume16 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume16 / division, 0)) then yes else no, otmcallstrike16, callOptionVolume16, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume16a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume16a / division, 0)) then yes else no, otmcallstrike16-space, putOptionVolume16a, Color.red, no);
 def otmcallstrike17 = CallStrike + strikeSpacing * 17;
 plot otmcall16 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume17 / division, 0)) then otmcallstrike17 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume17 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume17 / division, 0)) then yes else no, otmcallstrike17, callOptionVolume17, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume17a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume17a / division, 0)) then yes else no, otmcallstrike17-space, putOptionVolume17a, Color.red, no);
 def otmcallstrike18 = CallStrike + strikeSpacing * 18;
 plot otmcall17 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume18 / division, 0)) then otmcallstrike18 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume18 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume18 / division, 0)) then yes else no, otmcallstrike18, callOptionVolume18, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume18a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume18a / division, 0)) then yes else no, otmcallstrike18-space, putOptionVolume18a, Color.red, no);
 def otmcallstrike19 = CallStrike + strikeSpacing * 19;
 plot otmcall18 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume19 / division, 0)) then otmcallstrike19 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume19 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume19 / division, 0)) then yes else no, otmcallstrike19, callOptionVolume19, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume19a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume19a / division, 0)) then yes else no, otmcallstrike19-space, putOptionVolume19a, Color.red, no);
 def otmcallstrike20 = CallStrike + strikeSpacing * 20;
 plot otmcall19 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume20 / division, 0)) then otmcallstrike20 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume20 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume20 / division, 0)) then yes else no, otmcallstrike20, callOptionVolume20, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume20a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume20a / division, 0)) then yes else no, otmcallstrike20-space, putOptionVolume20a, Color.red, no);
 
 
 def itmcallstrike1 = CallStrike - strikeSpacing;
 plot itmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolumea / division, 0)) then itmcallstrike1 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume1a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1a / division, 0)) then yes else no, itmcallstrike1, callOptionVolume1a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume1 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume1 / division, 0)) then yes else no, itmcallstrike1-space, putOptionVolume1, Color.red, no);
 
 def itmcallstrike2 = CallStrike - strikeSpacing * 2;
 plot itmcall1 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume2a / division, 0)) then itmcallstrike2 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume2a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume2a / division, 0)) then yes else no, itmcallstrike2, callOptionVolume2a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume2 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume2 / division, 0)) then yes else no, itmcallstrike2-space, putOptionVolume2, Color.red, no);
 def itmcallstrike3 = CallStrike - strikeSpacing * 3;
 plot itmcall2 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume3a / division, 0)) then itmcallstrike3 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume3a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume3a / division, 0)) then yes else no, itmcallstrike3, callOptionVolume3a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume3 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume3 / division, 0)) then yes else no, itmcallstrike3-space, putOptionVolume3, Color.red, no);
 def itmcallstrike4 = CallStrike - strikeSpacing * 4;
 plot itmcall3 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume4a / division, 0)) then itmcallstrike4 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume4a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume4a / division, 0)) then yes else no, itmcallstrike4, callOptionVolume4a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume4 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume4 / division, 0)) then yes else no, itmcallstrike4-space, putOptionVolume4, Color.red, no);
 def itmcallstrike5 = CallStrike - strikeSpacing * 5;
 plot itmcall4 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume5a / division, 0)) then itmcallstrike5 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume5a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume5a / division, 0)) then yes else no, itmcallstrike5, callOptionVolume5a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume5 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume5 / division, 0)) then yes else no, itmcallstrike5-space, putOptionVolume5, Color.red, no);
 def itmcallstrike6 = CallStrike - strikeSpacing * 6;
 plot itmcall5 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume6a / division, 0)) then itmcallstrike6 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume6a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume6a / division, 0)) then yes else no, itmcallstrike6, callOptionVolume6a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume6 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume6 / division, 0)) then yes else no, itmcallstrike6-space, putOptionVolume6, Color.red, no);
 def itmcallstrike7 = CallStrike - strikeSpacing * 7;
 plot itmcall6 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume7a / division, 0)) then itmcallstrike7 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume7a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume7a / division, 0)) then yes else no, itmcallstrike7, callOptionVolume7a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume7 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume7 / division, 0)) then yes else no, itmcallstrike7-space, putOptionVolume7, Color.red, no);
 def itmcallstrike8 = CallStrike - strikeSpacing * 8;
 plot itmcall7 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume8a / division, 0)) then itmcallstrike8 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume8a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume8a / division, 0)) then yes else no, itmcallstrike8, callOptionVolume8a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume8 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume8 / division, 0)) then yes else no, itmcallstrike8-space, putOptionVolume8, Color.red, no);
 def itmcallstrike9 = CallStrike - strikeSpacing * 9;
 plot itmcall8 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume9a / division, 0)) then itmcallstrike9 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume9a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume9a / division, 0)) then yes else no, itmcallstrike9, callOptionVolume9a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume9 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume9 / division, 0)) then yes else no, itmcallstrike9-space, putOptionVolume9, Color.red, no);
 def itmcallstrike10 = CallStrike - strikeSpacing * 10;
 plot itmcall9 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume10a / division, 0)) then itmcallstrike10 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume10a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume10a / division, 0)) then yes else no, itmcallstrike10, callOptionVolume10a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume10 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume10 / division, 0)) then yes else no, itmcallstrike10-space, putOptionVolume10, Color.red, no);
 def itmcallstrike11 = CallStrike - strikeSpacing * 11;
 plot itmcall10 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume11a / division, 0)) then itmcallstrike11 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume11a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume11a / division, 0)) then yes else no, itmcallstrike11, callOptionVolume11a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume11 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume11 / division, 0)) then yes else no, itmcallstrike11-space, putOptionVolume11, Color.red, no);
 def itmcallstrike12 = CallStrike - strikeSpacing * 12;
 plot itmcall11 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume12a / division, 0)) then itmcallstrike12 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume12a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume12a / division, 0)) then yes else no, itmcallstrike12, callOptionVolume12a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume12 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume12 / division, 0)) then yes else no, itmcallstrike12-space, putOptionVolume12, Color.red, no);
 def itmcallstrike13 = CallStrike - strikeSpacing * 13;
 plot itmcall12 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume13a / division, 0)) then itmcallstrike13 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume13a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume13a / division, 0)) then yes else no, itmcallstrike13, callOptionVolume13a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume13 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume13 / division, 0)) then yes else no, itmcallstrike13-space, putOptionVolume13, Color.red, no);
 def itmcallstrike14 = CallStrike - strikeSpacing * 14;
 plot itmcall13 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume14a / division, 0)) then itmcallstrike14 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume14a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume14a / division, 0)) then yes else no, itmcallstrike14, callOptionVolume14a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume14 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume14 / division, 0)) then yes else no, itmcallstrike14-space, putOptionVolume14, Color.red, no);
 def itmcallstrike15 = CallStrike - strikeSpacing * 15;
 plot itmcall14 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume15a / division, 0)) then itmcallstrike15 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume15a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume15a / division, 0)) then yes else no, itmcallstrike15, callOptionVolume15a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume15 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume15 / division, 0)) then yes else no, itmcallstrike15-space, putOptionVolume15, Color.red, no);
 def itmcallstrike16 = CallStrike - strikeSpacing * 16;
 plot itmcall15 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume16a / division, 0)) then itmcallstrike16 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume16a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume16a / division, 0)) then yes else no, itmcallstrike16, callOptionVolume16a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume16 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume16 / division, 0)) then yes else no, itmcallstrike16-space, putOptionVolume16, Color.red, no);
 def itmcallstrike17 = CallStrike - strikeSpacing * 17;
 plot itmcall16 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume17a / division, 0)) then itmcallstrike17 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume17a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume17a / division, 0)) then yes else no, itmcallstrike17, callOptionVolume17a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume17 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume17 / division, 0)) then yes else no, itmcallstrike17-space, putOptionVolume17, Color.red, no);
 def itmcallstrike18 = CallStrike - strikeSpacing * 18;
 plot itmcall17 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume18a / division, 0)) then itmcallstrike18 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume18a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume18a / division, 0)) then yes else no, itmcallstrike18, callOptionVolume18a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume18 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume18 / division, 0)) then yes else no, itmcallstrike18-space, putOptionVolume18, Color.red, no);
 def itmcallstrike19 = CallStrike - strikeSpacing * 19;
 plot itmcall18 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume19a / division, 0)) then itmcallstrike19 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume19a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume19a / division, 0)) then yes else no, itmcallstrike19, callOptionVolume19a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume19 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume19 / division, 0)) then yes else no, itmcallstrike19-space, putOptionVolume19, Color.red, no);
 def itmcallstrike20 = CallStrike - strikeSpacing * 20;
 plot itmcall19 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume20a / division, 0)) then itmcallstrike20 else Double.NaN;
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume20a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume20a / division, 0)) then yes else no, itmcallstrike20, callOptionVolume20a, Color.green, yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume20 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume20 / division, 0)) then yes else no, itmcallstrike20-space, putOptionVolume20, Color.red, no);
 
 #PUTS
 def atmputstrike = PutStrike - space;
