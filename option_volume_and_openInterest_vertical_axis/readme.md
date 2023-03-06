@@ -2,8 +2,7 @@
 
 Category: Option Volume/Open Interest
 
-
-<img src="https://user-images.githubusercontent.com/75052782/204035580-ab8c13b2-acaf-4ab3-85f9-a7dfd8685551.png" width="450" height="800">
+![image](https://user-images.githubusercontent.com/75052782/223152669-178be115-0e04-4786-8606-458c47f00edf.png)
 
 Designed for SPY and QQQ. (Use manual version for any other instrument)
 
