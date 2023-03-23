@@ -2,8 +2,7 @@
 
 Category: Option Volume
 
-![2023-03-23-TOS_CHARTS_2](https://user-images.githubusercontent.com/75052782/227285384-e42ed67a-5cf7-41ec-b8b0-56a26bc0ce02.png)
-
+![2023-03-23-TOS_CHARTS_2](https://user-images.githubusercontent.com/75052782/227285731-0b805b9a-704c-462f-8780-d08926980c08.png)
 
 Designed for SPY and QQQ. (Use manual version for any other instrument)
 
