@@ -2,6 +2,9 @@
 
 Category: Option Volume
 
+![image](https://user-images.githubusercontent.com/75052782/227275846-e309202b-ed55-45b9-9b21-9127751d9f5a.png)
+
+
 Designed for SPY and QQQ. (Use manual version for any other instrument)
 
 > Chart requirements for optimal use:
@@ -10,7 +13,6 @@ Designed for SPY and QQQ. (Use manual version for any other instrument)
   Time frame: 1 Day
 
   Aggregation Period: 1 Minute
-  
   
 ```
 
@@ -24,10 +26,10 @@ Designed for SPY and QQQ. (Use manual version for any other instrument)
   1. Strike Spacing: 1;  (This sets the space between strikes. Ex: Current SPY price is 400. It will monitor calls
      and puts at strikes 398, 399, 400, 401 and 402)
   2. Trade Size Dollar: 200000; (This sets the minimum trade size. 1min option volume * price.)
-  3.  Roundup: No;  (Set this to "Yes" if you want to adjust the range monitored to higher strikes)
+  3. Roundup: No;  (Set this to "Yes" if you want to adjust the range monitored to higher strikes)
   
   Manual Version:
-  1. Option series yymmdd: 221125; (Enter the specific expiration date you want to monitor)
+  1. Option series yymmdd: 230324; (Enter the specific expiration date you want to monitor)
 
 
  ```
