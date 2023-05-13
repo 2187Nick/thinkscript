@@ -1,4 +1,4 @@
-# My Thinkscript Indicators
+# Thinkscript Indicators
 
 I will upload indicators that over the years have been useful.
 
