@@ -1,0 +1,52 @@
+# near_the_money_spy_daiily_vix_upper
+# @2187Nick
+
+# May 16, 2023
+# This version usses vix to set a range of strikes to monitor.
+# Adds chart bubble when price is rising and call premium exceeds $1 million.
+# Adds chart bubble when price is falling and put premium exceeds $1 million.
+
+# Run on 1 min chart only.  Calculates Premium. ( 1 min volume x 1 min OHLC4)
+# Starts at 945. First 15 min lots of chaos and false signals.
+declare once_per_bar;
+
+input chain_width = 1;
+input symbol = "SPY";
+input premium_extreme_level = 1000000;
+
+def after945 = SecondsFromTime(945) >= 0;
+
+def vix = close("VIX", AggregationPeriod.DAY)[1];
+
+def price = round(close(symbol, AggregationPeriod.day)[1],0);
+def move = vix / Sqrt(252) / 100;
+
+def strike_up = Round (price * (1 + move) / chain_width, 0.01) * chain_width;
+def strike_down =  Round (price * (1 - move) / chain_width, 0.01) * chain_width;
+
+# get 0DTE expiration
+def CurrentYear = GetYear()-2000;
+def CurrentMonth = GetMonth();
+def CurrentDay = GetDayOfMonth(GetYYYYMMDD());
+def DateString = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDay;
+
+def Call_VolumexOHLC = fold strike_c = strike_down to strike_up with v do v +
+                if IsNaN(volume("." + symbol +  AsPrice(DateString) + "C" + AsPrice(strike_c)))  then 0
+                else (volume("." + symbol +  AsPrice(DateString) + "C" + AsPrice(strike_c))
+                *ohlc4("." + symbol +  AsPrice(DateString) + "C" + AsPrice(strike_c))
+                );
+
+def Put_VolumexOHLC = fold strike_p = strike_down to strike_up with v_p do v_p +
+                if IsNaN(volume("." + symbol +  AsPrice(DateString) + "P" + AsPrice(strike_p))) then 0
+                else (volume("." + symbol +  AsPrice(DateString) + "P" + AsPrice(strike_p))
+                *ohlc4("." + symbol +  AsPrice(DateString) + "P" + AsPrice(strike_p))
+                );
+
+def moving_up = if close[1] > close[2] then 1 else 0;
+def moving_down = close[1] < close[2];
+
+def calls_current_total = if after945 then Call_VolumexOHLC*100 else 0;
+def puts_current_total = if after945 then  put_VolumexOHLC*100 else 0;
+
+AddChartBubble(puts_current_total > premium_extreme_level and moving_down, low, "Extreme" , color.Green);
+AddChartBubble(calls_current_total > premium_extreme_level and moving_up ==1, high+.1, "Extreme" , color.red);
