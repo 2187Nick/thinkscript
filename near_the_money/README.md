@@ -8,8 +8,8 @@ Category: Mean Reversion
 Designed for SPY and QQQ.
 
 New features/changes:
-# This version uses vix to set a range of strikes to monitor.
-# Starts at 945. First 15 min lots of chaos and false signals.
+  1. This version uses vix to set a range of strikes to monitor.
+  2. Starts at 945. First 15 min lots of chaos and false signals.
 
 > Chart requirements for optimal use:
 ```bash
