@@ -1,10 +1,15 @@
 🚀 This monitors for a peak in option call premium at the highs and peak in option put premium at the lows.
+*** New version May 16, 2023
 
 Category: Mean Reversion
 
 <img src="https://user-images.githubusercontent.com/75052782/203618629-3c0bf2ba-da5e-4a4f-8d98-67cf2a929846.png" width="450" height="800">
 
 Designed for SPY and QQQ.
+
+New features/changes:
+# This version uses vix to set a range of strikes to monitor.
+# Starts at 945. First 15 min lots of chaos and false signals.
 
 > Chart requirements for optimal use:
 ```bash
