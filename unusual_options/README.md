@@ -1,10 +1,13 @@
-🚀 This plots unusual options live
+🚀 This plots unusual options live. *** Updated May 16, 2023
 
 Category: Option Volume
 
 ![2023-03-23-TOS_CHARTS_2](https://user-images.githubusercontent.com/75052782/227285731-0b805b9a-704c-462f-8780-d08926980c08.png)
 
-Designed for SPY and QQQ. (Use manual version for any other instrument)
+New Features:
+1. Option to set number of strikes to view
+2. Option to manually set expiration date
+3. Should run much faster
 
 > Chart requirements for optimal use:
 ```bash
@@ -25,10 +28,11 @@ Designed for SPY and QQQ. (Use manual version for any other instrument)
   1. Strike Spacing: 1;  (This sets the space between strikes. Ex: Current SPY price is 400. It will monitor calls
      and puts at strikes 398, 399, 400, 401 and 402)
   2. Trade Size Dollar: 200000; (This sets the minimum trade size. 1min option volume * price.)
-  3. Roundup: No;  (Set this to "Yes" if you want to adjust the range monitored to higher strikes)
-  
-  Manual Version:
-  1. Option series yymmdd: 230324; (Enter the specific expiration date you want to monitor)
+  3. Strikes: 0; (Default is 0. Select up to 20. This will give 40 strikes total)
+  4. Roundup: No;  (Set this to "Yes" if you want to adjust the range monitored to higher strikes)
+  5. Manually Set Expiration = false; (Default this selects current day. Which is good for SPY and QQQ)
+        A. Set this to true and then set the Expiration in #6.
+  6. Expiration_YYMMDD = 230616;
 
 
  ```
