@@ -5,8 +5,8 @@ Category: Option Volume
 ![2023-03-23-TOS_CHARTS_2](https://user-images.githubusercontent.com/75052782/227285731-0b805b9a-704c-462f-8780-d08926980c08.png)
 
 New Features:
-1. Option to set number of strikes to view
-2. Option to manually set expiration date
+1. Set number of strikes to view
+2. Ability to manually set expiration date
 3. Should run much faster
 
 > Chart requirements for optimal use:
