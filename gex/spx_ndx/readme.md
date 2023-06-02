@@ -10,10 +10,13 @@ The GEX is displayed in millions.
 ######
 ######
 
-GEX Open Interest:
+GEX based on Open Interest:
 
     Option's Gamma * Contract Size * Open Interest * Spot Price ^2 * .01 *(-1 if puts)
 
-GEX Live Volume:
+GEX based on Live Volume:
 
     Option's Gamma * Contract Size * Volume *  Spot Price ^2 * .01 *(-1 if puts)
+    
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/d5ae03c2-86fe-41b0-9a3a-10815b4b2fe5)
+
