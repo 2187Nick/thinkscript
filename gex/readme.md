@@ -1,9 +1,17 @@
 # Gamma Exposure (Naive)
 
 This calculates gex per $1 move in the underlying asset. Based on open interest.
+
 (Currently it only works for option contracts in the current month.)
 
 The GEX is displayed in millions.
+
+GEX:
+Option's Gamma * Contract Size * Open Interest * Spot Price * (-1 if puts)
+
+GEX Live Volume:
+Option's Gamma * Contract Size * Volume * Spot Price * (-1 if puts)
+
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/f10f65f1-8cd4-4dbc-a9e5-1eda8039c3da)
 
