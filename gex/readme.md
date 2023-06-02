@@ -10,12 +10,12 @@ The GEX is displayed in millions.
 ######
 ######
 
-GEX:
+GEX based on Open Interest:
 
     Option's Gamma * Contract Size * Open Interest * Spot Price
     Total GEX = Call GEX - Put GEX
 
-GEX Live Volume:
+GEX based on Live Volume:
 
     Option's Gamma * Contract Size * Volume * Spot Price
     Total GEX = Call GEX - Put GEX
