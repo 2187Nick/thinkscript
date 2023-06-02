@@ -12,11 +12,13 @@ The GEX is displayed in millions.
 
 GEX:
 
-    Option's Gamma * Contract Size * Open Interest * Spot Price * (-1 if puts)
+    Option's Gamma * Contract Size * Open Interest * Spot Price
+    Total GEX = Call GEX - Put GEX
 
 GEX Live Volume:
 
-    Option's Gamma * Contract Size * Volume * Spot Price * (-1 if puts)
+    Option's Gamma * Contract Size * Volume * Spot Price
+    Total GEX = Call GEX - Put GEX
 
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/f10f65f1-8cd4-4dbc-a9e5-1eda8039c3da)
