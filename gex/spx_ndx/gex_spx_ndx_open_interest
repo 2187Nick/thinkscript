@@ -1,0 +1,24 @@
+def CurrentYear = GetYear()-2000;
+def CurrentMonth = GetMonth();
+def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString = CurrentYear*10000+CurrentMonth*100+CurrentDOM+getdaystoexpiration()-1;
+
+input threshold = 1000; # 1 billion
+def sym;
+if (getUnderlyingSymbol() == "NDX") {
+    sym = 1;
+} else {
+    sym = 0;
+};
+
+def gex = if IsNan((open_interest("."+getunderlyingSymbol()+(if sym then "P" else "W")+ AsPrice(DateString) + "C" +AsPrice(getStrike())) -  open_interest("."+getunderlyingSymbol()+(if sym then "P" else "W")+AsPrice(DateString) + "P" + AsPrice(getStrike())))* Gamma() * close(getunderlyingSymbol()) /1000) then 0 else round((open_interest("."+getunderlyingSymbol()+(if sym then "P" else "W")+ AsPrice(DateString) + "C" +AsPrice(getStrike())) -  open_interest("."+getunderlyingSymbol()+(if sym then "P" else "W")+AsPrice(DateString) + "P" + AsPrice(getStrike())))* Gamma() * close(getunderlyingSymbol())*close(getunderlyingSymbol()) *.01 /10000,1);
+
+addlabel(yes, gex );
+
+addlabel(IsPut() and gex <= -.1, gex, if gex <= (-1*threshold) then color.red else color.light_red);
+addlabel(IsPut() and gex >= 0, "", color.black);
+
+addlabel(!IsPut() and gex >= .1, gex,  if gex >= threshold then color.green else color.light_green);
+addlabel(!IsPut() and gex < 0, "", color.black);
+
+assignBackgroundColor(color.black);
