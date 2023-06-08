@@ -35,6 +35,8 @@ To install:
     # Click thinkScript Editor
     # Paste the code. Select Apply and Ok.
     # Select the Add Items button. Then Ok and done. 
+    
+    **** Make sure D (Day) is selected. To the right of the column name.
    ![image](https://github.com/2187Nick/thinkscript/assets/75052782/ed16a9c6-db13-4070-9a17-1a39bbcf2f8e)
 
 
