@@ -13,6 +13,7 @@ https://www.investopedia.com/terms/i/islandreversal.asp
   Time Frame Aggregation Period: Day
   
   Note: This must be added as a strategy, not as an indicator.
+  Note2: I am not accounting for volume in the strategy.
 ```
 
 ### > Settings 👷‍:
