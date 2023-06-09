@@ -2,6 +2,7 @@ input trend_length = 20;
 input show_trend = no;
 input stoploss = .05; # 5% stoploss
 input profittarget = .05; # 5% profit target
+input gap_size = .01; # 1 percent
 
 def SMA = Average(close, trend_length);
 plot MA = if show_trend then SMA else double.nan;
@@ -16,8 +17,8 @@ def GapDown = high[1] < low[2];  # current candle high is < previous candle low
 
 def gapsize = if GapUp then (low[1] - high[2]) else if GapDown then (low[2] - high[1]) else 0;
 
-def didwegapup = if BullishTrend and GapUp and (gapsize / high[2]) > 0.01 then 1 else 0;
-def didwegapdown = if BearishTrend and GapDown and (gapsize / low[2]) > 0.01 then 1 else 0;
+def didwegapup = if BullishTrend and GapUp and (gapsize / high[2]) > gap_size then 1 else 0;
+def didwegapdown = if BearishTrend and GapDown and (gapsize / low[2]) > gap_size then 1 else 0;
 
 def GapUpLowestPrice;
 def GapUpFillPrice;
@@ -121,4 +122,3 @@ def bull_entryPrice = EntryPrice();
 def bull_ExitforProfit = bull_entryPrice + (bull_entryPrice*profittarget);
 def bull_ExitforLoss = bull_entryPrice - (bull_entryPrice*stoploss);
 AddOrder(OrderType.SELL_TO_CLOSE, close >bull_ExitforProfit or close < bull_ExitforLoss, tickcolor = GetColor(6), arrowcolor = GetColor(5));
-
