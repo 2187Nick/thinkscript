@@ -24,6 +24,8 @@ Upper:
   2. Show Trend: No;
   3. Stop Loss: .05;  (5 percent)
   4. Profit Target: .05;  (5 percent)
+  5. Gap Size: .01; (1 percent default)
+     (Gives you the option to set a minimum gap size to monitor)
   
 
  ```
