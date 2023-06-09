@@ -1,5 +1,5 @@
 input trend_length = 20;
-input show_trend = yes;
+input show_trend = no;
 input stoploss = .05; # 5% stoploss
 input profittarget = .05; # 5% profit target
 
