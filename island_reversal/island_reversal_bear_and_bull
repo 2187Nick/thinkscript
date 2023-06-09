@@ -1,0 +1,124 @@
+input trend_length = 20;
+input show_trend = yes;
+input stoploss = .05; # 5% stoploss
+input profittarget = .05; # 5% profit target
+
+def SMA = Average(close, trend_length);
+plot MA = if show_trend then SMA else double.nan;
+MA.SetDefaultColor(GetColor(1));
+MA.SetPaintingStrategy(PaintingStrategy.LINE);
+
+def BullishTrend = open[2] > SMA[2];
+def BearishTrend = open[2] < SMA[2];
+
+def GapUp = low[1] > high[2];  # current candle low is > previous candle high
+def GapDown = high[1] < low[2];  # current candle high is < previous candle low
+
+def gapsize = if GapUp then (low[1] - high[2]) else if GapDown then (low[2] - high[1]) else 0;
+
+def didwegapup = if BullishTrend and GapUp and (gapsize / high[2]) > 0.01 then 1 else 0;
+def didwegapdown = if BearishTrend and GapDown and (gapsize / low[2]) > 0.01 then 1 else 0;
+
+def GapUpLowestPrice;
+def GapUpFillPrice;
+def bear_islandgap;
+def downtarget;
+
+if didwegapup {
+    GapUpLowestPrice = low[1];
+    GapUpFillPrice = high[2];
+    bear_islandgap = double.nan;
+    downtarget = gapsize*2;
+    # Check if we are still an island. low[1] > GapUpLowestPrice
+    # did we have a gap down and did the high of gap down create island
+} else if GapUpLowestPrice[1] and low[1] > GapUpFillPrice[1] and high[1] >= GapUpLowestPrice[1]  {
+    # Check if the candle makes a new island low. 
+    GapUpLowestPrice = if low[1] < GapUpLowestPrice[1] then low[1] else GapUpLowestPrice[1];
+    GapUpFillPrice = GapUpFillPrice[1];
+    bear_islandgap = double.nan;
+    downtarget = downtarget[1];
+    # Check if we have a gapdown. And checks if there is an island gap.
+} else if GapUpLowestPrice[1] and low[2] > high[1] and high[1] < GapUpLowestPrice[1] {
+    GapUpLowestPrice = double.nan;
+    GapUpFillPrice = double.nan;
+    bear_islandgap = 1;
+    # ExitforProfit = entryPrice - (entryPrice*profittarget);
+    downtarget = close[1] - (close[1]*profittarget);
+    #downtarget = close - downtarget[1];
+}else {
+    GapUpLowestPrice = double.nan;
+    GapUpFillPrice = double.nan;
+    bear_islandgap = double.nan;
+    downtarget = double.nan;
+};
+
+addchartbubble(bear_islandgap and (downtarget > close*.2) , downtarget, "Down Target");
+addchartbubble(bear_islandgap, high, "Bear Island Gap");
+    
+plot gaplevel_bearisland = if GapUpLowestPrice then GapUpLowestPrice else double.nan;
+gaplevel_bearisland.SetDefaultColor(Color.RED);
+gaplevel_bearisland.SetStyle(curve.firm);
+
+plot gaplevel_bearisland1 = if GapUpFillPrice then GapUpFillPrice else double.nan;
+gaplevel_bearisland1.SetDefaultColor(Color.RED);
+gaplevel_bearisland1.SetStyle(curve.short_dash);
+
+AddCloud(gaplevel_bearisland, gaplevel_bearisland1, color.RED, color.RED, yes);
+
+AddOrder(OrderType.SELL_TO_OPEN, bear_islandgap and downtarget > close*.2, close[1], tickcolor = GetColor(5), arrowcolor = GetColor(5));
+def entryPrice = EntryPrice();
+def ExitforProfit = entryPrice - (entryPrice*profittarget);
+def ExitforLoss = entryPrice + (entryPrice*stoploss);
+AddOrder(OrderType.BUY_TO_CLOSE, close <ExitforProfit or close > ExitforLoss, tickcolor = GetColor(6), arrowcolor = GetColor(5));
+
+def GapDownHighestPrice;
+def GapDownFillPrice;
+def bull_islandgap;
+def uptarget;
+
+if didwegapdown {
+    GapDownHighestPrice = high[1];
+    GapDownFillPrice = low[2];
+    bull_islandgap = double.nan;
+    uptarget = gapsize*2;
+    # Check if we are still an island. low[1] > GapUpLowestPrice
+    # did we have a gap down and did the high of gap down create island
+} else if GapDownHighestPrice[1] and high[1] < GapDownFillPrice[1] and low[1] <= GapDownHighestPrice[1]  {
+    # Check if the candle makes a new island high. 
+    GapDownHighestPrice = if high[1] > GapDownHighestPrice[1] then high[1] else GapDownHighestPrice[1];
+    GapDownFillPrice = GapDownFillPrice[1];
+    bull_islandgap = double.nan;
+    uptarget = uptarget[1];
+    # Check if we have a gapup. And checks if there is an island gap.
+} else if GapDownHighestPrice[1] and low[1] > high[2] and low[1] > GapDownHighestPrice[1] {
+    GapDownHighestPrice = double.nan;
+    GapDownFillPrice = double.nan;
+    bull_islandgap = 1;
+    #uptarget = close + uptarget[1];
+    uptarget = close[1] + (close[1]*profittarget);
+}else {
+    GapDownHighestPrice = double.nan;
+    GapDownFillPrice = double.nan;
+    bull_islandgap = double.nan;
+    uptarget = double.nan;
+};
+
+addchartbubble(bull_islandgap and (uptarget > close*.2) , uptarget, "Up Target", color.green);
+addchartbubble(bull_islandgap, high, "Bull Island Gap", color.green);
+    
+plot gaplevel_bullisland = if GapDownHighestPrice then GapDownHighestPrice else double.nan;
+gaplevel_bullisland.SetDefaultColor(Color.GREEN);
+gaplevel_bullisland.SetStyle(curve.firm);
+
+plot gaplevel_bullisland1 = if GapDownFillPrice then GapDownFillPrice else double.nan;
+gaplevel_bullisland1.SetDefaultColor(Color.GREEN);
+gaplevel_bullisland1.SetStyle(curve.short_dash);
+
+AddCloud(gaplevel_bullisland, gaplevel_bullisland1, color.GREEN, color.GREEN, yes);
+
+AddOrder(OrderType.BUY_TO_OPEN, bull_islandgap and (uptarget > close*.2), close[1], tickcolor = GetColor(5), arrowcolor = GetColor(5));
+def bull_entryPrice = EntryPrice();
+def bull_ExitforProfit = bull_entryPrice + (bull_entryPrice*profittarget);
+def bull_ExitforLoss = bull_entryPrice - (bull_entryPrice*stoploss);
+AddOrder(OrderType.SELL_TO_CLOSE, close >bull_ExitforProfit or close < bull_ExitforLoss, tickcolor = GetColor(6), arrowcolor = GetColor(5));
+
