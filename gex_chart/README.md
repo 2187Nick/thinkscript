@@ -6,6 +6,9 @@ Currently setup for SPY and QQQ 0dte contract only.
 
 The GEX is displayed in millions.
 
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/12cbb105-9158-4b49-beb0-d4ecb3774ba6)
+
+
 
 ######
 ######
