@@ -27,3 +27,12 @@ GEX based on Open Interest:
 
     Option's Gamma * Contract Size * Open Interest * Spot Price
     Total GEX = Call GEX - Put GEX
+
+
+> 🦖 How to use this(layman description):
+```bash
+
+  1. Large Gamma Exposure strikes can act like a magnet for price.
+  2. Gamma increases when price is near the strike.
+       
+```
