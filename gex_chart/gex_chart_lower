@@ -1,9 +1,10 @@
-
-# Gex Plotted lower V1 Jul 6, 2023
+# Gex Plotted lower V2 Jul 31, 2023
 # Twitter @2187Nick
+# Adds labels and minimum gex amount.
 
 declare lower;
 declare once_per_bar;
+input min_gex = 50;
 input strikeSpacing = 1.0;
 input strikes = {default "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 "10"};
@@ -183,26 +184,78 @@ def lastbar = if IsNaN(close[-1]) and !IsNaN(close)
 
 #AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarNumber() <= HighestAll(lastbar +  shift_line_right), "Gamma Exposure",color.white,Curve.LONG_DASH);
 
+plot base = if absValue(strike_base_gex) > min_gex then strike_base_gex else double.nan;
 
-plot base = if strike_base_gex then strike_base_gex else double.nan;
-plot base_plus1 = if strike_plus1_gex then strike_plus1_gex else double.nan;
-plot base_plus2 = if strike_plus2_gex then strike_plus2_gex else double.nan;
-plot base_plus3 = if strike_plus3_gex then strike_plus3_gex else double.nan;
-plot base_plus4 = if strike_plus4_gex then strike_plus4_gex else double.nan;
-plot base_plus5 = if strike_plus5_gex then strike_plus5_gex else double.nan;
-plot base_plus6 = if strike_plus6_gex then strike_plus6_gex else double.nan;
-plot base_plus7 = if strike_plus7_gex then strike_plus7_gex else double.nan;
-plot base_plus8 = if strike_plus8_gex then strike_plus8_gex else double.nan;
-plot base_plus9 = if strike_plus9_gex then strike_plus9_gex else double.nan;
-plot base_plus10 = if strike_plus10_gex then strike_plus10_gex else double.nan;
+plot base_plus1 = if strikes >0 and absValue(strike_plus1_gex) > min_gex then strike_plus1_gex else double.nan;
+plot base_plus2 = if strikes > 1 and absValue(strike_plus2_gex) > min_gex then strike_plus2_gex else double.nan;
+plot base_plus3 = if strikes > 2 and absValue(strike_plus3_gex) > min_gex then strike_plus3_gex else double.nan;
+plot base_plus4 = if strikes > 3 and absValue(strike_plus4_gex) > min_gex then strike_plus4_gex else double.nan;
+plot base_plus5 = if strikes > 4 and absValue(strike_plus5_gex) > min_gex then strike_plus5_gex else double.nan;
+plot base_plus6 = if strikes > 5 and absValue(strike_plus6_gex) > min_gex then strike_plus6_gex else double.nan;
+plot base_plus7 = if strikes > 6 and absValue(strike_plus7_gex) > min_gex then strike_plus7_gex else double.nan;
+plot base_plus8 = if strikes > 7 and absValue(strike_plus8_gex) > min_gex then strike_plus8_gex else double.nan;
+plot base_plus9 = if strikes > 8 and absValue(strike_plus9_gex) > min_gex then strike_plus9_gex else double.nan;
+plot base_plus10 = if strikes > 9 and absValue(strike_plus10_gex) > min_gex then strike_plus10_gex else double.nan;
 
-plot base_minus1 = if strike_minus1_gex then strike_minus1_gex else double.nan;
-plot base_minus2 = if strike_minus2_gex then strike_minus2_gex else double.nan;
-plot base_minus3 = if strike_minus3_gex then strike_minus3_gex else double.nan;
-plot base_minus4 = if strike_minus4_gex then strike_minus4_gex else double.nan;
-plot base_minus5 = if strike_minus5_gex then strike_minus5_gex else double.nan;
-plot base_minus6 = if strike_minus6_gex then strike_minus6_gex else double.nan;
-plot base_minus7 = if strike_minus7_gex then strike_minus7_gex else double.nan;
-plot base_minus8 = if strike_minus8_gex then strike_minus8_gex else double.nan;
-plot base_minus9 = if strike_minus9_gex then strike_minus9_gex else double.nan;
-plot base_minus10 = if strike_minus10_gex then strike_minus10_gex else double.nan;
+plot base_minus1 = if strikes >0 and absValue(strike_minus1_gex) > min_gex then strike_minus1_gex else double.nan;
+plot base_minus2 = if strikes > 1 and absValue(strike_minus2_gex) > min_gex then strike_minus2_gex else double.nan;
+plot base_minus3 = if strikes > 2 and absValue(strike_minus3_gex) > min_gex then strike_minus3_gex else double.nan;
+plot base_minus4 = if strikes > 3 and absValue(strike_minus4_gex) > min_gex then strike_minus4_gex else double.nan;
+plot base_minus5 = if strikes > 4 and absValue(strike_minus5_gex) > min_gex then strike_minus5_gex else double.nan;
+plot base_minus6 = if strikes > 5 and absValue(strike_minus6_gex) > min_gex then strike_minus6_gex else double.nan;
+plot base_minus7 = if strikes > 6 and absValue(strike_minus7_gex) > min_gex then strike_minus7_gex else double.nan;
+plot base_minus8 = if strikes > 7 and absValue(strike_minus8_gex) > min_gex then strike_minus8_gex else double.nan;
+plot base_minus9 = if strikes > 8 and absValue(strike_minus9_gex) > min_gex then strike_minus9_gex else double.nan;
+plot base_minus10 = if strikes > 9 and absValue(strike_minus10_gex) > min_gex then strike_minus10_gex else double.nan;
+
+base.setlineweight(5);
+base_plus1.setlineweight(5);
+base_plus2.setlineweight(5);
+base_plus3.setlineweight(5);
+base_plus4.setlineweight(5);
+base_plus5.setlineweight(5);
+base_plus6.setlineweight(5);
+base_plus7.setlineweight(5);
+base_plus8.setlineweight(5);
+base_plus9.setlineweight(5);
+base_plus10.setlineweight(5);
+
+base_minus1.setlineweight(5);
+base_minus2.setlineweight(5);
+base_minus3.setlineweight(5);
+base_minus4.setlineweight(5);
+base_minus5.setlineweight(5);
+base_minus6.setlineweight(5);
+base_minus7.setlineweight(5);
+base_minus8.setlineweight(5);   
+base_minus9.setlineweight(5);
+base_minus10.setlineweight(5);
+
+
+
+#AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right)  and  BarNumber() <= HighestAll(lastbar + shift_line_right) and strike_minus1_gex and strikes > 0 then yes else no, strike_minus1, strike_minus1_gex, if strike_minus1_gex > 0 then Color.GREEN else Color.RED, if strike_minus1_gex > 0 then yes else no);
+
+# only display at current bar, price location = gex level, text = strike
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_base_gex) > min_gex , strike_base_gex, base_strike, if strike_base_gex > 0 then Color.GREEN else Color.RED, if strike_base_gex > 0 then yes else no);
+
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus1_gex) > min_gex, strike_minus1_gex, strike_minus1, if strike_minus1_gex > 0 then Color.GREEN else Color.RED, if strike_minus1_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber())  and absValue( strike_minus2_gex) > min_gex, strike_minus2_gex, strike_minus2, if strike_minus2_gex > 0 then Color.GREEN else Color.RED, if strike_minus2_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus3_gex) > min_gex, strike_minus3_gex, strike_minus3, if strike_minus3_gex > 0 then Color.GREEN else Color.RED, if strike_minus3_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus4_gex) > min_gex, strike_minus4_gex, strike_minus4, if strike_minus4_gex > 0 then Color.GREEN else Color.RED, if strike_minus4_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus5_gex) > min_gex, strike_minus5_gex, strike_minus5, if strike_minus5_gex > 0 then Color.GREEN else Color.RED, if strike_minus5_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus6_gex) > min_gex, strike_minus6_gex, strike_minus6, if strike_minus6_gex > 0 then Color.GREEN else Color.RED, if strike_minus6_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus7_gex) > min_gex, strike_minus7_gex, strike_minus7, if strike_minus7_gex > 0 then Color.GREEN else Color.RED, if strike_minus7_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus8_gex) > min_gex, strike_minus8_gex, strike_minus8, if strike_minus8_gex > 0 then Color.GREEN else Color.RED, if strike_minus8_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus9_gex) > min_gex, strike_minus9_gex, strike_minus9, if strike_minus9_gex > 0 then Color.GREEN else Color.RED, if strike_minus9_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_minus10_gex) > min_gex, strike_minus10_gex, strike_minus10, if strike_minus10_gex > 0 then Color.GREEN else Color.RED, if strike_minus10_gex > 0 then yes else no);
+
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus1_gex) > min_gex, strike_plus1_gex, strike_plus1, if strike_plus1_gex > 0 then Color.GREEN else Color.RED, if strike_plus1_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber())  and absValue( strike_plus2_gex) > min_gex, strike_plus2_gex, strike_plus2, if strike_plus2_gex > 0 then Color.GREEN else Color.RED, if strike_plus2_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus3_gex) > min_gex, strike_plus3_gex, strike_plus3, if strike_plus3_gex > 0 then Color.GREEN else Color.RED, if strike_plus3_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus4_gex) > min_gex, strike_plus4_gex, strike_plus4, if strike_plus4_gex > 0 then Color.GREEN else Color.RED, if strike_plus4_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus5_gex) > min_gex, strike_plus5_gex, strike_plus5, if strike_plus5_gex > 0 then Color.GREEN else Color.RED, if strike_plus5_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus6_gex) > min_gex, strike_plus6_gex, strike_plus6, if strike_plus6_gex > 0 then Color.GREEN else Color.RED, if strike_plus6_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus7_gex) > min_gex, strike_plus7_gex, strike_plus7, if strike_plus7_gex > 0 then Color.GREEN else Color.RED, if strike_plus7_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus8_gex) > min_gex, strike_plus8_gex, strike_plus8, if strike_plus8_gex > 0 then Color.GREEN else Color.RED, if strike_plus8_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus9_gex) > min_gex, strike_plus9_gex, strike_plus9, if strike_plus9_gex > 0 then Color.GREEN else Color.RED, if strike_plus9_gex > 0 then yes else no);
+AddChartBubble(BarNumber()== HighestAll(BarNumber()) and absValue( strike_plus10_gex) > min_gex, strike_plus10_gex, strike_plus10, if strike_plus10_gex > 0 then Color.GREEN else Color.RED, if strike_plus10_gex > 0 then yes else no);
