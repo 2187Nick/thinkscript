@@ -1,4 +1,4 @@
-# near_the_money_spx_upper_v2
+# near_the_money_spx_upper_v4
 # 2187Nick
 declare upper;
 declare once_per_bar;
@@ -9,10 +9,10 @@ input symbol = "SPXW";
 input set_base_strike_maunually = no;
 input manual_base_strike = 4025;
 
-
 def CurrentYear = GetYear()-2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString = CurrentYear*10000+CurrentMonth*100+CurrentDOM;
 
 def rounding_factor = if Strike_Spacing > 1 and Strike_Spacing < 25 then -1 else if Strike_Spacing > 24 then -2 else 0;
 
@@ -35,35 +35,35 @@ def strike_otm2_put = base - Strike_Spacing - Strike_Spacing * 1;
 #def strike_otm3_put = base - Strike_Spacing - Strike_Spacing * 2;
 
 
-def call_close_itm1 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_itm1_call));
-def call_volume_itm1 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_itm1_call));
+def call_close_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
+def call_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
 
-def call_close_itm2 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_itm2_call));
-def call_volume_itm2 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_itm2_call));
+def call_close_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
+def call_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
 
-def call_close_price = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_atm));
-def call_volume = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_atm));
+def call_close_price = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_atm));
+def call_volume = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_atm));
 
-def call_close_otm1 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_otm1_call));
-def call_volume1 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_otm1_call));
+def call_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
+def call_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
 
-def call_close_otm2 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_otm2_call));
-def call_volume2 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"C")) else Concat(CurrentDOM,"C")) + AsPrice(strike_otm2_call));
+def call_close_otm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call)); 
+def call_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call));
 
-def put_close_price_itm1 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_itm1_put));
-def put_volume_itm1 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_itm1_put));
+def put_close_price_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
+def put_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
 
-def put_close_price_itm2 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_itm2_put));
-def put_volume_itm2 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_itm2_put));
+def put_close_price_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
+def put_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
 
-def put_close_price = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_atm));
-def put_volume = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_atm));
+def put_close_price = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_atm));
+def put_volume = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_atm));
 
-def put_close_otm1 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_otm1_put));
-def put_volume1 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_otm1_put));
+def put_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
+def put_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
 
-def put_close_otm2 = close("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_otm2_put));
-def put_volume2 = volume("." + symbol + CurrentYear + (if CurrentMonth < 10 then Concat(0,(CurrentMonth)) else AsText(CurrentMonth)) + (if CurrentDOM < 10 then Concat(0,(CurrentDOM+"P")) else Concat(CurrentDOM,"P")) + AsPrice(strike_otm2_put));
+def put_close_otm2= close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
+def put_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
 
 def call_itm_volumexclose = if isNaN(call_volume_itm1 * call_close_itm1 * 100) then 0 else call_volume_itm1 * call_close_itm1 * 100;
 def call_itm_volumexclose1 = if isNaN(call_volume_itm2 * call_close_itm2 * 100) then 0 else call_volume_itm2 * call_close_itm2 * 100;
@@ -85,4 +85,3 @@ def moving_up = if close[1] > close[2] then 1 else 0;
 def moving_down = close[1] < close[2];
 AddChartBubble(puts_current_total > Premium_Extreme_Level and moving_down, low, "BUY" , color.Green);
 AddChartBubble(calls_current_total > Premium_Extreme_Level and moving_up ==1, high, "SELL" , color.red);
-
