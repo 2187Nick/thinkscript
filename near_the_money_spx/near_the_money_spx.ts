@@ -42,35 +42,35 @@ def strike_otm1_put = base - Strike_Spacing;
 def strike_otm2_put = base - Strike_Spacing - Strike_Spacing * 1;
 #def strike_otm3_put = base - Strike_Spacing - Strike_Spacing * 2;
 
-def call_close_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
-def call_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
+def call_close_itm1 = close("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
+def call_volume_itm1 = volume("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_itm1_call));
 
-def call_close_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
-def call_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
+def call_close_itm2 = close("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
+def call_volume_itm2 = volume("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_itm2_call));
 
-def call_close_price = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_atm));
-def call_volume = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_atm));
+def call_close_price = close("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_atm));
+def call_volume = volume("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_atm));
 
-def call_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
-def call_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
+def call_close_otm1 = close("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
+def call_volume1 = volume("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_otm1_call));
 
-def call_close_otm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call)); 
-def call_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call));
+def call_close_otm2 = close("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call)); 
+def call_volume2 = volume("." + symbol + AsPrice(DateString) +"C" + AsPrice(strike_otm2_call));
 
-def put_close_price_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
-def put_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
+def put_close_price_itm1 = close("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
+def put_volume_itm1 = volume("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_itm1_put));
 
-def put_close_price_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
-def put_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
+def put_close_price_itm2 = close("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
+def put_volume_itm2 = volume("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_itm2_put));
 
-def put_close_price = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_atm));
-def put_volume = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_atm));
+def put_close_price = close("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_atm));
+def put_volume = volume("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_atm));
 
-def put_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
-def put_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
+def put_close_otm1 = close("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
+def put_volume1 = volume("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_otm1_put));
 
-def put_close_otm2= close("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
-def put_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
+def put_close_otm2= close("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
+def put_volume2 = volume("." + symbol + AsPrice(DateString) +"P" + AsPrice(strike_otm2_put));
 
 def call_itm_volumexclose = if IsNaN(call_volume_itm1 * call_close_itm1 * 100) then 0 else call_volume_itm1 * call_close_itm1 * 100;
 def call_itm_volumexclose1 = if IsNaN(call_volume_itm2 * call_close_itm2 * 100) then 0 else call_volume_itm2 * call_close_itm2 * 100;
