@@ -1,5 +1,5 @@
 🚀 This monitors for a peak in option call premium at the highs and peak in option put premium at the lows.
-*** New version May 16, 2023
+*** Oct 10 2023  VIX version not currently working. Use the SPY version for now. 
 
 Category: Mean Reversion
 
