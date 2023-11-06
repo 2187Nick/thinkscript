@@ -127,7 +127,7 @@ def lastbar = if IsNaN(close[-1]) and !IsNaN(close)
               then BarNumber()  
               else lastbar[1]; 
 
-AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarNumber() <= HighestAll(lastbar +  shift_line_right), "Live  open_interest",color.white,Curve.LONG_DASH);
+AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarNumber() <= HighestAll(lastbar +  shift_line_right), "Open Interest",color.white,Curve.LONG_DASH);
 
 ## We plot the open_interest using tos bar numbers. Normally a full horizontal line would be 
 ## plotted across then full length of the chart. Using if statement I narrow down the area of the line
