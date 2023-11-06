@@ -22,8 +22,6 @@ def floor_or_ceiling = if roundup then Ceil(openlevel / 10) * 10 else Floor(open
 def PutStrike = floor_or_ceiling;
 def CallStrike = floor_or_ceiling;
 
-def putOptionVolumeTest = if IsNaN(volume("." + symbol + "P" + AsPrice(PutStrike - strikeSpacing * 0)+":XCME")) then 0 else volume("." + Symbol + "P" + AsPrice(PutStrike - strikeSpacing * 0)+":XCME");
-
 ### Put Option volume
 def putOptionvolume = if IsNaN(volume("." + symbol + "P"+ AsPrice(PutStrike - strikeSpacing * 0)+":XCME", agg)) then 0 else volume("." + symbol + "P"+ AsPrice(PutStrike - strikeSpacing * 0)+":XCME", agg);
 
