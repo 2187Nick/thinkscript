@@ -1,4 +1,4 @@
-# openInterest_vertical_axis_v4_labels
+# openInterest_vertical_axis_v4
 # Twitter 2187Nick
 declare upper;
 declare once_per_bar;
