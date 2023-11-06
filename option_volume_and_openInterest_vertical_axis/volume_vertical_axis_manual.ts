@@ -1,116 +1,125 @@
-
-# volume_vertical_axis_manual
-# Twitter @2187Nick
+# volume_vertical_axis_v4
+# Nov 5, 2023. Updated datestring formula
+# Twitter 2187Nick
 declare upper;
 declare once_per_bar;
-input OptionSeries_YYMMDD = "221216";
-input strikeSpacing = 2.5;
+def CurrentYear = GetYear()-2000;
+def CurrentMonth = GetMonth();
+def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString_auto = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 231117;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+input strikeSpacing = 1;
 input roundup = no;
-input openintline = 100;
 input shift_line_right = 10;# negative numbers plot in candle area, positive in expansion 
 input division = 1000; # divides the open interest by this number. Gives user option to reduce size of bar plots.
 input space = .05; # the vertical space between the put open interest bar and call open interest bar.
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
-AddLabel(yes, OptionSeries_YYMMDD + "C", GlobalColor("CallColor"));
-AddLabel(yes, OptionSeries_YYMMDD + "P", GlobalColor("PutColor"));
+AddLabel(yes,  "Vol: " + AsPrice(GetYear()) + AsPrice(DateString) + "C", GlobalColor("CallColor"));
+AddLabel(yes,  "Vol: " +  AsPrice(GetYear()) + AsPrice(DateString) + "P", GlobalColor("PutColor"));
 def agg = AggregationPeriod.DAY;
+
 def openlevel = close(period = agg);
 def floor_or_ceiling = if roundup then Ceil(openlevel / 10) * 10 else Floor(openlevel / 10) * 10;
 def PutStrike = floor_or_ceiling;
 def CallStrike = floor_or_ceiling;
 
 ### Put Option Volume
-def putOptionVolume = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 0), period = agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 0), period = agg);
-def putOptionVolume1 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 1), agg);
-def putOptionVolume2 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 2), agg);
-def putOptionVolume3 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 3), agg);
-def putOptionVolume4 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 4), agg);
-def putOptionVolume5 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 5), agg);
-def putOptionVolume6 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 6), agg);
-def putOptionVolume7 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 7), agg);
-def putOptionVolume8 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 8), agg);
-def putOptionVolume9 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 9), agg);
-def putOptionVolume10 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 10), agg);
-def putOptionVolume11 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 11), agg);
-def putOptionVolume13 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 12), agg);
-def putOptionVolume12 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 13), agg);
-def putOptionVolume14 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 14), agg);
-def putOptionVolume15 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 15), agg);
-def putOptionVolume16 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 16), agg);
-def putOptionVolume17 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 17), agg);
-def putOptionVolume18 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 18), agg);
-def putOptionVolume19 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 19), agg);
-def putOptionVolume20 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike - strikeSpacing * 20), agg);
+def putOptionVolume = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 0), agg);
 
-def putOptionVolumea = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 0), agg);
-def putOptionVolume1a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 1), agg);
-def putOptionVolume2a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 2), agg);
-def putOptionVolume3a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 3), agg);
-def putOptionVolume4a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 4), agg);
-def putOptionVolume5a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 5), agg);
-def putOptionVolume6a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 6), agg);
-def putOptionVolume7a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 7), agg);
-def putOptionVolume8a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 8), agg);
-def putOptionVolume9a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 9), agg);
-def putOptionVolume10a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 10), agg);
-def putOptionVolume11a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 11), agg);
-def putOptionVolume13a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 12), agg);
-def putOptionVolume12a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 13), agg);
-def putOptionVolume14a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 14), agg);
-def putOptionVolume15a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 15), agg);
-def putOptionVolume16a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 16), agg);
-def putOptionVolume17a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 17), agg);
-def putOptionVolume18a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 18), agg);
-def putOptionVolume19a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 19), agg);
-def putOptionVolume20a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "P" + AsPrice(PutStrike + strikeSpacing * 20), agg);
+def putOptionVolume1 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 1), agg);
+def putOptionVolume2 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 2), agg);
+def putOptionVolume3 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 3), agg);
+def putOptionVolume4 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 4), agg);
+def putOptionVolume5 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 5), agg);
+def putOptionVolume6 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 6), agg);
+def putOptionVolume7 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 7), agg);
+def putOptionVolume8 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 8), agg);
+def putOptionVolume9 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 9), agg);
+def putOptionVolume10 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 10), agg);
+def putOptionVolume11 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 11), agg);
+def putOptionVolume13 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 12), agg);
+def putOptionVolume12 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 13), agg);
+def putOptionVolume14 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 14), agg);
+def putOptionVolume15 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 15), agg);
+def putOptionVolume16 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 16), agg);
+def putOptionVolume17 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 17), agg);
+def putOptionVolume18 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 18), agg);
+def putOptionVolume19 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 19), agg);
+def putOptionVolume20 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike - strikeSpacing * 20), agg);
+
+def putOptionVolumea = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 0), agg);
+def putOptionVolume1a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 1), agg);
+def putOptionVolume2a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 2), agg);
+def putOptionVolume3a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 3), agg);
+def putOptionVolume4a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 4), agg);
+def putOptionVolume5a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 5), agg);
+def putOptionVolume6a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 6), agg);
+def putOptionVolume7a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 7), agg);
+def putOptionVolume8a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 8), agg);
+def putOptionVolume9a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 9), agg);
+def putOptionVolume10a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 10), agg);
+def putOptionVolume11a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 11), agg);
+def putOptionVolume13a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 12), agg);
+def putOptionVolume12a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 13), agg);
+def putOptionVolume14a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 14), agg);
+def putOptionVolume15a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 15), agg);
+def putOptionVolume16a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 16), agg);
+def putOptionVolume17a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 17), agg);
+def putOptionVolume18a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 18), agg);
+def putOptionVolume19a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 19), agg);
+def putOptionVolume20a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "P" + AsPrice(PutStrike + strikeSpacing * 20), agg);
 
 ###Call Option Volume
-def callOptionVolume = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 0), agg);
+def callOptionVolume = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 0), agg);
 
-def callOptionVolume1 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 1), agg);
-def callOptionVolume2 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 2), agg);
-def callOptionVolume3 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 3), agg);
-def callOptionVolume4 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 4), agg);
-def callOptionVolume5 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 5), agg);
-def callOptionVolume6 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 6), agg);
-def callOptionVolume7 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 7), agg);
-def callOptionVolume8 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 8), agg);
-def callOptionVolume9 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 9), agg);
-def callOptionVolume10 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 10), agg);
-def callOptionVolume11 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 11), agg);
-def callOptionVolume12 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 12), agg);
-def callOptionVolume13 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 13), agg);
-def callOptionVolume14 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 14), agg);
-def callOptionVolume15 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 15), agg);
-def callOptionVolume16 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 16), agg);
-def callOptionVolume17 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 17), agg);
-def callOptionVolume18 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 18), agg);
-def callOptionVolume19 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 19), agg);
-def callOptionVolume20 = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike + strikeSpacing * 20), agg);
+def callOptionVolume1 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 1), agg);
+def callOptionVolume2 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 2), agg);
+def callOptionVolume3 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 3), agg);
+def callOptionVolume4 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 4), agg);
+def callOptionVolume5 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 5), agg);
+def callOptionVolume6 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 6), agg);
+def callOptionVolume7 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 7), agg);
+def callOptionVolume8 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 8), agg);
+def callOptionVolume9 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 9), agg);
+def callOptionVolume10 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 10), agg);
+def callOptionVolume11 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 11), agg);
+def callOptionVolume12 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 12), agg);
+def callOptionVolume13 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 13), agg);
+def callOptionVolume14 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 14), agg);
+def callOptionVolume15 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 15), agg);
+def callOptionVolume16 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 16), agg);
+def callOptionVolume17 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 17), agg);
+def callOptionVolume18 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 18), agg);
+def callOptionVolume19 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 19), agg);
+def callOptionVolume20 = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike + strikeSpacing * 20), agg);
 
-def callOptionVolumea = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 0), agg);
-def callOptionVolume1a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 1), agg);
-def callOptionVolume2a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 2), agg);
-def callOptionVolume3a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 3), agg);
-def callOptionVolume4a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 4), agg);
-def callOptionVolume5a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 5), agg);
-def callOptionVolume6a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 6), agg);
-def callOptionVolume7a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 7), agg);
-def callOptionVolume8a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 8), agg);
-def callOptionVolume9a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 9), agg);
-def callOptionVolume10a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 10), agg);
-def callOptionVolume11a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 11), agg);
-def callOptionVolume13a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 12), agg);
-def callOptionVolume12a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 13), agg);
-def callOptionVolume14a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 14), agg);
-def callOptionVolume15a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 15), agg);
-def callOptionVolume16a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 16), agg);
-def callOptionVolume17a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 17), agg);
-def callOptionVolume18a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 18), agg);
-def callOptionVolume19a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 19), agg);
-def callOptionVolume20a = if IsNaN(volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + OptionSeries_YYMMDD + "C" + AsPrice(CallStrike - strikeSpacing * 20), agg);
+def callOptionVolumea = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 0), agg);
+def callOptionVolume1a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 1), agg);
+def callOptionVolume2a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 2), agg);
+def callOptionVolume3a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 3), agg);
+def callOptionVolume4a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 4), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 4), agg);
+def callOptionVolume5a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 5), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 5), agg);
+def callOptionVolume6a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 6), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 6), agg);
+def callOptionVolume7a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 7), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 7), agg);
+def callOptionVolume8a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 8), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 8), agg);
+def callOptionVolume9a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 9), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 9), agg);
+def callOptionVolume10a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 10), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 10), agg);
+def callOptionVolume11a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 11), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 11), agg);
+def callOptionVolume13a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 12), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 12), agg);
+def callOptionVolume12a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 13), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 13), agg);
+def callOptionVolume14a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 14), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 14), agg);
+def callOptionVolume15a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 15), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 15), agg);
+def callOptionVolume16a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 16), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 16), agg);
+def callOptionVolume17a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 17), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 17), agg);
+def callOptionVolume18a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 18), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 18), agg);
+def callOptionVolume19a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 19), agg);
+def callOptionVolume20a = if IsNaN(volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + CurrentYear + AsPrice(DateString) + "C" + AsPrice(CallStrike - strikeSpacing * 20), agg);
 
 #####################################
 
@@ -118,10 +127,15 @@ def lastbar = if IsNaN(close[-1]) and !IsNaN(close)
               then BarNumber()  
               else lastbar[1]; 
 
-AddVerticalLine(BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right), "Live  Volume",color.white,Curve.LONG_DASH);
+AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarNumber() <= HighestAll(lastbar +  shift_line_right), "Live  Volume",color.white,Curve.LONG_DASH);
+
+## We plot the volume using tos bar numbers. Normally a full horizontal line would be 
+## plotted across then full length of the chart. Using if statement I narrow down the area of the line
+## that is plotted. Example: atmcall( plot line from bar#: (lastbar + 10) to bar#(lastbar+10+ callOptionVolume);
 
 def atmcallstrike = CallStrike;
 plot atmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume / division, 0)) then atmcallstrike else Double.NaN;
+
 def otmcallstrike1 = CallStrike + strikeSpacing;
 plot otmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1 / division, 0)) then otmcallstrike1 else Double.NaN;
 def otmcallstrike2 = CallStrike + strikeSpacing * 2;
@@ -206,12 +220,13 @@ plot itmcall18 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  B
 def itmcallstrike20 = CallStrike - strikeSpacing * 20;
 plot itmcall19 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume20a / division, 0)) then itmcallstrike20 else Double.NaN;
 
-####################
 #PUTS
 def atmputstrike = PutStrike - space;
 plot atmput  = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume / division, 0)) then atmputstrike else Double.NaN;
+
 def itmputstrike1 = PutStrike + strikeSpacing - space;
 plot itmput  = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume1a / division, 0)) then itmputstrike1 else Double.NaN;
+
 def itmPutStrike2 = PutStrike + strikeSpacing * 2 - space;
 plot itmput1 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume2a / division, 0)) then itmPutStrike2 else Double.NaN;
 def itmPutStrike3 = PutStrike + strikeSpacing * 3 - space;
@@ -250,6 +265,7 @@ def itmPutStrike19 = PutStrike + strikeSpacing * 19 - space;
 plot itmput18 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume19a / division, 0)) then itmPutStrike19 else Double.NaN;
 def itmPutStrike20 = PutStrike + strikeSpacing * 20 - space;
 plot itmput19 = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume20a / division, 0)) then itmPutStrike20 else Double.NaN;
+
 
 def otmputstrike1 = PutStrike - strikeSpacing - space;
 plot otmput  = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume1 / division, 0)) then otmputstrike1 else Double.NaN;
@@ -480,11 +496,6 @@ itmput18.SetDefaultColor(GlobalColor("PutColor"));
 itmput19.SetPaintingStrategy(PaintingStrategy.LINE);
 itmput19.SetLineWeight(5);
 itmput19.SetDefaultColor(GlobalColor("PutColor"));
-
-
-
-
-
 otmput.SetPaintingStrategy(PaintingStrategy.LINE);
 otmput.SetLineWeight(5);
 otmput.SetDefaultColor(GlobalColor("PutColor"));
