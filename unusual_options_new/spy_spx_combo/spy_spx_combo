@@ -1,0 +1,756 @@
+# Unusual options spy_spx_combo_V1
+# Need to add this to SPY chart
+# And unusual_options_new to same chart to view SPY Large Option trades
+# Twitter @2187Nick
+
+declare upper;
+declare once_per_bar;
+input symbol = "SPXW";
+input underlying_symbol = "SPX";
+input strikeSpacing = 5.0;
+input Tradesize_Dollars = 500000;
+#input strikes = {default "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+#"10", "11", "12", "13", "14","15", "16", "17", "18", "19", "20"};
+input strikes = 6;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 231020;
+
+def CurrentYear = GetYear() - 2000;
+def CurrentMonth = GetMonth();
+def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString_auto = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM;
+
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+def spy_spx_diff = ABSValue((open(symbol = "SPY", AggregationPeriod.DAY) * 10) - (open(symbol = "SPX", AggregationPeriod.DAY)));
+
+def spx_open = open(symbol = "SPX", period = AggregationPeriod.DAY);
+def base_strike = (Round((spx_open / 5), 0) * 5);
+
+DefineGlobalColor("CallColor", Color.CYAN);
+DefineGlobalColor("PutColor", Color.ORANGE);
+AddLabel(yes, "SPX: " + AsPrice(DateString) + "C", GlobalColor("CallColor"));
+AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
+
+DefineGlobalColor("SPX_Open_Price", color.blue);
+DefineGlobalColor("SPX_Pos_Offset", CreateColor(120, 155, 120));
+DefineGlobalColor("SPX_Neg_Offset", CreateColor(155, 120, 120));
+DefineGlobalColor("SPX_Current_Level", CreateColor(120, 120, 120));
+
+input offset = 10;
+def showBubbleNow = !IsNaN(close) and IsNaN(close[-1]);
+
+# This is roughly the open price of SPX minus 18 and divided by 10
+# This estimates the spy level that would match spx
+def base_strike_spy = (base_strike - spy_spx_diff)/10;
+plot strike_base_spy = base_strike_spy;
+plot strike_plus1_spy = base_strike_spy + (.5);
+plot strike_plus2_spy = base_strike_spy + (.5 *2);
+plot strike_plus3_spy = base_strike_spy + (.5 *3);
+plot strike_plus4_spy = base_strike_spy + (.5 *4);
+plot strike_plus5_spy = base_strike_spy + (.5 *5);
+plot strike_plus6_spy = base_strike_spy + (.5 *6);
+plot strike_plus7_spy = base_strike_spy + (.5 *7);
+plot strike_plus8_spy = base_strike_spy + (.5 *8);
+plot strike_plus9_spy = base_strike_spy + (.5 *9);
+plot strike_plus10_spy = base_strike_spy + (.5 *10);
+plot strike_plus11_spy = base_strike_spy + (.5 *11);
+plot strike_plus12_spy = base_strike_spy + (.5 *12);
+plot strike_plus13_spy = base_strike_spy + (.5 *13);
+plot strike_plus14_spy = base_strike_spy + (.5 *14);
+plot strike_plus15_spy = base_strike_spy + (.5 *15);
+plot strike_plus16_spy = base_strike_spy + (.5 *16);
+plot strike_plus17_spy = base_strike_spy + (.5 *17);
+plot strike_plus18_spy = base_strike_spy + (.5 *18);
+plot strike_plus19_spy = base_strike_spy + (.5 *19);
+plot strike_plus20_spy = base_strike_spy + (.5 *20);
+plot strike_plus21_spy = base_strike_spy + (.5 *21);
+
+plot strike_minus1_spy = base_strike_spy - (.5);
+plot strike_minus2_spy = base_strike_spy - (.5 *2);
+plot strike_minus3_spy = base_strike_spy - (.5 *3);
+plot strike_minus4_spy = base_strike_spy - (.5 *4);
+plot strike_minus5_spy = base_strike_spy - (.5 *5);
+plot strike_minus6_spy = base_strike_spy - (.5 *6);
+plot strike_minus7_spy = base_strike_spy - (.5 *7);
+plot strike_minus8_spy = base_strike_spy - (.5 *8);
+plot strike_minus9_spy = base_strike_spy - (.5 *9);
+plot strike_minus10_spy = base_strike_spy - (.5 *10);
+plot strike_minus11_spy = base_strike_spy - (.5 *11);
+plot strike_minus12_spy = base_strike_spy - (.5 *12);
+plot strike_minus13_spy = base_strike_spy - (.5 *13);
+plot strike_minus14_spy = base_strike_spy - (.5 *14);
+plot strike_minus15_spy = base_strike_spy - (.5 *15);
+plot strike_minus16_spy = base_strike_spy - (.5 *16);
+plot strike_minus17_spy = base_strike_spy - (.5 *17);
+plot strike_minus18_spy = base_strike_spy - (.5 *18);
+plot strike_minus19_spy = base_strike_spy - (.5 *19);
+plot strike_minus20_spy = base_strike_spy - (.5 *20);
+plot strike_minus21_spy = base_strike_spy - (.5 *21);
+
+def strike_base = base_strike;
+def strike_plus1 = base_strike + strikeSpacing;
+def strike_plus2 = base_strike + strikeSpacing * 2;
+def strike_plus3 = base_strike + strikeSpacing * 3;
+def strike_plus4 = base_strike + strikeSpacing * 4;
+def strike_plus5 = base_strike + strikeSpacing * 5;
+def strike_plus6 = base_strike + strikeSpacing * 6;
+def strike_plus7 = base_strike + strikeSpacing * 7;
+def strike_plus8 = base_strike + strikeSpacing * 8;
+def strike_plus9 = base_strike + strikeSpacing * 9;
+def strike_plus10 = base_strike + strikeSpacing * 10;
+def strike_plus11 = base_strike + strikeSpacing * 11;
+def strike_plus12 = base_strike + strikeSpacing * 12;
+def strike_plus13 = base_strike + strikeSpacing * 13;
+def strike_plus14 = base_strike + strikeSpacing * 14;
+def strike_plus15 = base_strike + strikeSpacing * 15;
+def strike_plus16 = base_strike + strikeSpacing * 16;
+def strike_plus17 = base_strike + strikeSpacing * 17;
+def strike_plus18 = base_strike + strikeSpacing * 18;
+def strike_plus19 = base_strike + strikeSpacing * 19;
+def strike_plus20 = base_strike + strikeSpacing * 20;
+def strike_plus21 = base_strike + strikeSpacing * 21;
+
+def strike_minus1 = base_strike - strikeSpacing;
+def strike_minus2 = base_strike - strikeSpacing * 2;
+def strike_minus3 = base_strike - strikeSpacing * 3;
+def strike_minus4 = base_strike - strikeSpacing * 4;
+def strike_minus5 = base_strike - strikeSpacing * 5;
+def strike_minus6 = base_strike - strikeSpacing * 6;
+def strike_minus7 = base_strike - strikeSpacing * 7;
+def strike_minus8 = base_strike - strikeSpacing * 8;
+def strike_minus9 = base_strike - strikeSpacing * 9;
+def strike_minus10 = base_strike - strikeSpacing * 10;
+def strike_minus11 = base_strike - strikeSpacing * 11;
+def strike_minus12 = base_strike - strikeSpacing * 12;
+def strike_minus13 = base_strike - strikeSpacing * 13;
+def strike_minus14 = base_strike - strikeSpacing * 14;
+def strike_minus15 = base_strike - strikeSpacing * 15;
+def strike_minus16 = base_strike - strikeSpacing * 16;
+def strike_minus17 = base_strike - strikeSpacing * 17;
+def strike_minus18 = base_strike - strikeSpacing * 18;
+def strike_minus19 = base_strike - strikeSpacing * 19;
+def strike_minus20 = base_strike - strikeSpacing * 20;
+def strike_minus21 = base_strike - strikeSpacing * 21;
+
+### Put Option Volume
+def putOptionVolume = if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_base))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_base));
+#addlabel(yes, "putOptionVolume: " + putOptionVolume, color.cyan);
+def putOptionVolume1 =  if strikes < 1 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus1))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus1));
+def putOptionVolume2 =  if strikes < 2 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus2))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus2));
+def putOptionVolume3 =  if strikes < 3 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus3))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus3));
+def putOptionVolume4 = if strikes < 4 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus4))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus4));
+def putOptionVolume5 = if strikes < 5 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus5))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus5));
+def putOptionVolume6 = if strikes < 6 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus6))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus6));
+def putOptionVolume7 = if strikes < 7 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus7))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus7));
+def putOptionVolume8 = if strikes < 8 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus8))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus8));
+def putOptionVolume9 = if strikes < 9 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus9))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus9));
+def putOptionVolume10 = if strikes < 10 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus10))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus10));
+def putOptionVolume11 = if strikes < 11 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus11))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus11));
+def putOptionVolume12 = if strikes < 12 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus12))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus12));
+def putOptionVolume13 = if strikes < 13 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus13))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus13));
+def putOptionVolume14 = if strikes < 14 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus14))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus14));
+def putOptionVolume15 = if strikes < 15 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus15))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus15));
+def putOptionVolume16 = if strikes < 16 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus16))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus16));
+def putOptionVolume17 = if strikes < 17 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus17))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus17));
+def putOptionVolume18 = if strikes < 18 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus18))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus18));
+def putOptionVolume19 = if strikes < 19 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus19))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus19));
+def putOptionVolume20 = if strikes < 20 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus20))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus20));
+
+def putOptionVolume1a =  if strikes < 1 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus1))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus1));
+def putOptionVolume2a =  if strikes < 2 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus2))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus2));
+def putOptionVolume3a =  if strikes < 3 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus3))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus3));
+def putOptionVolume4a = if strikes < 4 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus4))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus4));
+def putOptionVolume5a = if strikes < 5 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus5))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus5));
+def putOptionVolume6a = if strikes < 6 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus6))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus6));
+def putOptionVolume7a = if strikes < 7 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus7))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus7));
+def putOptionVolume8a = if strikes < 8 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus8))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus8));
+def putOptionVolume9a = if strikes < 9 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus9))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus9));
+def putOptionVolume10a = if strikes < 10 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus10))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus10));
+def putOptionVolume11a = if strikes < 11 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus11))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus11));
+def putOptionVolume12a = if strikes < 12 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus12))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus12));
+def putOptionVolume13a = if strikes < 13 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus13))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus13));
+def putOptionVolume14a = if strikes < 14 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus14))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus14));
+def putOptionVolume15a = if strikes < 15 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus15))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus15));
+def putOptionVolume16a = if strikes < 16 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus16))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus16));
+def putOptionVolume17a = if strikes < 17 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus17))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus17));
+def putOptionVolume18a = if strikes < 18 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus18))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus18));
+def putOptionVolume19a = if strikes < 19 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus19))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus19));
+def putOptionVolume20a = if strikes < 20 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus20))) then 0 else volume("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus20));
+
+###Call Option Volume
+def callOptionVolume = if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_base))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_base));
+def callOptionVolume1 =  if strikes < 1 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus1))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus1));
+def callOptionVolume2 =  if strikes < 2 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus2))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus2));
+def callOptionVolume3 =  if strikes < 3 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus3))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus3));
+def callOptionVolume4 = if strikes < 4 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus4))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus4));
+def callOptionVolume5 = if strikes < 5 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus5))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus5));
+def callOptionVolume6 = if strikes < 6 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus6))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus6));
+def callOptionVolume7 = if strikes < 7 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus7))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus7));
+def callOptionVolume8 = if strikes < 8 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus8))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus8));
+def callOptionVolume9 = if strikes < 9 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus9))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus9));
+def callOptionVolume10 = if strikes < 10 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus10))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus10));
+def callOptionVolume11 = if strikes < 11 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus11))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus11));
+def callOptionVolume12 = if strikes < 12 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus12))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus12));
+def callOptionVolume13 = if strikes < 13 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus13))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus13));
+def callOptionVolume14 = if strikes < 14 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus14))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus14));
+def callOptionVolume15 = if strikes < 15 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus15))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus15));
+def callOptionVolume16 = if strikes < 16 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus16))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus16));
+def callOptionVolume17 = if strikes < 17 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus17))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus17));
+def callOptionVolume18 = if strikes < 18 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus18))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus18));
+def callOptionVolume19 = if strikes < 19 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus19))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus19));
+def callOptionVolume20 = if strikes < 20 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus20))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus20));
+
+def callOptionVolume1a =  if strikes < 1 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus1))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus1));
+def callOptionVolume2a =  if strikes < 2 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus2))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus2));
+def callOptionVolume3a =  if strikes < 3 then 0 else if IsNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus3))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus3));
+def callOptionVolume4a = if strikes < 4 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus4))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus4));
+def callOptionVolume5a = if strikes < 5 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus5))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus5));
+def callOptionVolume6a = if strikes < 6 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus6))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus6));
+def callOptionVolume7a = if strikes < 7 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus7))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus7));
+def callOptionVolume8a = if strikes < 8 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus8))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus8));
+def callOptionVolume9a = if strikes < 9 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus9))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus9));
+def callOptionVolume10a = if strikes < 10 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus10))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus10));
+def callOptionVolume11a = if strikes < 11 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus11))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus11));
+def callOptionVolume12a = if strikes < 12 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus12))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus12));
+def callOptionVolume13a = if strikes < 13 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus13))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus13));
+def callOptionVolume14a = if strikes < 14 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus14))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus14));
+def callOptionVolume15a = if strikes < 15 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus15))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus15));
+def callOptionVolume16a = if strikes < 16 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus16))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus16));
+def callOptionVolume17a = if strikes < 17 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus17))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus17));
+def callOptionVolume18a = if strikes < 18 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus18))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus18));
+def callOptionVolume19a = if strikes < 19 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus19))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus19));
+def callOptionVolume20a = if strikes < 20 then 0 else if isNaN(volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus20))) then 0 else volume("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus20));
+
+### Put Option ohlc4
+def putOptionohlc4 = if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_base))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_base));
+def putOptionohlc41 =  if strikes < 1 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus1))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus1));
+def putOptionohlc42 =  if strikes < 2 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus2))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus2));
+def putOptionohlc43 = if strikes < 3 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus3))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus3));
+def putOptionohlc44 = if strikes < 4 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus4))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus4));
+def putOptionohlc45 = if strikes < 5 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus5))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus5));
+def putOptionohlc46 = if strikes < 6 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus6))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus6));
+def putOptionohlc47 = if strikes < 7 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus7))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus7));
+def putOptionohlc48 = if strikes < 8 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus8))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus8));
+def putOptionohlc49 =if strikes < 9 then 0 else  if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus9))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus9));
+def putOptionohlc410 = if strikes < 10 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus10))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus10));
+def putOptionohlc411 = if strikes < 11 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus11))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus11));
+def putOptionohlc412 = if strikes < 12 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus12))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus12));
+def putOptionohlc413 = if strikes < 13 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus13))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus13));
+def putOptionohlc414 = if strikes < 14 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus14))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus14));
+def putOptionohlc415 = if strikes < 15 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus15))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus15));
+def putOptionohlc416 = if strikes < 16 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus16))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus16));
+def putOptionohlc417 = if strikes < 17 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus17))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus17));
+def putOptionohlc418 = if strikes < 18 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus18))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus18));
+def putOptionohlc419 = if strikes < 19 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus19))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus19));
+def putOptionohlc420 = if strikes < 20 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus20))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_minus20));
+
+def putOptionohlc41a = if strikes < 1 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus1))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus1));
+def putOptionohlc42a = if strikes < 2 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus2))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus2));
+def putOptionohlc43a = if strikes < 3 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus3))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus3));
+def putOptionohlc44a = if strikes < 4 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus4))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus4));
+def putOptionohlc45a = if strikes < 5 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus5))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus5));
+def putOptionohlc46a = if strikes < 6 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus6))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus6));
+def putOptionohlc47a = if strikes < 7 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus7))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus7));
+def putOptionohlc48a = if strikes < 8 then 0 else  if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus8))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus8));
+def putOptionohlc49a = if strikes < 9 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus9))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus9));
+def putOptionohlc410a = if strikes < 10 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus10))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus10));
+def putOptionohlc411a = if strikes < 11 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus11))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus11));
+def putOptionohlc412a = if strikes < 12 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus12))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus12));
+def putOptionohlc413a = if strikes < 13 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus13))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus13));
+def putOptionohlc414a = if strikes < 14 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus14))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus14));
+def putOptionohlc415a = if strikes < 15 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus15))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus15));
+def putOptionohlc416a = if strikes < 16 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus16))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus16));
+def putOptionohlc417a = if strikes < 17 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus17))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus17));
+def putOptionohlc418a = if strikes < 18 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus18))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus18));
+def putOptionohlc419a = if strikes < 19 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus19))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus19));
+def putOptionohlc420a = if strikes < 20 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus20))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "P" + AsPrice(strike_plus20));
+
+
+####Call Option ohlc4
+def callOptionohlc4 = if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_base))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_base));
+def callOptionohlc41 = if strikes < 1 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus1))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus1));
+def callOptionohlc42 = if strikes < 2 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus2))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus2));
+def callOptionohlc43 = if strikes < 3 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus3))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus3));
+def callOptionohlc44 = if strikes < 4 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus4))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus4));
+def callOptionohlc45 = if strikes < 5 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus5))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus5));
+def callOptionohlc46 = if strikes < 6 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus6))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus6));
+def callOptionohlc47 = if strikes < 7 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus7))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus7));
+def callOptionohlc48 = if strikes < 8 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus8))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus8));
+def callOptionohlc49 = if strikes < 9 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus9))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus9));
+def callOptionohlc410 = if strikes < 10 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus10))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus10));
+def callOptionohlc411 = if strikes < 11 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus11))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus11));
+def callOptionohlc412 = if strikes < 12 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus12))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus12));
+def callOptionohlc413 = if strikes < 13 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus13))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus13));
+def callOptionohlc414 = if strikes < 14 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus14))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus14));
+def callOptionohlc415 = if strikes < 15 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus15))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus15));
+def callOptionohlc416 = if strikes < 16 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus16))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus16));
+def callOptionohlc417 = if strikes < 17 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus17))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus17));
+def callOptionohlc418 = if strikes < 18 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus18))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus18));
+def callOptionohlc419 = if strikes < 19 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus19))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus19));
+def callOptionohlc420 = if strikes < 20 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus20))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_plus20));
+
+def callOptionohlc41a = if strikes < 1 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus1))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus1));
+def callOptionohlc42a = if strikes < 2 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus2))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus2));
+def callOptionohlc43a = if strikes < 3 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus3))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus3));
+def callOptionohlc44a = if strikes < 4 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus4))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus4));
+def callOptionohlc45a = if strikes < 5 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus5))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus5));
+def callOptionohlc46a = if strikes < 6 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus6))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus6));
+def callOptionohlc47a = if strikes < 7 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus7))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus7));
+def callOptionohlc48a = if strikes < 8 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus8))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus8));
+def callOptionohlc49a = if strikes < 9 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus9))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus9));
+def callOptionohlc410a = if strikes < 10 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus10))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus10));
+def callOptionohlc411a = if strikes < 11 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus11))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus11));
+def callOptionohlc412a = if strikes < 12 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus12))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus12));
+def callOptionohlc413a = if strikes < 13 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus13))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus13));
+def callOptionohlc414a = if strikes < 14 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus14))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus14));
+def callOptionohlc415a = if strikes < 15 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus15))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus15));
+def callOptionohlc416a = if strikes < 16 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus16))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus16));
+def callOptionohlc417a = if strikes < 17 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus17))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus17));
+def callOptionohlc418a = if strikes < 18 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus18))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus18));
+def callOptionohlc419a = if strikes < 19 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus19))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus19));
+def callOptionohlc420a = if strikes < 20 then 0 else if IsNaN(ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus20))) then 0 else ohlc4("." + symbol + AsPrice(DateString) + "C" + AsPrice(strike_minus20));
+
+
+######################
+#Chart Bubbles Puts
+
+AddChartBubble(putOptionVolume * putOptionohlc4 * 100 > Tradesize_Dollars, strike_base_spy, "$" + Round((putOptionVolume * putOptionohlc4) / 10, 0) + "K", GlobalColor("PutColor"), no);
+
+AddChartBubble(putOptionVolume1 * putOptionohlc41 * 100 > Tradesize_Dollars, strike_minus1_spy, "$" + Round((putOptionVolume1 * putOptionohlc41) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume2 * putOptionohlc42 * 100 > Tradesize_Dollars, strike_minus2_spy, "$" + Round((putOptionVolume2 * putOptionohlc42) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume3 * putOptionohlc43 * 100 > Tradesize_Dollars, strike_minus3_spy, "$" + Round((putOptionVolume3 * putOptionohlc43) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume4 * putOptionohlc44 * 100 > Tradesize_Dollars, strike_minus4_spy, "$" + Round((putOptionVolume4 * putOptionohlc44) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume5 * putOptionohlc45 * 100 > Tradesize_Dollars, strike_minus5_spy, "$" + Round((putOptionVolume5 * putOptionohlc45) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume6 * putOptionohlc46 * 100 > Tradesize_Dollars, strike_minus6_spy, "$" + Round((putOptionVolume6 * putOptionohlc46) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume7 * putOptionohlc47 * 100 > Tradesize_Dollars, strike_minus7_spy, "$" + Round((putOptionVolume7 * putOptionohlc47) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume8 * putOptionohlc48 * 100 > Tradesize_Dollars, strike_minus8_spy, "$" + Round((putOptionVolume8 * putOptionohlc48) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume9 * putOptionohlc49 * 100 > Tradesize_Dollars, strike_minus9_spy, "$" + Round((putOptionVolume9 * putOptionohlc49) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume10 * putOptionohlc410 * 100 > Tradesize_Dollars, strike_minus10_spy, "$" + Round((putOptionVolume10 * putOptionohlc410) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume11 * putOptionohlc411 * 100 > Tradesize_Dollars, strike_minus11_spy, "$" + Round((putOptionVolume11 * putOptionohlc411) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume12 * putOptionohlc412 * 100 > Tradesize_Dollars, strike_minus12_spy, "$" + Round((putOptionVolume12 * putOptionohlc412) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume13 * putOptionohlc413 * 100 > Tradesize_Dollars, strike_minus13_spy, "$" + Round((putOptionVolume13 * putOptionohlc413) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume14 * putOptionohlc414 * 100 > Tradesize_Dollars, strike_minus14_spy, "$" + Round((putOptionVolume14 * putOptionohlc414) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume15 * putOptionohlc415 * 100 > Tradesize_Dollars, strike_minus15_spy, "$" + Round((putOptionVolume15 * putOptionohlc415) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume16 * putOptionohlc416 * 100 > Tradesize_Dollars, strike_minus16_spy, "$" + Round((putOptionVolume16 * putOptionohlc416) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume17 * putOptionohlc417 * 100 > Tradesize_Dollars, strike_minus17_spy, "$" + Round((putOptionVolume17 * putOptionohlc417) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume18 * putOptionohlc418 * 100 > Tradesize_Dollars, strike_minus18_spy, "$" + Round((putOptionVolume18 * putOptionohlc418) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume19 * putOptionohlc419 * 100 > Tradesize_Dollars, strike_minus19_spy, "$" + Round((putOptionVolume19 * putOptionohlc419) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume20 * putOptionohlc420 * 100 > Tradesize_Dollars, strike_minus20_spy, "$" + Round((putOptionVolume20 * putOptionohlc420) / 10, 0) + "K", GlobalColor("PutColor"), no);
+
+AddChartBubble(putOptionVolume1a * putOptionohlc41a * 100 > Tradesize_Dollars, strike_plus1_spy, "$" + Round((putOptionVolume1a * putOptionohlc41a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume2a * putOptionohlc42a * 100 > Tradesize_Dollars, strike_plus2_spy, "$" + Round((putOptionVolume2a * putOptionohlc42a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume3a * putOptionohlc43a * 100 > Tradesize_Dollars, strike_plus3_spy, "$" + Round((putOptionVolume3a * putOptionohlc43a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume4a * putOptionohlc44a * 100 > Tradesize_Dollars, strike_plus4_spy, "$" + Round((putOptionVolume4a * putOptionohlc44a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume5a * putOptionohlc45a * 100 > Tradesize_Dollars, strike_plus5_spy, "$" + Round((putOptionVolume5a * putOptionohlc45a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume6a * putOptionohlc46a * 100 > Tradesize_Dollars, strike_plus6_spy, "$" + Round((putOptionVolume6a * putOptionohlc46a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume7a * putOptionohlc47a * 100 > Tradesize_Dollars, strike_plus7_spy, "$" + Round((putOptionVolume7a * putOptionohlc47a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume8a * putOptionohlc48a * 100 > Tradesize_Dollars, strike_plus8_spy, "$" + Round((putOptionVolume8a * putOptionohlc48a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume9a * putOptionohlc49a * 100 > Tradesize_Dollars, strike_plus9_spy, "$" + Round((putOptionVolume9a * putOptionohlc49a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume10a * putOptionohlc410a * 100 > Tradesize_Dollars, strike_plus10_spy, "$" + Round((putOptionVolume10a * putOptionohlc410a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume11a * putOptionohlc411a * 100 > Tradesize_Dollars, strike_plus11_spy, "$" + Round((putOptionVolume11a * putOptionohlc411a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume12a * putOptionohlc412a * 100 > Tradesize_Dollars, strike_plus12_spy, "$" + Round((putOptionVolume12a * putOptionohlc412a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume13a * putOptionohlc413a * 100 > Tradesize_Dollars, strike_plus13_spy, "$" + Round((putOptionVolume13a * putOptionohlc413a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume14a * putOptionohlc414a * 100 > Tradesize_Dollars, strike_plus14_spy, "$" + Round((putOptionVolume14a * putOptionohlc414a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume15a * putOptionohlc415a * 100 > Tradesize_Dollars, strike_plus15_spy, "$" + Round((putOptionVolume15a * putOptionohlc415a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume16a * putOptionohlc416a * 100 > Tradesize_Dollars, strike_plus16_spy, "$" + Round((putOptionVolume16a * putOptionohlc416a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume17a * putOptionohlc417a * 100 > Tradesize_Dollars, strike_plus17_spy, "$" + Round((putOptionVolume17a * putOptionohlc417a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume18a * putOptionohlc418a * 100 > Tradesize_Dollars, strike_plus18_spy, "$" + Round((putOptionVolume18a * putOptionohlc418a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume19a * putOptionohlc419a * 100 > Tradesize_Dollars, strike_plus19_spy, "$" + Round((putOptionVolume19a * putOptionohlc419a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+AddChartBubble(putOptionVolume20a * putOptionohlc420a * 100 > Tradesize_Dollars, strike_plus20_spy, "$" + Round((putOptionVolume20a * putOptionohlc420a) / 10, 0) + "K", GlobalColor("PutColor"), no);
+
+
+#Chart Bubbles for Calls
+AddChartBubble(callOptionVolume * callOptionohlc4 * 100 > Tradesize_Dollars, strike_base_spy, "$" + Round((callOptionVolume * callOptionohlc4) / 10, 0) + "K", GlobalColor("CallColor"), no);
+
+AddChartBubble(callOptionVolume1 * callOptionohlc41 * 100 > Tradesize_Dollars, strike_plus1_spy, "$" + Round((callOptionVolume1 * callOptionohlc41) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume2 * callOptionohlc42 * 100 > Tradesize_Dollars, strike_plus2_spy, "$" + Round((callOptionVolume2 * callOptionohlc42) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 3 and callOptionVolume3 * callOptionohlc43 * 100 > Tradesize_Dollars, strike_plus3_spy, "$" + Round((callOptionVolume3 * callOptionohlc43) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 4 and callOptionVolume4 * callOptionohlc44 * 100 > Tradesize_Dollars, strike_plus4_spy, "$" + Round((callOptionVolume4 * callOptionohlc44) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 5 and callOptionVolume5 * callOptionohlc45 * 100 > Tradesize_Dollars, strike_plus5_spy, "$" + Round((callOptionVolume5 * callOptionohlc45) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 6 and callOptionVolume6 * callOptionohlc46 * 100 > Tradesize_Dollars, strike_plus6_spy, "$" + Round((callOptionVolume6 * callOptionohlc46) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 7 and callOptionVolume7 * callOptionohlc47 * 100 > Tradesize_Dollars, strike_plus7_spy, "$" + Round((callOptionVolume7 * callOptionohlc47) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 8 and callOptionVolume8 * callOptionohlc48 * 100 > Tradesize_Dollars, strike_plus8_spy, "$" + Round((callOptionVolume8 * callOptionohlc48) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 9 and callOptionVolume9 * callOptionohlc49 * 100 > Tradesize_Dollars, strike_plus9_spy, "$" + Round((callOptionVolume9 * callOptionohlc49) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 10 and callOptionVolume10 * callOptionohlc410 * 100 > Tradesize_Dollars, strike_plus10_spy, "$" + Round((callOptionVolume10 * callOptionohlc410) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 11 and callOptionVolume11 * callOptionohlc411 * 100 > Tradesize_Dollars, strike_plus11_spy, "$" + Round((callOptionVolume11 * callOptionohlc411) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 12 and callOptionVolume12 * callOptionohlc412 * 100 > Tradesize_Dollars, strike_plus12_spy, "$" + Round((callOptionVolume12 * callOptionohlc412) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 13 and callOptionVolume13 * callOptionohlc413 * 100 > Tradesize_Dollars, strike_plus13_spy, "$" + Round((callOptionVolume13 * callOptionohlc413) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 14 and callOptionVolume14 * callOptionohlc414 * 100 > Tradesize_Dollars, strike_plus14_spy, "$" + Round((callOptionVolume14 * callOptionohlc414) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 15 and callOptionVolume15 * callOptionohlc415 * 100 > Tradesize_Dollars, strike_plus15_spy, "$" + Round((callOptionVolume15 * callOptionohlc415) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 16 and callOptionVolume16 * callOptionohlc416 * 100 > Tradesize_Dollars, strike_plus16_spy, "$" + Round((callOptionVolume16 * callOptionohlc416) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 17 and callOptionVolume17 * callOptionohlc417 * 100 > Tradesize_Dollars, strike_plus17_spy, "$" + Round((callOptionVolume17 * callOptionohlc417) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 18 and callOptionVolume18 * callOptionohlc418 * 100 > Tradesize_Dollars, strike_plus18_spy, "$" + Round((callOptionVolume18 * callOptionohlc418) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 19 and callOptionVolume19 * callOptionohlc419 * 100 > Tradesize_Dollars, strike_plus19_spy, "$" + Round((callOptionVolume19 * callOptionohlc419) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(strikes >= 20 and callOptionVolume20 * callOptionohlc420 * 100 > Tradesize_Dollars, strike_plus20_spy, "$" + Round((callOptionVolume20 * callOptionohlc420) / 10, 0) + "K", GlobalColor("CallColor"), no);
+
+AddChartBubble(callOptionVolume1a * callOptionohlc41a * 100 > Tradesize_Dollars, strike_minus1_spy, "$" + Round((callOptionVolume1a * callOptionohlc41a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume2a * callOptionohlc42a * 100 > Tradesize_Dollars, strike_minus2_spy, "$" + Round((callOptionVolume2a * callOptionohlc42a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume3a * callOptionohlc43a * 100 > Tradesize_Dollars, strike_minus3_spy, "$" + Round((callOptionVolume3a * callOptionohlc43a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume4a * callOptionohlc44a * 100 > Tradesize_Dollars, strike_minus4_spy, "$" + Round((callOptionVolume4a * callOptionohlc44a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume5a * callOptionohlc45a * 100 > Tradesize_Dollars, strike_minus5_spy, "$" + Round((callOptionVolume5a * callOptionohlc45a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume6a * callOptionohlc46a * 100 > Tradesize_Dollars, strike_minus6_spy, "$" + Round((callOptionVolume6a * callOptionohlc46a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume7a * callOptionohlc47a * 100 > Tradesize_Dollars, strike_minus7_spy, "$" + Round((callOptionVolume7a * callOptionohlc47a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume8a * callOptionohlc48a * 100 > Tradesize_Dollars, strike_minus8_spy, "$" + Round((callOptionVolume8a * callOptionohlc48a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume9a * callOptionohlc49a * 100 > Tradesize_Dollars, strike_minus9_spy, "$" + Round((callOptionVolume9a * callOptionohlc49a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume10a * callOptionohlc410a * 100 > Tradesize_Dollars, strike_minus10_spy, "$" + Round((callOptionVolume10a * callOptionohlc410a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume11a * callOptionohlc411a * 100 > Tradesize_Dollars, strike_minus11_spy, "$" + Round((callOptionVolume11a * callOptionohlc411a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume12a * callOptionohlc412a * 100 > Tradesize_Dollars, strike_minus12_spy, "$" + Round((callOptionVolume12a * callOptionohlc412a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume13a * callOptionohlc413a * 100 > Tradesize_Dollars, strike_minus13_spy, "$" + Round((callOptionVolume13a * callOptionohlc413a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume14a * callOptionohlc414a * 100 > Tradesize_Dollars, strike_minus14_spy, "$" + Round((callOptionVolume14a * callOptionohlc414a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume15a * callOptionohlc415a * 100 > Tradesize_Dollars, strike_minus15_spy, "$" + Round((callOptionVolume15a * callOptionohlc415a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume16a * callOptionohlc416a * 100 > Tradesize_Dollars, strike_minus16_spy, "$" + Round((callOptionVolume16a * callOptionohlc416a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume17a * callOptionohlc417a * 100 > Tradesize_Dollars, strike_minus17_spy, "$" + Round((callOptionVolume17a * callOptionohlc417a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume18a * callOptionohlc418a * 100 > Tradesize_Dollars, strike_minus18_spy, "$" + Round((callOptionVolume18a * callOptionohlc418a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume19a * callOptionohlc419a * 100 > Tradesize_Dollars, strike_minus19_spy, "$" + Round((callOptionVolume19a * callOptionohlc419a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+AddChartBubble(callOptionVolume20a * callOptionohlc420a * 100 > Tradesize_Dollars, strike_minus20_spy, "$" + Round((callOptionVolume20a * callOptionohlc420a) / 10, 0) + "K", GlobalColor("CallColor"), no);
+
+strike_minus1_spy.SetHiding(strikes <= 0);
+strike_plus1_spy.SetHiding(strikes <= 0);
+strike_minus2_spy.SetHiding(strikes <= 1);
+strike_plus2_spy.SetHiding(strikes <= 1);
+strike_minus3_spy.SetHiding(strikes <= 2);
+strike_plus3_spy.SetHiding(strikes <= 2);
+strike_minus4_spy.SetHiding(strikes <= 3);
+strike_plus4_spy.SetHiding(strikes <= 3);
+strike_minus5_spy.SetHiding(strikes <= 4);
+strike_plus5_spy.SetHiding(strikes <= 4);
+strike_minus6_spy.SetHiding(strikes <= 5);
+strike_plus6_spy.SetHiding(strikes <= 5);
+strike_minus7_spy.SetHiding(strikes <= 6);
+strike_plus7_spy.SetHiding(strikes <= 6);
+strike_minus8_spy.SetHiding(strikes <= 7);
+strike_plus8_spy.SetHiding(strikes <= 7);
+strike_minus9_spy.SetHiding(strikes <= 8);
+strike_plus9_spy.SetHiding(strikes <= 8);
+strike_minus10_spy.SetHiding(strikes <= 9);
+strike_plus10_spy.SetHiding(strikes <= 9);
+strike_minus11_spy.SetHiding(strikes <= 10);
+strike_plus11_spy.SetHiding(strikes <= 10);
+strike_minus12_spy.SetHiding(strikes <= 11);
+strike_plus12_spy.SetHiding(strikes <= 11);
+strike_minus13_spy.SetHiding(strikes <= 12);
+strike_plus13_spy.SetHiding(strikes <= 12);
+strike_minus14_spy.SetHiding(strikes <= 13);
+strike_plus14_spy.SetHiding(strikes <= 13);
+strike_minus15_spy.SetHiding(strikes <= 14);
+strike_plus15_spy.SetHiding(strikes <= 14);
+strike_minus16_spy.SetHiding(strikes <= 15);
+strike_plus16_spy.SetHiding(strikes <= 15);
+strike_minus17_spy.SetHiding(strikes <= 16);
+strike_plus17_spy.SetHiding(strikes <= 16);
+strike_minus18_spy.SetHiding(strikes <= 17);
+strike_plus18_spy.SetHiding(strikes <= 17);
+strike_minus19_spy.SetHiding(strikes <= 18);
+strike_plus19_spy.SetHiding(strikes <= 18);
+strike_minus20_spy.SetHiding(strikes <= 19);
+strike_plus20_spy.SetHiding(strikes <= 19);
+strike_minus21_spy.SetHiding(strikes <= 20);
+strike_plus21_spy.SetHiding(strikes <= 20);
+
+
+strike_base_spy.SetDefaultColor(GlobalColor("SPX_Open_Price"));
+strike_base_spy.SetLineWeight(2);
+strike_base_spy.HideBubble();
+strike_base_spy.HideTitle();
+
+AddChartBubble(showBubbleNow[offset], strike_base_spy, strike_base, strike_base_spy.TakeValueColor());
+strike_base_spy.SetStyle(Curve.FIRM);
+AddChartBubble(showBubbleNow[offset], strike_base_spy, "OPEN", strike_base_spy.TakeValueColor(),no);
+strike_base_spy.SetStyle(Curve.FIRM);
+
+strike_plus1_spy.SetLineWeight(1);
+strike_plus1_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus1_spy.HideBubble();
+strike_plus1_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset], strike_plus1_spy, strike_plus1, strike_plus1_spy.TakeValueColor());
+strike_plus1_spy.SetStyle(Curve.FIRM);
+
+strike_plus2_spy.SetLineWeight(1);
+strike_plus2_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus2_spy.HideBubble();
+strike_plus2_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >1, strike_plus2_spy, strike_plus2, strike_plus2_spy.TakeValueColor());
+strike_plus2_spy.SetStyle(Curve.FIRM);
+
+strike_plus3_spy.SetLineWeight(1);
+strike_plus3_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus3_spy.HideBubble();
+strike_plus3_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >2, strike_plus3_spy, strike_plus3, strike_plus3_spy.TakeValueColor());
+strike_plus3_spy.SetStyle(Curve.FIRM);
+
+strike_plus4_spy.SetLineWeight(1);
+strike_plus4_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus4_spy.HideBubble();
+strike_plus4_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >3, strike_plus4_spy, strike_plus4, strike_plus4_spy.TakeValueColor());
+strike_plus4_spy.SetStyle(Curve.FIRM);
+
+strike_plus5_spy.SetLineWeight(1);
+strike_plus5_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus5_spy.HideBubble();
+strike_plus5_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >4, strike_plus5_spy, strike_plus5, strike_plus5_spy.TakeValueColor());
+strike_plus5_spy.SetStyle(Curve.FIRM);
+
+strike_plus6_spy.SetLineWeight(1);
+strike_plus6_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus6_spy.HideBubble();
+strike_plus6_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >5, strike_plus6_spy, strike_plus6, strike_plus6_spy.TakeValueColor());
+strike_plus6_spy.SetStyle(Curve.FIRM);
+
+strike_plus7_spy.SetLineWeight(1);
+strike_plus7_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus7_spy.HideBubble();
+strike_plus7_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >6, strike_plus7_spy, strike_plus7, strike_plus7_spy.TakeValueColor());
+strike_plus7_spy.SetStyle(Curve.FIRM);
+
+strike_plus8_spy.SetLineWeight(1);
+strike_plus8_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus8_spy.HideBubble();
+strike_plus8_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >7, strike_plus8_spy, strike_plus8, strike_plus8_spy.TakeValueColor());
+strike_plus8_spy.SetStyle(Curve.FIRM);
+
+strike_plus9_spy.SetLineWeight(1);
+strike_plus9_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus9_spy.HideBubble();
+strike_plus9_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >8, strike_plus9_spy, strike_plus9, strike_plus9_spy.TakeValueColor());
+strike_plus9_spy.SetStyle(Curve.FIRM);
+
+strike_plus10_spy.SetLineWeight(1);
+strike_plus10_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus10_spy.HideBubble();
+strike_plus10_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >9, strike_plus10_spy, strike_plus10, strike_plus10_spy.TakeValueColor());
+strike_plus10_spy.SetStyle(Curve.FIRM);
+
+strike_plus11_spy.SetLineWeight(1);
+strike_plus11_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus11_spy.HideBubble();
+strike_plus11_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >10, strike_plus11_spy, strike_plus11, strike_plus11_spy.TakeValueColor());
+strike_plus11_spy.SetStyle(Curve.FIRM);
+
+strike_plus12_spy.SetLineWeight(1);
+strike_plus12_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus12_spy.HideBubble();
+strike_plus12_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >11, strike_plus12_spy, strike_plus12, strike_plus12_spy.TakeValueColor());
+strike_plus12_spy.SetStyle(Curve.FIRM);
+
+strike_plus13_spy.SetLineWeight(1);
+strike_plus13_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus13_spy.HideBubble();
+strike_plus13_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >12, strike_plus13_spy, strike_plus13, strike_plus13_spy.TakeValueColor());
+strike_plus13_spy.SetStyle(Curve.FIRM);
+
+strike_plus14_spy.SetLineWeight(1);
+strike_plus14_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus14_spy.HideBubble();
+strike_plus14_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >13, strike_plus14_spy, strike_plus14, strike_plus14_spy.TakeValueColor());
+strike_plus14_spy.SetStyle(Curve.FIRM);
+
+strike_plus15_spy.SetLineWeight(1);
+strike_plus15_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus15_spy.HideBubble();
+strike_plus15_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >14, strike_plus15_spy, strike_plus15, strike_plus15_spy.TakeValueColor());
+strike_plus15_spy.SetStyle(Curve.FIRM);
+
+strike_plus16_spy.SetLineWeight(1);
+strike_plus16_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus16_spy.HideBubble();
+strike_plus16_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >15, strike_plus16_spy, strike_plus16, strike_plus16_spy.TakeValueColor());
+strike_plus16_spy.SetStyle(Curve.FIRM);
+
+strike_plus17_spy.SetLineWeight(1);
+strike_plus17_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus17_spy.HideBubble();
+strike_plus17_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >16, strike_plus17_spy, strike_plus17, strike_plus17_spy.TakeValueColor());
+strike_plus17_spy.SetStyle(Curve.FIRM);
+
+strike_plus18_spy.SetLineWeight(1);
+strike_plus18_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus18_spy.HideBubble();
+strike_plus18_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >17, strike_plus18_spy, strike_plus18, strike_plus18_spy.TakeValueColor());
+strike_plus18_spy.SetStyle(Curve.FIRM);
+
+strike_plus19_spy.SetLineWeight(1);
+strike_plus19_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus19_spy.HideBubble();
+strike_plus19_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >18, strike_plus19_spy, strike_plus19, strike_plus19_spy.TakeValueColor());
+strike_plus19_spy.SetStyle(Curve.FIRM);
+
+strike_plus20_spy.SetLineWeight(1);
+strike_plus20_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus20_spy.HideBubble();
+strike_plus20_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >19, strike_plus20_spy, strike_plus20, strike_plus20_spy.TakeValueColor());
+strike_plus20_spy.SetStyle(Curve.FIRM);
+
+strike_plus21_spy.SetLineWeight(1);
+strike_plus21_spy.SetDefaultColor(GlobalColor("SPX_Pos_Offset"));
+strike_plus21_spy.HideBubble();
+strike_plus21_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >20, strike_plus21_spy, strike_plus21, strike_plus21_spy.TakeValueColor());
+strike_plus21_spy.SetStyle(Curve.FIRM);
+
+
+strike_minus1_spy.SetLineWeight(1);
+strike_minus1_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus1_spy.HideBubble();
+strike_minus1_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset], strike_minus1_spy, strike_minus1, strike_minus1_spy.TakeValueColor(), no);
+strike_minus1_spy.SetStyle(Curve.FIRM);
+
+strike_minus2_spy.SetLineWeight(1);
+strike_minus2_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus2_spy.HideBubble();
+strike_minus2_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >1, strike_minus2_spy, strike_minus2, strike_minus2_spy.TakeValueColor(), no);
+strike_minus2_spy.SetStyle(Curve.FIRM);
+
+strike_minus3_spy.SetLineWeight(1);
+strike_minus3_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus3_spy.HideBubble();
+strike_minus3_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >2, strike_minus3_spy, strike_minus3, strike_minus3_spy.TakeValueColor(), no);
+strike_minus3_spy.SetStyle(Curve.FIRM);
+
+strike_minus4_spy.SetLineWeight(1);
+strike_minus4_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus4_spy.HideBubble();
+strike_minus4_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >3, strike_minus4_spy, strike_minus4, strike_minus4_spy.TakeValueColor(), no);
+strike_minus4_spy.SetStyle(Curve.FIRM);
+
+strike_minus5_spy.SetLineWeight(1);
+strike_minus5_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus5_spy.HideBubble();
+strike_minus5_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >4, strike_minus5_spy, strike_minus5, strike_minus5_spy.TakeValueColor(), no);
+strike_minus5_spy.SetStyle(Curve.FIRM);
+
+strike_minus6_spy.SetLineWeight(1);
+strike_minus6_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus6_spy.HideBubble();
+strike_minus6_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >5, strike_minus6_spy, strike_minus6, strike_minus6_spy.TakeValueColor(), no);
+strike_minus6_spy.SetStyle(Curve.FIRM);
+
+strike_minus7_spy.SetLineWeight(1);
+strike_minus7_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus7_spy.HideBubble();
+strike_minus7_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >6, strike_minus7_spy, strike_minus7, strike_minus7_spy.TakeValueColor(), no);
+strike_minus7_spy.SetStyle(Curve.FIRM);
+
+strike_minus8_spy.SetLineWeight(1);
+strike_minus8_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus8_spy.HideBubble();
+strike_minus8_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >7, strike_minus8_spy, strike_minus8, strike_minus8_spy.TakeValueColor(), no);
+strike_minus8_spy.SetStyle(Curve.FIRM);
+
+strike_minus9_spy.SetLineWeight(1);
+strike_minus9_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus9_spy.HideBubble();
+strike_minus9_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >8, strike_minus9_spy, strike_minus9, strike_minus9_spy.TakeValueColor(), no);
+strike_minus9_spy.SetStyle(Curve.FIRM);
+
+strike_minus10_spy.SetLineWeight(1);
+strike_minus10_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus10_spy.HideBubble();
+strike_minus10_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >9, strike_minus10_spy, strike_minus10, strike_minus10_spy.TakeValueColor(), no);
+strike_minus10_spy.SetStyle(Curve.FIRM);
+
+strike_minus11_spy.SetLineWeight(1);
+strike_minus11_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus11_spy.HideBubble();
+strike_minus11_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >10, strike_minus11_spy, strike_minus11, strike_minus11_spy.TakeValueColor(), no);
+strike_minus11_spy.SetStyle(Curve.FIRM);
+
+strike_minus12_spy.SetLineWeight(1);
+strike_minus12_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus12_spy.HideBubble();
+strike_minus12_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >11, strike_minus12_spy, strike_minus12, strike_minus12_spy.TakeValueColor(), no);
+strike_minus12_spy.SetStyle(Curve.FIRM);
+
+strike_minus13_spy.SetLineWeight(1);
+strike_minus13_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus13_spy.HideBubble();
+strike_minus13_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >12, strike_minus13_spy, strike_minus13, strike_minus13_spy.TakeValueColor(), no);
+strike_minus13_spy.SetStyle(Curve.FIRM);
+
+strike_minus14_spy.SetLineWeight(1);
+strike_minus14_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus14_spy.HideBubble();
+strike_minus14_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >13, strike_minus14_spy, strike_minus14, strike_minus14_spy.TakeValueColor(), no);
+strike_minus14_spy.SetStyle(Curve.FIRM);
+
+strike_minus15_spy.SetLineWeight(1);
+strike_minus15_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus15_spy.HideBubble();
+strike_minus15_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >14, strike_minus15_spy, strike_minus15, strike_minus15_spy.TakeValueColor(), no);
+strike_minus15_spy.SetStyle(Curve.FIRM);
+
+strike_minus16_spy.SetLineWeight(1);
+strike_minus16_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus16_spy.HideBubble();
+strike_minus16_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >15, strike_minus16_spy, strike_minus16, strike_minus16_spy.TakeValueColor(), no);
+strike_minus16_spy.SetStyle(Curve.FIRM);
+
+strike_minus17_spy.SetLineWeight(1);
+strike_minus17_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus17_spy.HideBubble();
+strike_minus17_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >16, strike_minus17_spy, strike_minus17, strike_minus17_spy.TakeValueColor(), no);
+strike_minus17_spy.SetStyle(Curve.FIRM);
+
+strike_minus18_spy.SetLineWeight(1);
+strike_minus18_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus18_spy.HideBubble();
+strike_minus18_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >17, strike_minus18_spy, strike_minus18, strike_minus18_spy.TakeValueColor(), no);
+strike_minus18_spy.SetStyle(Curve.FIRM);
+
+strike_minus19_spy.SetLineWeight(1);
+strike_minus19_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus19_spy.HideBubble();
+strike_minus19_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >18, strike_minus19_spy, strike_minus19, strike_minus19_spy.TakeValueColor(), no);
+strike_minus19_spy.SetStyle(Curve.FIRM);
+
+strike_minus20_spy.SetLineWeight(1);
+strike_minus20_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus20_spy.HideBubble();
+strike_minus20_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >19, strike_minus20_spy, strike_minus20, strike_minus20_spy.TakeValueColor(), no);
+strike_minus20_spy.SetStyle(Curve.FIRM);
+
+strike_minus21_spy.SetLineWeight(1);
+strike_minus21_spy.SetDefaultColor(GlobalColor("SPX_Neg_Offset"));
+strike_minus21_spy.HideBubble();
+strike_minus21_spy.HideTitle();
+AddChartBubble(showBubbleNow[offset] and strikes >20, strike_minus21_spy, strike_minus21, strike_minus21_spy.TakeValueColor(), no);
+strike_minus21_spy.SetStyle(Curve.FIRM);
