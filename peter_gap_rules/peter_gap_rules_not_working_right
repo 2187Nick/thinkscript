@@ -38,40 +38,40 @@ def gap_up = today_open > yday_close+1;
 def gap_down_large = yday_close > today_open+2;
 def gap_up_large = today_open > yday_close+2;
 
-# Peter Gap Rule #1. If we are in an "UP" cycle on 30min and Daily.
-# 1. Price gaps down. Atleast $1.
-# 2. Opening Market breadth is roughly not less than -1500
-# Take a long trade with expecation of the gap filling.
+#Peter Gap Rule #1. If we are in an "UP" cycle on 30min and Daily.
+#1. Price gaps down. Atleast $1.
+#2. Opening Market breadth is roughly not less than -1500
+#There is potential for the gap to fill.
 addlabel(peter_up and gap_down and breadth_open > -1499, "Buy Calls. TGT: " + yday_close);
 def gap_rule1 = peter_up and gap_down and breadth_open > -1499;
 #plot gap1 = if gap_rule1 then 1 else double.nan;
 #gap1.AssignValueColor(color.green);
 addchartbubble(marketOpen and gap_rule1, low, "Up_Cycles\n" + "Gap Down\n"+ "Fill gap", color.green, no);
 
-# Peter Gap Rule #2. If we are in an "UP" cycle on 30min and Daily.
-# 1. Price gaps up. Atleast $2.
-# 2. MarketForecast breadth is roughly greater than 1200.
-# Take a long trade. Low of day likely in the 1st hour. High of day likely after 230.
+#Peter Gap Rule #2. If we are in an "UP" cycle on 30min and Daily.
+#1. Price gaps up. Atleast $2.
+#2. MarketForecast breadth is roughly greater than 1200.
+#Potential for Low of day in the 1st hour. High of day after 200pm EST.
 addlabel(peter_up and gap_up_large and price > 1199, "Buy Calls. Low in 1st Hour. High after 200PM");
 def gap_rule2 = peter_up and gap_up_large and price > 1199;
 #plot gap2 = if gap_rule2 then 1 else double.nan;
 #gap2.AssignValueColor(color.cyan);
 addchartbubble(marketOpen and gap_rule2,low, "Up_Cycles\n"+ "Gap Up and Go", color.cyan, no);
 
-# Peter Gap Rule #3. If we are in a "DOWN" cycle on 30min and Daily.
-# 1. Price gaps up. Atleast $1.
-# 2. Opening Market breadth is roughly less than 1500.
-# Take a short trade with expecation of the gap filling.
+#Peter Gap Rule #3. If we are in a "DOWN" cycle on 30min and Daily.
+#1. Price gaps up. Atleast $1.
+#2. Opening Market breadth is roughly less than 1500.
+#There is potential for the gap to fill.
 addlabel(peter_down and gap_up  and breadth_open < 1501, "Buy Puts. TGT: " + yday_close);
 def gap_rule3 = peter_down and gap_up  and breadth_open < 1501;
 #plot gap3 = if gap_rule3 then 1 else double.nan;
 #gap3.AssignValueColor(color.magenta);
 addchartbubble(marketOpen and gap_rule3,high, "Down_Cycles\n"+ "Gap Up\n" + "Fill Gap", color.magenta, yes);
 
-# Peter Gap Rule #4. If we are in an "DOWN" cycle on 30min and Daily.
-# 1. Price gaps down. Atleast $2.
-# 2. MarketForecast breadth is roughly -1200 or lower.
-# Take a short trade. High of day likely in the 1st hour. Low of day likely after 230.
+#Peter Gap Rule #4. If we are in an "DOWN" cycle on 30min and Daily.
+#1. Price gaps down. Atleast $2.
+#2. MarketForecast breadth is roughly -1200 or lower.
+#Potential for High of day in the 1st hour. Low of day after 200pm EST.
 addlabel(peter_down and gap_down_large and price < -1199, "Buy Puts. High in 1st Hour. Low after 200PM");
 def gap_rule4 = peter_down and gap_down_large and price < -1199;
 #plot gap4 = if gap_rule4 then 1 else double.nan;
