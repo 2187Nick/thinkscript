@@ -7,7 +7,7 @@ declare once_per_bar;
 input min_gex = 50;
 input strikeSpacing = 1.0;
 #input strikes = {default "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-"10"};
+#"10"};
 input strikes = 10;
 
 input roundup = no; # helpful with stock price below $10
