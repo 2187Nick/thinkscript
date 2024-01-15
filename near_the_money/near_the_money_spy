@@ -11,10 +11,7 @@ plot lowline = lowline_millions;
 highline.SetDefaultColor(Color.red);
 lowline.SetDefaultColor(Color.green);
 
-def CurrentYear = GetYear()-2000;
-def CurrentMonth = GetMonth();
-def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
-def DateString = CurrentYear*10000+CurrentMonth*100+CurrentDOM;
+def DateString = GetYYYYMMDD()-20000000;
 
 def rounding_factor = if Strike_Spacing > 1 and Strike_Spacing < 25 then -1 else if Strike_Spacing > 24 then -2 else 0;
 
