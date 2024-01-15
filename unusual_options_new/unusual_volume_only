@@ -15,11 +15,7 @@ input roundup = no; # helpful with stock price below $10
 input ManuallySetExpiration = {default "false", "true"};
 input Expiration_YYMMDD = 231020;
 
-def CurrentYear = GetYear() - 2000;
-def CurrentMonth = GetMonth();
-def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
-def DateString_auto = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM;
-
+def DateString_auto = GetYYYYMMDD()-20000000;
 def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
 
 DefineGlobalColor("CallColor", Color.GREEN);
