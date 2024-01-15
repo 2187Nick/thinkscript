@@ -1,7 +1,4 @@
-def CurrentYear = GetYear()-2000;
-def CurrentMonth = GetMonth();
-def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
-def DateString = CurrentYear*10000+CurrentMonth*100+CurrentDOM+getdaystoexpiration()-1;
+def DateString = GetYYYYMMDD()-20000000+getdaystoexpiration()-1;
 
 ### This works except for monthly expiration. Symbol is issue and daystoexpiration
 
