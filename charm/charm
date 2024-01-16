@@ -1,0 +1,32 @@
+# Charm Jan 14, 2024  1 Day Charm
+# @2187Nick
+# ITM Calls & OTM Puts = Positive Charm
+# OTM Calls & ITM Puts = Negative Charm
+
+# Manually set for testing
+#def Vol = .12;
+#def S = 476; 
+#def exp = 240229;
+#t = 20/365;
+#strike = 472;
+def Vol = imp_volatility(getUnderLyingSymbol());
+def S = close(getUnderlyingSymbol());
+
+def today = GetYYYYMMDD();
+def exp = today + getDaysToExpiration();
+def t = GetDaysToExpiration()/365;
+def strike = getStrike();
+
+def Sqr_IV_2 = Sqr(Vol)*.5 * t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+def d1 = (Log(S / strike) + Sqr_IV_2) / Vol_Sqrt_t;
+def N1d1 = Exp(-.5*Sqr((Log(S / strike) + Sqr_IV_2) / Vol_Sqrt_t)) / Sqrt_2pi;
+def d2 = d1 - Vol_Sqrt_t;
+
+# Divide by 365 to get single day value of Charm.
+def charm = -(N1d1 * (( -d2 * Vol_Sqrt_t ) / ( 2 * t * Vol_Sqrt_t)))/365;
+addlabel(yes, charm, color.cyan);
+
+assignBackgroundColor(color.black);
