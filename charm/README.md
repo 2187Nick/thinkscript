@@ -1,7 +1,7 @@
 Coming Soon..
 
 
-# Gamma Exposure (Naive)
+# Charm Exposure (Naive)
 
 This calculates Charm Exposure per passage of 1 day. (Might add a version that calculates based on passage of 1 hour.) Based on open interest.
 
