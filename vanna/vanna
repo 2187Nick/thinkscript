@@ -1,0 +1,30 @@
+# Vanna Jan 14, 2024 
+# @2187Nick
+# Note: This version uses 0 dividend and 0 interest rate.
+
+# Manually set for testing
+#def Vol = .12;
+#def S = 476; 
+#def exp = 240229;
+#t = 20/365;
+#strike = 472;
+def Vol = imp_volatility(getUnderlyingSymbol());
+def S = close(getUnderlyingSymbol());
+
+def today = GetYYYYMMDD();
+def exp = today + getDaysToExpiration();
+def t = GetDaysToExpiration()/365;
+def strike = getStrike();
+
+def Sqr_IV_2 = Sqr(Vol)*.5 * t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+def d1 = (Log(S / strike) + Sqr_IV_2) / Vol_Sqrt_t;
+def N1d1 = Exp(-.5*Sqr((Log(S / strike) + Sqr_IV_2) / Vol_Sqrt_t)) / Sqrt_2pi;
+def d2 = d1 - Vol_Sqrt_t;
+
+def vanna = -N1d1 * (d2/Vol);
+addlabel(yes, Round(vanna,2), color.cyan);
+
+assignBackgroundColor(color.black);
