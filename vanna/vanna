@@ -11,7 +11,6 @@
 def Vol = imp_volatility(getUnderlyingSymbol());
 def S = close(getUnderlyingSymbol());
 
-def today = GetYYYYMMDD();
 def t = GetDaysToExpiration()/365;
 def strike = getStrike();
 
