@@ -23,7 +23,7 @@ def agg = AggregationPeriod.Day;
 
 def seconds_left = SecondsTillTime(1615);
 def hours_left = seconds_left / 3600;
-def days_left = hours_left / 24;
+def days_left = if hours_left <= 0 then 0 else hours_left / 24;
 
 def Vol = imp_volatility(getSymbol());
 def S = close(period = agg);
