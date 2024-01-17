@@ -8,7 +8,7 @@ input strikeSpacing = 1.0;
 input strikes = 10;
 input shift_line_left = 1;
 input spacing = 1;
-input threshold = 50;
+input threshold = 0;
 
 def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
               then BarNumber()  
