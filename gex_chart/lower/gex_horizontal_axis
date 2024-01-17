@@ -8,6 +8,7 @@ input strikeSpacing = 1.0;
 input strikes = 10;
 input shift_line_left = 1;
 input spacing = 1;
+input threshold = 50;
 
 def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
               then BarNumber()  
@@ -36,6 +37,7 @@ def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
 
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
+AddLabel(yes, "GEX", color.cyan);
 AddLabel(yes, AsPrice(DateString) + "C", GlobalColor("CallColor"));
 AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
 
@@ -176,122 +178,122 @@ plot base = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10))
 base.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base.setLineWeight(5);
 base.AssignValueColor(if strike_base_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) and AbsValue(strike_base_gex) > 0 then yes else no, 0, base_strike, color.gray, if strike_base_gex > 0 then no else yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) and AbsValue(strike_base_gex) > threshold then yes else no, 0, base_strike, color.gray, if strike_base_gex > 0 then no else yes);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) then yes else no, strike_base_gex, strike_base_gex, if strike_base_gex > 0 then Color.Cyan else Color.RED, if strike_base_gex > 0 then yes else no);
 
-plot base_plus1 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9)) and AbsValue(strike_plus1_gex) > 0 then strike_plus1_gex else Double.Nan;
+plot base_plus1 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9)) then strike_plus1_gex else Double.Nan;
 base_plus1.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus1.setLineWeight(5);
 base_plus1.AssignValueColor(if strike_plus1_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9)) then yes else no, strike_plus1_gex, strike_plus1_gex, if strike_plus1_gex > 0 then Color.Cyan else Color.RED, if strike_plus1_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9))  and AbsValue(strike_plus1_gex) > threshold then yes else no, strike_plus1_gex, strike_plus1_gex, if strike_plus1_gex > 0 then Color.Cyan else Color.RED, if strike_plus1_gex > 0 then yes else no);
 
 plot base_plus2 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*8)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*8)) then strike_plus2_gex else Double.Nan;
 base_plus2.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus2.setLineWeight(5);
 base_plus2.AssignValueColor(if strike_plus2_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*8)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*8)) and AbsValue(strike_plus2_gex) > 0 then yes else no, strike_plus2_gex, strike_plus2_gex, if strike_plus2_gex > 0 then Color.Cyan else Color.RED, if strike_plus2_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*8)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*8)) and AbsValue(strike_plus2_gex) > threshold then yes else no, strike_plus2_gex, strike_plus2_gex, if strike_plus2_gex > 0 then Color.Cyan else Color.RED, if strike_plus2_gex > 0 then yes else no);
 plot base_plus3 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*7)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*7)) then strike_plus3_gex else Double.Nan;
 base_plus3.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus3.setLineWeight(5);
 base_plus3.AssignValueColor(if strike_plus3_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*7)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*7)) and AbsValue(strike_plus3_gex) > 0 then yes else no, strike_plus3_gex, strike_plus3_gex, if strike_plus3_gex > 0 then Color.Cyan else Color.RED, if strike_plus3_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*7)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*7)) and AbsValue(strike_plus3_gex) > threshold then yes else no, strike_plus3_gex, strike_plus3_gex, if strike_plus3_gex > 0 then Color.Cyan else Color.RED, if strike_plus3_gex > 0 then yes else no);
 plot base_plus4 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*6)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*6)) then strike_plus4_gex else Double.Nan;
 base_plus4.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus4.setLineWeight(5);
 base_plus4.AssignValueColor(if strike_plus4_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*6)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*6)) and AbsValue(strike_plus4_gex) > 0 then yes else no, strike_plus4_gex, strike_plus4_gex, if strike_plus4_gex > 0 then Color.Cyan else Color.RED, if strike_plus4_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*6)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*6)) and AbsValue(strike_plus4_gex) > threshold then yes else no, strike_plus4_gex, strike_plus4_gex, if strike_plus4_gex > 0 then Color.Cyan else Color.RED, if strike_plus4_gex > 0 then yes else no);
 plot base_plus5 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) then strike_plus5_gex else Double.Nan;
 base_plus5.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus5.setLineWeight(5);
 base_plus5.AssignValueColor(if strike_plus5_gex > 0 then Color.Cyan else Color.RED);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) then yes else no, 0, strike_plus5, color.gray, if strike_plus5_gex > 0 then no else yes);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) and AbsValue(strike_plus5_gex) > 0 then yes else no, strike_plus5_gex, strike_plus5_gex, if strike_plus5_gex > 0 then Color.Cyan else Color.RED, if strike_plus5_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) and AbsValue(strike_plus5_gex) > threshold then yes else no, strike_plus5_gex, strike_plus5_gex, if strike_plus5_gex > 0 then Color.Cyan else Color.RED, if strike_plus5_gex > 0 then yes else no);
 plot base_plus6 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*4)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*4)) then strike_plus6_gex else Double.Nan;
 base_plus6.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus6.setLineWeight(5);
 base_plus6.AssignValueColor(if strike_plus6_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*4)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*4)) and AbsValue(strike_plus6_gex) > 0 then yes else no, strike_plus6_gex, strike_plus6_gex, if strike_plus6_gex > 0 then Color.Cyan else Color.RED, if strike_plus6_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*4)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*4)) and AbsValue(strike_plus6_gex) > threshold then yes else no, strike_plus6_gex, strike_plus6_gex, if strike_plus6_gex > 0 then Color.Cyan else Color.RED, if strike_plus6_gex > 0 then yes else no);
 plot base_plus7 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*3)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*3)) then strike_plus7_gex else Double.Nan;
 base_plus7.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus7.setLineWeight(5);
 base_plus7.AssignValueColor(if strike_plus7_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*3)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*3)) and AbsValue(strike_plus7_gex) > 0 then yes else no, strike_plus7_gex, strike_plus7_gex, if strike_plus7_gex > 0 then Color.Cyan else Color.RED, if strike_plus7_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*3)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*3)) and AbsValue(strike_plus7_gex) > threshold then yes else no, strike_plus7_gex, strike_plus7_gex, if strike_plus7_gex > 0 then Color.Cyan else Color.RED, if strike_plus7_gex > 0 then yes else no);
 
 plot base_plus8 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*2)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*2)) then strike_plus8_gex else Double.Nan;
 base_plus8.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus8.setLineWeight(5);
 base_plus8.AssignValueColor(if strike_plus8_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*2)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*2)) and AbsValue(strike_plus8_gex) > 0 then yes else no, strike_plus8_gex, strike_plus8_gex, if strike_plus8_gex > 0 then Color.Cyan else Color.RED, if strike_plus8_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*2)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*2)) and AbsValue(strike_plus8_gex) > threshold then yes else no, strike_plus8_gex, strike_plus8_gex, if strike_plus8_gex > 0 then Color.Cyan else Color.RED, if strike_plus8_gex > 0 then yes else no);
 
 plot base_plus9 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing)) then strike_plus9_gex else Double.Nan;
 base_plus9.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus9.setLineWeight(5);
 base_plus9.AssignValueColor(if strike_plus9_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing)) and AbsValue(strike_plus9_gex) > 0 then yes else no, strike_plus9_gex, strike_plus9_gex, if strike_plus9_gex > 0 then Color.Cyan else Color.RED, if strike_plus9_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing)) and AbsValue(strike_plus9_gex) > threshold then yes else no, strike_plus9_gex, strike_plus9_gex, if strike_plus9_gex > 0 then Color.Cyan else Color.RED, if strike_plus9_gex > 0 then yes else no);
 
-plot base_plus10 = if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) then strike_plus10_gex else Double.Nan;
+plot base_plus10 = if BarNumber() >= HighestAll(lastbar - (shift_line_left-1)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left-1)) then strike_plus10_gex else Double.Nan;
 base_plus10.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_plus10.setLineWeight(5);
 base_plus10.AssignValueColor(if strike_plus10_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) and AbsValue(strike_plus10_gex) > 0 then yes else no, strike_plus10_gex, strike_plus10_gex, if strike_plus10_gex > 0 then Color.Cyan else Color.RED, if strike_plus10_gex > 0 then yes else no);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) then yes else no, 0, strike_plus10, color.gray, if strike_plus10_gex > 0 then no else yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left-1)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left-1)) and AbsValue(strike_plus10_gex) > threshold then yes else no, strike_plus10_gex, strike_plus10_gex, if strike_plus10_gex > 0 then Color.Cyan else Color.RED, if strike_plus10_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left-1)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left-1)) then yes else no, 0, strike_plus10, color.gray, if strike_plus10_gex > 0 then no else yes);
 
 plot base_minus1 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*11)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*11)) then strike_minus1_gex else Double.Nan;
 base_minus1.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus1.setLineWeight(5);
 base_minus1.AssignValueColor(if strike_minus1_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*11)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*11)) and AbsValue(strike_minus1_gex) > 0 then yes else no, strike_minus1_gex, strike_minus1_gex, if strike_minus1_gex > 0 then Color.Cyan else Color.RED, if strike_minus1_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*11)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*11)) and AbsValue(strike_minus1_gex) > threshold then yes else no, strike_minus1_gex, strike_minus1_gex, if strike_minus1_gex > 0 then Color.Cyan else Color.RED, if strike_minus1_gex > 0 then yes else no);
 
 plot base_minus2 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*12)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*12)) then strike_minus2_gex else Double.Nan;
 base_minus2.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus2.setLineWeight(5);
 base_minus2.AssignValueColor(if strike_minus2_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*12)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*12)) and AbsValue(strike_minus2_gex) > 0 then yes else no, strike_minus2_gex, strike_minus2_gex, if strike_minus2_gex > 0 then Color.Cyan else Color.RED, if strike_minus2_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*12)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*12)) and AbsValue(strike_minus2_gex) > threshold then yes else no, strike_minus2_gex, strike_minus2_gex, if strike_minus2_gex > 0 then Color.Cyan else Color.RED, if strike_minus2_gex > 0 then yes else no);
 plot base_minus3 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*13)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*13)) then strike_minus3_gex else Double.Nan;
 base_minus3.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus3.setLineWeight(5);
 base_minus3.AssignValueColor(if strike_minus3_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*13)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*13))and AbsValue(strike_minus3_gex) > 0  then yes else no, strike_minus3_gex, strike_minus3_gex, if strike_minus3_gex > 0 then Color.Cyan else Color.RED, if strike_minus3_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*13)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*13))and AbsValue(strike_minus3_gex) > threshold  then yes else no, strike_minus3_gex, strike_minus3_gex, if strike_minus3_gex > 0 then Color.Cyan else Color.RED, if strike_minus3_gex > 0 then yes else no);
 plot base_minus4 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*14)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*14)) then strike_minus4_gex else Double.Nan;
 base_minus4.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus4.setLineWeight(5);
 base_minus4.AssignValueColor(if strike_minus4_gex > 0 then Color.Cyan else Color.RED);
 
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*14)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*14))and AbsValue(strike_minus4_gex) > 0  then yes else no, strike_minus4_gex, strike_minus4_gex, if strike_minus4_gex > 0 then Color.Cyan else Color.RED, if strike_minus4_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*14)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*14))and AbsValue(strike_minus4_gex) > threshold  then yes else no, strike_minus4_gex, strike_minus4_gex, if strike_minus4_gex > 0 then Color.Cyan else Color.RED, if strike_minus4_gex > 0 then yes else no);
 plot base_minus5 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15)) then strike_minus5_gex else Double.Nan;
 base_minus5.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus5.setLineWeight(5);
 base_minus5.AssignValueColor(if strike_minus5_gex > 0 then Color.Cyan else Color.RED);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15)) then yes else no, 0, strike_minus5, color.gray, if strike_minus5_gex > 0 then no else yes);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15))and AbsValue(strike_minus5_gex) > 0 then yes else no, strike_minus5_gex, strike_minus5_gex, if strike_minus5_gex > 0 then Color.Cyan else Color.RED, if strike_minus5_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15))and AbsValue(strike_minus5_gex) > threshold then yes else no, strike_minus5_gex, strike_minus5_gex, if strike_minus5_gex > 0 then Color.Cyan else Color.RED, if strike_minus5_gex > 0 then yes else no);
 plot base_minus6 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*16)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*16)) then strike_minus6_gex else Double.Nan;
 base_minus6.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus6.setLineWeight(5);
 base_minus6.AssignValueColor(if strike_minus6_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*16)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*16))and AbsValue(strike_minus6_gex) > 0 then yes else no, strike_minus6_gex, strike_minus6_gex, if strike_minus6_gex > 0 then Color.Cyan else Color.RED, if strike_minus6_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*16)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*16))and AbsValue(strike_minus6_gex) > threshold then yes else no, strike_minus6_gex, strike_minus6_gex, if strike_minus6_gex > 0 then Color.Cyan else Color.RED, if strike_minus6_gex > 0 then yes else no);
 plot base_minus7 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*17)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*17)) then strike_minus7_gex else Double.Nan;
 base_minus7.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus7.setLineWeight(5);
 base_minus7.AssignValueColor(if strike_minus7_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*17)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*17))and AbsValue(strike_minus7_gex) > 0 then yes else no, strike_minus7_gex, strike_minus7_gex, if strike_minus7_gex > 0 then Color.Cyan else Color.RED, if strike_minus7_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*17)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*17))and AbsValue(strike_minus7_gex) > threshold then yes else no, strike_minus7_gex, strike_minus7_gex, if strike_minus7_gex > 0 then Color.Cyan else Color.RED, if strike_minus7_gex > 0 then yes else no);
 
 plot base_minus8 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*18)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*18)) then strike_minus8_gex else Double.Nan;
 base_minus8.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus8.setLineWeight(5);
 base_minus8.AssignValueColor(if strike_minus8_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*18)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*18))and AbsValue(strike_minus8_gex) > 0 then yes else no, strike_minus8_gex, strike_minus8_gex, if strike_minus8_gex > 0 then Color.Cyan else Color.RED, if strike_minus8_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*18)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*18))and AbsValue(strike_minus8_gex) > threshold then yes else no, strike_minus8_gex, strike_minus8_gex, if strike_minus8_gex > 0 then Color.Cyan else Color.RED, if strike_minus8_gex > 0 then yes else no);
 
 plot base_minus9 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*19)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*19)) then strike_minus9_gex else Double.Nan;
 base_minus9.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus9.setLineWeight(5);
 base_minus9.AssignValueColor(if strike_minus9_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*19)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*19))and AbsValue(strike_minus9_gex) > 0 then yes else no, strike_minus9_gex, strike_minus9_gex, if strike_minus9_gex > 0 then Color.Cyan else Color.RED, if strike_minus9_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*19)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*19))and AbsValue(strike_minus9_gex) > threshold then yes else no, strike_minus9_gex, strike_minus9_gex, if strike_minus9_gex > 0 then Color.Cyan else Color.RED, if strike_minus9_gex > 0 then yes else no);
 
 plot base_minus10 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) then strike_minus10_gex else Double.Nan;
 base_minus10.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
 base_minus10.setLineWeight(5);
 base_minus10.AssignValueColor(if strike_minus10_gex > 0 then Color.Cyan else Color.RED);
-AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) and AbsValue(strike_minus10_gex) > 0  then yes else no, strike_minus10_gex,  strike_minus10_gex, if strike_minus10_gex > 0 then Color.Cyan else Color.RED, if strike_minus10_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) and AbsValue(strike_minus10_gex) > threshold  then yes else no, strike_minus10_gex,  strike_minus10_gex, if strike_minus10_gex > 0 then Color.Cyan else Color.RED, if strike_minus10_gex > 0 then yes else no);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) then yes else no, 0, strike_minus10, color.gray, if strike_minus10 > 0 then yes else no);
 #######
 plot zeroline = 0;
