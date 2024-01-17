@@ -1,0 +1,298 @@
+# GEX Horizontal Axis V1 Jan 17, 2023
+# Twitter @2187Nick
+
+declare lower;
+declare once_per_bar;
+
+input strikeSpacing = 1.0;
+input strikes = 10;
+input shift_line_left = 1;
+input spacing = 1;
+
+def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
+              then BarNumber()  
+              else lastbar[1]; 
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 240117;
+def DateString_auto = GetYYYYMMDD() - 20000000;
+def DateString = if ManuallySetExpiration then Expiration_YYMMDD else  DateString_auto;
+
+def agg = AggregationPeriod.Day;
+
+def seconds_left = SecondsTillTime(1615);
+def hours_left = seconds_left / 3600;
+def days_left = hours_left / 24;
+
+def Vol = imp_volatility(getSymbol());
+def S = close(period = agg);
+#addlabel(yes, "S: " + S, color.white);
+def t = ((DateString - DateString_auto) + days_left) / 365;
+#def t = 1/365;
+def Sqr_Vol_2 = Sqr(Vol)*.5* t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+
+DefineGlobalColor("CallColor", Color.GREEN);
+DefineGlobalColor("PutColor", Color.RED);
+AddLabel(yes, AsPrice(DateString) + "C", GlobalColor("CallColor"));
+AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
+
+def openlevel = open(period = agg);
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(openlevel, rounding_factor);
+def base_strike = floor_or_ceiling;
+#addlabel(yes, "centerStrike: " + base_strike);
+
+def strike_base = base_strike;
+def strike_plus1 = base_strike + strikeSpacing;
+def strike_plus2 = base_strike + strikeSpacing * 2;
+def strike_plus3 = base_strike + strikeSpacing * 3;
+def strike_plus4 = base_strike + strikeSpacing * 4;
+def strike_plus5 = base_strike + strikeSpacing * 5;
+def strike_plus6 = base_strike + strikeSpacing * 6;
+def strike_plus7 = base_strike + strikeSpacing * 7;
+def strike_plus8 = base_strike + strikeSpacing * 8;
+def strike_plus9 = base_strike + strikeSpacing * 9;
+def strike_plus10 = base_strike + strikeSpacing * 10;
+
+def strike_minus1 = base_strike - strikeSpacing;
+def strike_minus2 = base_strike - strikeSpacing * 2;
+def strike_minus3 = base_strike - strikeSpacing * 3;
+def strike_minus4 = base_strike - strikeSpacing * 4;
+def strike_minus5 = base_strike - strikeSpacing * 5;
+def strike_minus6 = base_strike - strikeSpacing * 6;
+def strike_minus7 = base_strike - strikeSpacing * 7;
+def strike_minus8 = base_strike - strikeSpacing * 8;
+def strike_minus9 = base_strike - strikeSpacing * 9;
+def strike_minus10 = base_strike - strikeSpacing * 10;
+
+### Put Option open_interest
+def putopen_interest = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_base), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_base), period = agg);
+def putopen_interest1 =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus1), period = agg);
+def putopen_interest2 =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus2), period = agg);
+def putopen_interest3 =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus3), period = agg);
+def putopen_interest4 = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus4), period = agg);
+def putopen_interest5 = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus5), period = agg);
+def putopen_interest6 = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus6), period = agg);
+def putopen_interest7 = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus7), period = agg);
+def putopen_interest8 = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus8), period = agg);
+def putopen_interest9 = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus9), period = agg);
+def putopen_interest10 = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus10), period = agg);
+
+def putopen_interest1a =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus1), period = agg);
+def putopen_interest2a =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus2), period = agg);
+def putopen_interest3a =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus3), period = agg);
+def putopen_interest4a = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus4), period = agg);
+def putopen_interest5a = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus5), period = agg);
+def putopen_interest6a = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus6), period = agg);
+def putopen_interest7a = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus7), period = AggregationPeriod.DAY);
+def putopen_interest8a = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus8), period = agg);
+def putopen_interest9a = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus9), period = agg);
+def putopen_interest10a = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus10), period = agg);
+
+###Call Option open_interest
+def call_open_interest = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_base), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_base), period = agg);
+def call_open_interest1 =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus1), period = agg);
+def call_open_interest2 =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus2), period = agg);
+def call_open_interest3 =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus3), period = agg);
+def call_open_interest4 = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus4), period = agg);
+def call_open_interest5 = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus5), period = agg);
+def call_open_interest6 = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus6), period = agg);
+def call_open_interest7 = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus7), period = agg);
+def call_open_interest8 = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus8), period = agg);
+def call_open_interest9 = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus9), period = agg);
+def call_open_interest10 = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus10), period = agg);
+
+def call_open_interest1a =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus1), period = agg);
+def call_open_interest2a =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus2), period = agg);
+def call_open_interest3a =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus3), period = agg);
+def call_open_interest4a = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus4), period = agg);
+def call_open_interest5a = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus5), period = agg);
+def call_open_interest6a = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus6), period = agg);
+def call_open_interest7a = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus7), period = agg);
+def call_open_interest8a = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus8), period = agg);
+def call_open_interest9a = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus9), period = agg);
+def call_open_interest10a = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus10), period = agg);
+
+#def gamma(S, K, T, r, σ, q):
+#    d1_val = d1_old(S, K, T, r, σ, q)
+#    return math.exp(-q * T) * norm.pdf(d1_val) / (S * σ * math.sqrt(T))
+
+### Gamma
+def strike_base_gamma = (Exp(-(Sqr((Log(S / strike_base) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+#AddLabel(yes, base_strike + "_gamma: " + strike_base_gamma);
+def strike_plus1_gamma = (Exp(-(Sqr((Log(S / strike_plus1) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+#AddLabel(yes, strike_plus1 + "_gamma: " + strike_plus1_gamma);
+def strike_plus2_gamma = (Exp(-(Sqr((Log(S / strike_plus2) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus3_gamma = (Exp(-(Sqr((Log(S / strike_plus3) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus4_gamma = (Exp(-(Sqr((Log(S / strike_plus4) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus5_gamma = (Exp(-(Sqr((Log(S / strike_plus5) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus6_gamma = (Exp(-(Sqr((Log(S / strike_plus6) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus7_gamma = (Exp(-(Sqr((Log(S / strike_plus7) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus8_gamma = (Exp(-(Sqr((Log(S / strike_plus8) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus9_gamma = (Exp(-(Sqr((Log(S / strike_plus9) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_plus10_gamma = (Exp(-(Sqr((Log(S / strike_plus10) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+
+###
+def strike_minus1_gamma = (Exp(-(Sqr((Log(S / strike_minus1) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus2_gamma = (Exp(-(Sqr((Log(S / strike_minus2) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus3_gamma = (Exp(-(Sqr((Log(S / strike_minus3) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus4_gamma = (Exp(-(Sqr((Log(S / strike_minus4) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus5_gamma = (Exp(-(Sqr((Log(S / strike_minus5) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus6_gamma = (Exp(-(Sqr((Log(S / strike_minus6) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus7_gamma = (Exp(-(Sqr((Log(S / strike_minus7) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus8_gamma = (Exp(-(Sqr((Log(S / strike_minus8) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus9_gamma = (Exp(-(Sqr((Log(S / strike_minus9) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+def strike_minus10_gamma = (Exp(-(Sqr((Log(S / strike_minus10) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+
+### GEX
+def strike_base_gex = Round((strike_base_gamma * (call_open_interest - putopen_interest) * S) / 10000, 0);
+def strike_plus1_gex = Round((strike_plus1_gamma * (call_open_interest1 - putopen_interest1a) * S) / 10000, 0);
+def strike_plus2_gex =  Round((strike_plus2_gamma * (call_open_interest2 - putopen_interest2a) * S) / 10000, 0);
+def strike_plus3_gex =  Round((strike_plus3_gamma * (call_open_interest3 - putopen_interest3a) * S) / 10000, 0);
+def strike_plus4_gex =  Round((strike_plus4_gamma * (call_open_interest4 - putopen_interest4a) * S) / 10000, 0);
+def strike_plus5_gex =  Round((strike_plus5_gamma * (call_open_interest5 - putopen_interest5a) * S) / 10000, 0);
+def strike_plus6_gex =  Round((strike_plus6_gamma * (call_open_interest6 - putopen_interest6a) * S) / 10000, 0);
+def strike_plus7_gex =  Round((strike_plus7_gamma * (call_open_interest7 - putopen_interest7a) * S) / 10000, 0);
+def strike_plus8_gex =  Round((strike_plus8_gamma * (call_open_interest8 - putopen_interest8a) * S) / 10000, 0);
+def strike_plus9_gex =  Round((strike_plus9_gamma * (call_open_interest9 - putopen_interest9a) * S) / 10000, 0);
+def strike_plus10_gex =  Round((strike_plus10_gamma * (call_open_interest10 - putopen_interest10a) * S) / 10000, 0);
+def strike_minus1_gex =  Round((strike_minus1_gamma * (call_open_interest1a - putopen_interest1) * S) / 10000, 0);
+def strike_minus2_gex =  Round((strike_minus2_gamma * (call_open_interest2a - putopen_interest2) * S) / 10000, 0);
+def strike_minus3_gex =  Round((strike_minus3_gamma * (call_open_interest3a - putopen_interest3) * S) / 10000, 0);
+def strike_minus4_gex =  Round((strike_minus4_gamma * (call_open_interest4a - putopen_interest4) * S) / 10000, 0);
+def strike_minus5_gex =  Round((strike_minus5_gamma * (call_open_interest5a - putopen_interest5) * S) / 10000, 0);
+def strike_minus6_gex =  Round((strike_minus6_gamma * (call_open_interest6a - putopen_interest6) * S) / 10000, 0);
+def strike_minus7_gex =  Round((strike_minus7_gamma * (call_open_interest7a - putopen_interest7) * S) / 10000, 0);
+def strike_minus8_gex =  Round((strike_minus8_gamma * (call_open_interest8a - putopen_interest8) * S) / 10000, 0);
+def strike_minus9_gex =  Round((strike_minus9_gamma * (call_open_interest9a - putopen_interest9) * S) / 10000, 0);
+def strike_minus10_gex =  Round((strike_minus10_gamma * (call_open_interest10a - putopen_interest10) * S) / 10000, 0);
+
+#####################################
+
+plot base = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) then strike_base_gex else Double.Nan;
+base.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base.setLineWeight(5);
+base.AssignValueColor(if strike_base_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) and AbsValue(strike_base_gex) > 0 then yes else no, 0, base_strike, color.gray, if strike_base_gex > 0 then no else yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*10)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*10)) then yes else no, strike_base_gex, strike_base_gex, if strike_base_gex > 0 then Color.Cyan else Color.RED, if strike_base_gex > 0 then yes else no);
+
+plot base_plus1 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9)) and AbsValue(strike_plus1_gex) > 0 then strike_plus1_gex else Double.Nan;
+base_plus1.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus1.setLineWeight(5);
+base_plus1.AssignValueColor(if strike_plus1_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*9)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*9)) then yes else no, strike_plus1_gex, strike_plus1_gex, if strike_plus1_gex > 0 then Color.Cyan else Color.RED, if strike_plus1_gex > 0 then yes else no);
+
+plot base_plus2 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*8)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*8)) then strike_plus2_gex else Double.Nan;
+base_plus2.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus2.setLineWeight(5);
+base_plus2.AssignValueColor(if strike_plus2_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*8)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*8)) and AbsValue(strike_plus2_gex) > 0 then yes else no, strike_plus2_gex, strike_plus2_gex, if strike_plus2_gex > 0 then Color.Cyan else Color.RED, if strike_plus2_gex > 0 then yes else no);
+plot base_plus3 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*7)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*7)) then strike_plus3_gex else Double.Nan;
+base_plus3.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus3.setLineWeight(5);
+base_plus3.AssignValueColor(if strike_plus3_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*7)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*7)) and AbsValue(strike_plus3_gex) > 0 then yes else no, strike_plus3_gex, strike_plus3_gex, if strike_plus3_gex > 0 then Color.Cyan else Color.RED, if strike_plus3_gex > 0 then yes else no);
+plot base_plus4 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*6)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*6)) then strike_plus4_gex else Double.Nan;
+base_plus4.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus4.setLineWeight(5);
+base_plus4.AssignValueColor(if strike_plus4_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*6)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*6)) and AbsValue(strike_plus4_gex) > 0 then yes else no, strike_plus4_gex, strike_plus4_gex, if strike_plus4_gex > 0 then Color.Cyan else Color.RED, if strike_plus4_gex > 0 then yes else no);
+plot base_plus5 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) then strike_plus5_gex else Double.Nan;
+base_plus5.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus5.setLineWeight(5);
+base_plus5.AssignValueColor(if strike_plus5_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) then yes else no, 0, strike_plus5, color.gray, if strike_plus5_gex > 0 then no else yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*5)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*5)) and AbsValue(strike_plus5_gex) > 0 then yes else no, strike_plus5_gex, strike_plus5_gex, if strike_plus5_gex > 0 then Color.Cyan else Color.RED, if strike_plus5_gex > 0 then yes else no);
+plot base_plus6 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*4)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*4)) then strike_plus6_gex else Double.Nan;
+base_plus6.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus6.setLineWeight(5);
+base_plus6.AssignValueColor(if strike_plus6_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*4)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*4)) and AbsValue(strike_plus6_gex) > 0 then yes else no, strike_plus6_gex, strike_plus6_gex, if strike_plus6_gex > 0 then Color.Cyan else Color.RED, if strike_plus6_gex > 0 then yes else no);
+plot base_plus7 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*3)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*3)) then strike_plus7_gex else Double.Nan;
+base_plus7.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus7.setLineWeight(5);
+base_plus7.AssignValueColor(if strike_plus7_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*3)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*3)) and AbsValue(strike_plus7_gex) > 0 then yes else no, strike_plus7_gex, strike_plus7_gex, if strike_plus7_gex > 0 then Color.Cyan else Color.RED, if strike_plus7_gex > 0 then yes else no);
+
+plot base_plus8 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*2)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*2)) then strike_plus8_gex else Double.Nan;
+base_plus8.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus8.setLineWeight(5);
+base_plus8.AssignValueColor(if strike_plus8_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*2)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*2)) and AbsValue(strike_plus8_gex) > 0 then yes else no, strike_plus8_gex, strike_plus8_gex, if strike_plus8_gex > 0 then Color.Cyan else Color.RED, if strike_plus8_gex > 0 then yes else no);
+
+plot base_plus9 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing)) then strike_plus9_gex else Double.Nan;
+base_plus9.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus9.setLineWeight(5);
+base_plus9.AssignValueColor(if strike_plus9_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing)) and AbsValue(strike_plus9_gex) > 0 then yes else no, strike_plus9_gex, strike_plus9_gex, if strike_plus9_gex > 0 then Color.Cyan else Color.RED, if strike_plus9_gex > 0 then yes else no);
+
+plot base_plus10 = if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) then strike_plus10_gex else Double.Nan;
+base_plus10.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus10.setLineWeight(5);
+base_plus10.AssignValueColor(if strike_plus10_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) and AbsValue(strike_plus10_gex) > 0 then yes else no, strike_plus10_gex, strike_plus10_gex, if strike_plus10_gex > 0 then Color.Cyan else Color.RED, if strike_plus10_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left)) then yes else no, 0, strike_plus10, color.gray, if strike_plus10_gex > 0 then no else yes);
+
+plot base_minus1 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*11)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*11)) then strike_minus1_gex else Double.Nan;
+base_minus1.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus1.setLineWeight(5);
+base_minus1.AssignValueColor(if strike_minus1_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*11)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*11)) and AbsValue(strike_minus1_gex) > 0 then yes else no, strike_minus1_gex, strike_minus1_gex, if strike_minus1_gex > 0 then Color.Cyan else Color.RED, if strike_minus1_gex > 0 then yes else no);
+
+plot base_minus2 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*12)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*12)) then strike_minus2_gex else Double.Nan;
+base_minus2.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus2.setLineWeight(5);
+base_minus2.AssignValueColor(if strike_minus2_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*12)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*12)) and AbsValue(strike_minus2_gex) > 0 then yes else no, strike_minus2_gex, strike_minus2_gex, if strike_minus2_gex > 0 then Color.Cyan else Color.RED, if strike_minus2_gex > 0 then yes else no);
+plot base_minus3 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*13)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*13)) then strike_minus3_gex else Double.Nan;
+base_minus3.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus3.setLineWeight(5);
+base_minus3.AssignValueColor(if strike_minus3_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*13)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*13))and AbsValue(strike_minus3_gex) > 0  then yes else no, strike_minus3_gex, strike_minus3_gex, if strike_minus3_gex > 0 then Color.Cyan else Color.RED, if strike_minus3_gex > 0 then yes else no);
+plot base_minus4 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*14)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*14)) then strike_minus4_gex else Double.Nan;
+base_minus4.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus4.setLineWeight(5);
+base_minus4.AssignValueColor(if strike_minus4_gex > 0 then Color.Cyan else Color.RED);
+
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*14)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*14))and AbsValue(strike_minus4_gex) > 0  then yes else no, strike_minus4_gex, strike_minus4_gex, if strike_minus4_gex > 0 then Color.Cyan else Color.RED, if strike_minus4_gex > 0 then yes else no);
+plot base_minus5 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15)) then strike_minus5_gex else Double.Nan;
+base_minus5.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus5.setLineWeight(5);
+base_minus5.AssignValueColor(if strike_minus5_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15)) then yes else no, 0, strike_minus5, color.gray, if strike_minus5_gex > 0 then no else yes);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*15)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*15))and AbsValue(strike_minus5_gex) > 0 then yes else no, strike_minus5_gex, strike_minus5_gex, if strike_minus5_gex > 0 then Color.Cyan else Color.RED, if strike_minus5_gex > 0 then yes else no);
+plot base_minus6 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*16)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*16)) then strike_minus6_gex else Double.Nan;
+base_minus6.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus6.setLineWeight(5);
+base_minus6.AssignValueColor(if strike_minus6_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*16)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*16))and AbsValue(strike_minus6_gex) > 0 then yes else no, strike_minus6_gex, strike_minus6_gex, if strike_minus6_gex > 0 then Color.Cyan else Color.RED, if strike_minus6_gex > 0 then yes else no);
+plot base_minus7 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*17)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*17)) then strike_minus7_gex else Double.Nan;
+base_minus7.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus7.setLineWeight(5);
+base_minus7.AssignValueColor(if strike_minus7_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*17)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*17))and AbsValue(strike_minus7_gex) > 0 then yes else no, strike_minus7_gex, strike_minus7_gex, if strike_minus7_gex > 0 then Color.Cyan else Color.RED, if strike_minus7_gex > 0 then yes else no);
+
+plot base_minus8 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*18)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*18)) then strike_minus8_gex else Double.Nan;
+base_minus8.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus8.setLineWeight(5);
+base_minus8.AssignValueColor(if strike_minus8_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*18)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*18))and AbsValue(strike_minus8_gex) > 0 then yes else no, strike_minus8_gex, strike_minus8_gex, if strike_minus8_gex > 0 then Color.Cyan else Color.RED, if strike_minus8_gex > 0 then yes else no);
+
+plot base_minus9 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*19)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*19)) then strike_minus9_gex else Double.Nan;
+base_minus9.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus9.setLineWeight(5);
+base_minus9.AssignValueColor(if strike_minus9_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*19)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*19))and AbsValue(strike_minus9_gex) > 0 then yes else no, strike_minus9_gex, strike_minus9_gex, if strike_minus9_gex > 0 then Color.Cyan else Color.RED, if strike_minus9_gex > 0 then yes else no);
+
+plot base_minus10 = if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) then strike_minus10_gex else Double.Nan;
+base_minus10.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus10.setLineWeight(5);
+base_minus10.AssignValueColor(if strike_minus10_gex > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) and AbsValue(strike_minus10_gex) > 0  then yes else no, strike_minus10_gex,  strike_minus10_gex, if strike_minus10_gex > 0 then Color.Cyan else Color.RED, if strike_minus10_gex > 0 then yes else no);
+AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_line_left*spacing*20)) and  BarNumber() <= HighestAll(lastbar - (shift_line_left*spacing*20)) then yes else no, 0, strike_minus10, color.gray, if strike_minus10 > 0 then yes else no);
+#######
+plot zeroline = 0;
+zeroline.SetDEfaultColor(color.dark_gray);
