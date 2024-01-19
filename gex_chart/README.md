@@ -11,6 +11,10 @@ The GEX is displayed in millions.
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/12cbb105-9158-4b49-beb0-d4ecb3774ba6)
 
+# Only bubbles Version
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/cb529cc3-8825-4efa-8ded-9fb833c6ebb0)
+
+
 
 > Chart requirements for optimal use:
 ```bash
