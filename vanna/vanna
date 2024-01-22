@@ -1,0 +1,33 @@
+# Vanna V2 Jan 22, 2024 
+# @2187Nick
+# This uses dividend and interest rate.
+# Use this on the Options Chain Page
+
+# Manually set for testing
+#def Vol = .12;
+#def S = 476; 
+#t = 20/365;
+#strike = 472;
+def Vol = imp_volatility(getUnderlyingSymbol());
+def S = close(getUnderlyingSymbol());
+
+#def today = GetYYYYMMDD();
+def t = GetDaysToExpiration()/365;
+def strike = getStrike();
+def r = getInterestRate();
+def q = getYield();
+
+def r_q_Sqr_Vol_2 = (r-q + 0.5 * Sqr(Vol))* t;
+def Sqr_IV_2 = Sqr(Vol)*.5 * t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+def d1 = (Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t;
+def N1d1 = Exp(-.5*Sqr((Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t)) / 2.5066;
+
+def d2 = d1 - Vol_Sqrt_t;
+
+def vanna = -exp(-q * t) * N1d1 * (d2/Vol);
+addlabel(yes, Round(vanna,2), color.cyan);
+
+assignBackgroundColor(color.black);
