@@ -1,4 +1,4 @@
-# Gamma Vanna Charm Function Jan 19, 2024
+# Gamma Vanna Charm Function Jan 22, 2024
 # Twitter @2187Nick
 # Verify against this calculator:
 # https://perfiliev.co.uk/apps/black-scholes-pricer/
@@ -109,30 +109,30 @@ script cnd
 }
 
 def d1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
-addlabel(yes, strike + "_d1: " + d1, color.yellow);
+#addlabel(yes, strike + "_d1: " + d1, color.yellow);
 
 # for charm call
 def normcdf_d1 = cnd(d1).CND;
-addlabel(yes, strike + "_normcdf_d1: " + normcdf_d1, color.white);
+#addlabel(yes, strike + "_normcdf_d1: " + normcdf_d1, color.white);
 
 # for charm put
 def normcdf_d1_put = cnd(-d1).CND;
-addlabel(yes, strike + "_normcdf_d1_put: " + normcdf_d1_put, color.yellow);
+#addlabel(yes, strike + "_normcdf_d1_put: " + normcdf_d1_put, color.yellow);
 
 def d2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d2;
-addlabel(yes, strike + "_d2: " + d2, color.violet);
+#addlabel(yes, strike + "_d2: " + d2, color.violet);
 
 def N1d1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).N1d1;
-addlabel(yes, strike + "_N1d1: " + N1d1, color.white);
+#addlabel(yes, strike + "_N1d1: " + N1d1, color.white);
 
 def term1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S,normcdf_d1).term1;
 #addlabel(yes, strike + "_term1: " + term1, color.orange);
 
 def vanna_test2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).vanna;
-addlabel(yes, strike + "_vanna2: " + vanna_test2, color.cyan);
+addlabel(yes, strike + "_vanna: " + vanna_test2, color.cyan);
 
 def vex_test2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeVEX;
-addlabel(yes, strike + "_vex2: " + vex_test2, color.violet);
+addlabel(yes, strike + "_vex: " + vex_test2, color.violet);
 
 def cex_test = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, normcdf_d1).strikeCEX;
 addlabel(yes, strike + "_cex: " + cex_test, color.dark_orange);
