@@ -1,0 +1,248 @@
+# GEX Live Volume Bubbles
+# Twitter @2187Nick
+
+declare upper;
+declare once_per_bar;
+input strikeSpacing = 1.0;
+input setThreshold = 500000;
+def threshold = setThreshold/1000;
+input strikes = 10;
+
+input PreMarket = {default "false", "true"};
+def day = if !PreMarket then 0 else 1;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 240216;
+
+def DateString_auto = GetYYYYMMDD()-20000000;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+DefineGlobalColor("CallColor", Color.CYAN);
+DefineGlobalColor("PutColor", Color.violet);
+AddLabel(yes, "Live GEX", GlobalColor("CallColor"));
+AddLabel(yes, GetSymbol() + ": " + AsPrice(DateString) + "C", GlobalColor("CallColor"));
+AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
+
+def agg = AggregationPeriod.DAY;
+def openlevel = open(period = agg);
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(openlevel, rounding_factor);
+def base_strike = floor_or_ceiling;
+
+def seconds_left = SecondsTillTime(1615);
+def hours_left = seconds_left / 3600;
+def days_left = if hours_left <= 0 then 0 else hours_left / 24;
+
+def Vol = imp_volatility(getSymbol());
+#addlabel(yes, "Vol: " + Vol, color.white);
+def S = close();
+#def S = close(period = agg);
+#addlabel(yes, "S_close: " + S, color.white);
+
+def t = ((DateString - DateString_auto) + days_left) / 365;
+#addlabel(yes, "t: " + t);
+#def t = 1/365;
+def Sqr_Vol_2 = Sqr(Vol)*.5* t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+
+plot strike_base = base_strike;
+plot strike_plus1 = base_strike + strikeSpacing;
+plot strike_plus2 = base_strike + strikeSpacing * 2;
+plot strike_plus3 = base_strike + strikeSpacing * 3;
+plot strike_plus4 = base_strike + strikeSpacing * 4;
+plot strike_plus5 = base_strike + strikeSpacing * 5;
+plot strike_plus6 = base_strike + strikeSpacing * 6;
+plot strike_plus7 = base_strike + strikeSpacing * 7;
+plot strike_plus8 = base_strike + strikeSpacing * 8;
+plot strike_plus9 = base_strike + strikeSpacing * 9;
+plot strike_plus10 = base_strike + strikeSpacing * 10;
+plot strike_plus11 = base_strike + strikeSpacing * 11;
+plot strike_plus12 = base_strike + strikeSpacing * 12;
+plot strike_plus13 = base_strike + strikeSpacing * 13;
+plot strike_plus14 = base_strike + strikeSpacing * 14;
+plot strike_plus15 = base_strike + strikeSpacing * 15;
+plot strike_plus16 = base_strike + strikeSpacing * 16;
+plot strike_plus17 = base_strike + strikeSpacing * 17;
+plot strike_plus18 = base_strike + strikeSpacing * 18;
+plot strike_plus19 = base_strike + strikeSpacing * 19;
+plot strike_plus20 = base_strike + strikeSpacing * 20;
+plot strike_plus21 = base_strike + strikeSpacing * 21;
+
+plot strike_minus1 = base_strike - strikeSpacing;
+plot strike_minus2 = base_strike - strikeSpacing * 2;
+plot strike_minus3 = base_strike - strikeSpacing * 3;
+plot strike_minus4 = base_strike - strikeSpacing * 4;
+plot strike_minus5 = base_strike - strikeSpacing * 5;
+plot strike_minus6 = base_strike - strikeSpacing * 6;
+plot strike_minus7 = base_strike - strikeSpacing * 7;
+plot strike_minus8 = base_strike - strikeSpacing * 8;
+plot strike_minus9 = base_strike - strikeSpacing * 9;
+plot strike_minus10 = base_strike - strikeSpacing * 10;
+plot strike_minus11 = base_strike - strikeSpacing * 11;
+plot strike_minus12 = base_strike - strikeSpacing * 12;
+plot strike_minus13 = base_strike - strikeSpacing * 13;
+plot strike_minus14 = base_strike - strikeSpacing * 14;
+plot strike_minus15 = base_strike - strikeSpacing * 15;
+plot strike_minus16 = base_strike - strikeSpacing * 16;
+plot strike_minus17 = base_strike - strikeSpacing * 17;
+plot strike_minus18 = base_strike - strikeSpacing * 18;
+plot strike_minus19 = base_strike - strikeSpacing * 19;
+plot strike_minus20 = base_strike - strikeSpacing * 20;
+plot strike_minus21 = base_strike - strikeSpacing * 21;
+
+
+Script GEX {
+    input strike = 0;
+    input dateString = 0;
+    input Vol = 0;
+    input t = 0;
+    input S = 0;
+    input todayoryday = 0;
+    input Sqr_Vol_2 = 0;
+    input Vol_Sqrt_t = 0;
+    input Vol_Sqrt_t_S = 0;
+    def gamma = (Exp(-.5*(Sqr((Log(S / strike) + Sqr_Vol_2) / Vol_Sqrt_t) )) /2.5066) / Vol_Sqrt_t_S;
+
+    plot strikeGEX = Round((volume("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike))[todayoryday] - volume("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike))[todayoryday]) * gamma*S/1000,0);
+}
+
+def strike_base_gex = GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "strike_base_gex : " + strike_base_gex , color.yellow);
+
+def strike_plus1_gex = GEX(strike_plus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus2_gex = GEX(strike_plus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus3_gex = GEX(strike_plus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus4_gex = GEX(strike_plus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus5_gex = GEX(strike_plus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus6_gex = GEX(strike_plus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus7_gex = GEX(strike_plus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus8_gex = GEX(strike_plus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus9_gex = GEX(strike_plus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus10_gex = GEX(strike_plus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def strike_minus1_gex = GEX(strike_minus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus2_gex = GEX(strike_minus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus3_gex = GEX(strike_minus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus4_gex = GEX(strike_minus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus5_gex = GEX(strike_minus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus6_gex = GEX(strike_minus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus7_gex = GEX(strike_minus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus8_gex = GEX(strike_minus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus9_gex = GEX(strike_minus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus10_gex = GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+######################
+#Chart Bubbles Puts
+
+AddChartBubble(AbsValue(strike_base_gex) > threshold, strike_base, "$" + strike_base_gex + "K", if strike_base_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_base_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus1_gex) > threshold, strike_plus1, "$" + strike_plus1_gex + "K", if strike_plus1_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus1_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus2_gex) > threshold, strike_plus2, "$" + strike_plus2_gex + "K", if strike_plus2_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus2_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus3_gex) > threshold, strike_plus3, "$" + strike_plus3_gex + "K", if strike_plus3_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus3_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus4_gex) > threshold, strike_plus4, "$" + strike_plus4_gex + "K", if strike_plus4_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus4_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus5_gex) > threshold, strike_plus5, "$" + strike_plus5_gex + "K", if strike_plus5_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus5_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus6_gex) > threshold, strike_plus6, "$" + strike_plus6_gex + "K", if strike_plus6_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus6_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus7_gex) > threshold, strike_plus7, "$" + strike_plus7_gex + "K", if strike_plus7_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus7_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus8_gex) > threshold, strike_plus8, "$" + strike_plus8_gex + "K", if strike_plus8_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus8_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus9_gex) > threshold, strike_plus9, "$" + strike_plus9_gex + "K", if strike_plus9_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus9_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_plus10_gex) > threshold, strike_plus10, "$" + strike_plus10_gex + "K", if strike_plus10_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_plus10_gex > 0 then yes else no);
+
+AddChartBubble(AbsValue(strike_minus1_gex) > threshold, strike_minus1, "$" + strike_minus1_gex + "K", if strike_minus1_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus1_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus2_gex) > threshold, strike_minus2, "$" + strike_minus2_gex + "K", if strike_minus2_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus2_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus3_gex) > threshold, strike_minus3, "$" + strike_minus3_gex + "K", if strike_minus3_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus3_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus4_gex) > threshold, strike_minus4, "$" + strike_minus4_gex + "K", if strike_minus4_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus4_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus5_gex) > threshold, strike_minus5, "$" + strike_minus5_gex + "K", if strike_minus5_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus5_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus6_gex) > threshold, strike_minus6, "$" + strike_minus6_gex + "K", if strike_minus6_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus6_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus7_gex) > threshold, strike_minus7, "$" + strike_minus7_gex + "K", if strike_minus7_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus7_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus8_gex) > threshold, strike_minus8, "$" + strike_minus8_gex + "K", if strike_minus8_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus8_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus9_gex) > threshold, strike_minus9, "$" + strike_minus9_gex + "K", if strike_minus9_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus9_gex > 0 then yes else no);
+AddChartBubble(AbsValue(strike_minus10_gex) > threshold, strike_minus10, "$" + strike_minus10_gex + "K", if strike_minus10_gex > 0 then GlobalColor("CallColor") else GlobalColor("PutColor"), if strike_minus10_gex > 0 then yes else no);
+
+strike_minus1.SetHiding(strikes <= 0);
+strike_plus1.SetHiding(strikes <= 0);
+strike_minus2.SetHiding(strikes <= 1);
+strike_plus2.SetHiding(strikes <= 1);
+strike_minus3.SetHiding(strikes <= 2);
+strike_plus3.SetHiding(strikes <= 2);
+strike_minus4.SetHiding(strikes <= 3);
+strike_plus4.SetHiding(strikes <= 3);
+strike_minus5.SetHiding(strikes <= 4);
+strike_plus5.SetHiding(strikes <= 4);
+strike_minus6.SetHiding(strikes <= 5);
+strike_plus6.SetHiding(strikes <= 5);
+strike_minus7.SetHiding(strikes <= 6);
+strike_plus7.SetHiding(strikes <= 6);
+strike_minus8.SetHiding(strikes <= 7);
+strike_plus8.SetHiding(strikes <= 7);
+strike_minus9.SetHiding(strikes <= 8);
+strike_plus9.SetHiding(strikes <= 8);
+strike_minus10.SetHiding(strikes <= 9);
+strike_plus10.SetHiding(strikes <= 9);
+strike_minus11.SetHiding(strikes <= 10);
+strike_plus11.SetHiding(strikes <= 10);
+strike_minus12.SetHiding(strikes <= 11);
+strike_plus12.SetHiding(strikes <= 11);
+strike_minus13.SetHiding(strikes <= 12);
+strike_plus13.SetHiding(strikes <= 12);
+strike_minus14.SetHiding(strikes <= 13);
+strike_plus14.SetHiding(strikes <= 13);
+strike_minus15.SetHiding(strikes <= 14);
+strike_plus15.SetHiding(strikes <= 14);
+strike_minus16.SetHiding(strikes <= 15);
+strike_plus16.SetHiding(strikes <= 15);
+strike_minus17.SetHiding(strikes <= 16);
+strike_plus17.SetHiding(strikes <= 16);
+strike_minus18.SetHiding(strikes <= 17);
+strike_plus18.SetHiding(strikes <= 17);
+strike_minus19.SetHiding(strikes <= 18);
+strike_plus19.SetHiding(strikes <= 18);
+strike_minus20.SetHiding(strikes <= 19);
+strike_plus20.SetHiding(strikes <= 19);
+strike_minus21.SetHiding(strikes <= 20);
+strike_plus21.SetHiding(strikes <= 20);
+
+strike_base.SetDefaultColor(Color.Dark_Gray);
+strike_plus1.SetDefaultColor(Color.Dark_Gray);
+strike_plus2.SetDefaultColor(Color.Dark_Gray);
+strike_plus3.SetDefaultColor(Color.Dark_Gray);
+strike_plus4.SetDefaultColor(Color.Dark_Gray);
+strike_plus5.SetDefaultColor(Color.Dark_Gray);
+strike_plus6.SetDefaultColor(Color.Dark_Gray);
+strike_plus7.SetDefaultColor(Color.Dark_Gray);
+strike_plus8.SetDefaultColor(Color.Dark_Gray);
+strike_plus9.SetDefaultColor(Color.Dark_Gray);
+strike_plus10.SetDefaultColor(Color.Dark_Gray);
+strike_plus11.SetDefaultColor(Color.Dark_Gray);
+strike_plus12.SetDefaultColor(Color.Dark_Gray);
+strike_plus13.SetDefaultColor(Color.Dark_Gray);
+strike_plus14.SetDefaultColor(Color.Dark_Gray);
+strike_plus15.SetDefaultColor(Color.Dark_Gray);
+strike_plus16.SetDefaultColor(Color.Dark_Gray);
+strike_plus17.SetDefaultColor(Color.Dark_Gray);
+strike_plus18.SetDefaultColor(Color.Dark_Gray);
+strike_plus19.SetDefaultColor(Color.Dark_Gray);
+strike_plus20.SetDefaultColor(Color.Dark_Gray);
+strike_plus21.SetDefaultColor(Color.Dark_Gray);
+
+strike_minus1.SetDefaultColor(Color.Dark_Gray);
+strike_minus2.SetDefaultColor(Color.Dark_Gray);
+strike_minus3.SetDefaultColor(Color.Dark_Gray);
+strike_minus4.SetDefaultColor(Color.Dark_Gray);
+strike_minus5.SetDefaultColor(Color.Dark_Gray);
+strike_minus6.SetDefaultColor(Color.Dark_Gray);
+strike_minus7.SetDefaultColor(Color.Dark_Gray);
+strike_minus8.SetDefaultColor(Color.Dark_Gray);
+strike_minus9.SetDefaultColor(Color.Dark_Gray);
+strike_minus10.SetDefaultColor(Color.Dark_Gray);
+strike_minus11.SetDefaultColor(Color.Dark_Gray);
+strike_minus12.SetDefaultColor(Color.Dark_Gray);
+strike_minus13.SetDefaultColor(Color.Dark_Gray);
+strike_minus14.SetDefaultColor(Color.Dark_Gray);
+strike_minus15.SetDefaultColor(Color.Dark_Gray);
+strike_minus16.SetDefaultColor(Color.Dark_Gray);
+strike_minus17.SetDefaultColor(Color.Dark_Gray);
+strike_minus18.SetDefaultColor(Color.Dark_Gray);
+strike_minus19.SetDefaultColor(Color.Dark_Gray);
+strike_minus20.SetDefaultColor(Color.Dark_Gray);
+strike_minus21.SetDefaultColor(Color.Dark_Gray);
