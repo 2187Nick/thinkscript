@@ -1,0 +1,150 @@
+# Gamma Vanna Charm Function Jan 19, 2024
+# Twitter @2187Nick
+# Verify against this calculator:
+# https://perfiliev.co.uk/apps/black-scholes-pricer/
+
+# Note: Must set days to expiration if you are checking a date past the current month.
+
+declare lower;
+declare once_per_bar;
+
+input strike = 480.0;
+
+# If testing premarket then you can only use the previous days Open Interest
+# The Open Interest will update once the market opens.
+input PreMarket = {default "false", "true"};
+def day = if !PreMarket then 0 else 1;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 240216;
+input ManuallySetdte = {default "false", "true"};
+input dte = 25.0;
+
+def DateString_auto = GetYYYYMMDD() - 20000000;
+def DateString = if ManuallySetExpiration then Expiration_YYMMDD else DateString_auto;
+
+def agg = AggregationPeriod.Day;
+
+def InterestRate = getInterestRate();
+def DividendYield = getYield();
+addlabel(yes, "InterestRate: " + AsPercent(InterestRate), color.white);
+addlabel(yes, "DividendYield: " + AsPercent(DividendYield), color.white);
+
+def seconds_left = SecondsTillTime(1615);
+def hours_left = seconds_left / 3600;
+def days_left = if hours_left <= 0 then 0 else hours_left / 24;
+
+def Vol = imp_volatility(getSymbol());
+addlabel(yes, "Volatility_Percentage: " + AsPercent(Vol), color.white);
+def S = close()[day];
+addlabel(yes, "S_close: " + S);
+
+# only works for current month expirations
+def t_auto = ((DateString - DateString_auto) + days_left) / 365;
+def t_manual = dte/365;
+#addlabel(yes, "t_manual:  " + t_manual);
+def t = if ManuallySetdte then t_manual else t_auto;
+addlabel(yes, "days_left:  " + Round(t*365,2));
+#def t = 1/365;
+def Sqr_Vol_2 = Sqr(Vol)*.5* t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+
+def r = getInterestRate();
+def q = getYield();
+
+def r_q_Sqr_Vol_2 = (r-q + 0.5 * Sqr(Vol))* t;
+
+Script GREEKS {
+    input strike = 0;
+    input dateString = 0;
+    input Vol = 0;
+    input t = 0;
+    input r = 0;
+    input q = 0;
+    input S = 0;
+    input todayoryday = 0;
+    input r_q_Sqr_Vol_2 = 0;
+    input Vol_Sqrt_t = 0;
+    input Vol_Sqrt_t_S = 0;
+    input normcdf_d1 = 0;
+    input normcdf_d1_put = 0;
+    def d1 = (Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t;
+
+    def N1d1 = Exp(-.5*Sqr((Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t)) / 2.5066;
+    def d2 = d1 - Vol_Sqrt_t;
+    def term1 = N1d1 * (( 2*(r-q) *t - d2 * Vol_Sqrt_t ) / ( 2 * t * Vol_Sqrt_t));
+
+    def call_charm = (q*exp(-q *t)*normcdf_d1 - exp(-q *t) * term1)/365;
+    def put_charm = (-q*exp(-q *t)*normcdf_d1_put - exp(-q *t) * term1)/365;
+
+    def vanna = -exp(-q * t) * N1d1 * (d2/Vol);
+    def gamma = exp(-q * t) * N1d1 / Vol_Sqrt_t_S;
+
+    plot strikeGEX = Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/1,0);
+
+    def strikeVEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] -  open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* vanna * S * Vol/1,1);
+
+    def strikeCEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] -  open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* call_charm * S/1,1);
+
+}
+
+# Abramowiz Stegun Approximation for Cumulative Normal Distribution
+script cnd
+    {
+     input data  = 1;
+     def a = AbsValue(data);
+     def b1 =  .31938153;
+     def b2 = -.356563782;
+     def b3 = 1.781477937;
+     def b4 = -1.821255978;
+     def b5 = 1.330274429;
+     def b6 =  .2316419;
+     def e = 1 / (1 + b6 * a);
+     def i = 1 - 1 / Sqrt(2 * Double.Pi) * Exp(-Power(a, 2) / 2) * 
+            (b1 * e + b2 * e * e + b3 * Power(e, 3) + b4 * Power(e, 4) + b5 * Power(e, 5));
+     plot CND = if data < 0
+                then 1 - i
+                else i;
+}
+
+def d1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
+addlabel(yes, strike + "_d1: " + d1, color.yellow);
+
+# for charm call
+def normcdf_d1 = cnd(d1).CND;
+addlabel(yes, strike + "_normcdf_d1: " + normcdf_d1, color.white);
+
+# for charm put
+def normcdf_d1_put = cnd(-d1).CND;
+addlabel(yes, strike + "_normcdf_d1_put: " + normcdf_d1_put, color.yellow);
+
+def d2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d2;
+addlabel(yes, strike + "_d2: " + d2, color.violet);
+
+def N1d1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).N1d1;
+addlabel(yes, strike + "_N1d1: " + N1d1, color.white);
+
+def term1 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S,normcdf_d1).term1;
+#addlabel(yes, strike + "_term1: " + term1, color.orange);
+
+def vanna_test2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).vanna;
+addlabel(yes, strike + "_vanna2: " + vanna_test2, color.cyan);
+
+def vex_test2 = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeVEX;
+addlabel(yes, strike + "_vex2: " + vex_test2, color.violet);
+
+def cex_test = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, normcdf_d1).strikeCEX;
+addlabel(yes, strike + "_cex: " + cex_test, color.dark_orange);
+
+def charm_test_call = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, normcdf_d1).call_charm;
+addlabel(yes, strike + "_charm_call: " + charm_test_call, color.yellow);
+
+def charm_test_put = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, normcdf_d1, normcdf_d1_put).put_charm;
+addlabel(yes, strike + "_charm_put: " + charm_test_put, color.white);
+
+def gamma_test = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).gamma;
+addlabel(yes, strike + "_gamma: " + gamma_test, color.green);
+
+plot gex_test = GREEKS(strike, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGex;
+addlabel(yes, strike + "_gex: " + gex_test, color.cyan);
