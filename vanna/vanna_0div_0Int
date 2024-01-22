@@ -1,6 +1,7 @@
 # Vanna Jan 14, 2024 
 # @2187Nick
 # Note: This version uses 0 dividend and 0 interest rate.
+# Use this on the Options Chain Page
 
 # Manually set for testing
 #def Vol = .12;
