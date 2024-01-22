@@ -7,6 +7,8 @@
 
 ### Notes: 
     
-    1. The TOS function calculates the greeks with 0 dividend and 0 interest rate. My focus is on 0dte and near term options.
+    1. You must set the days to expiration if you are checking a date that is past the current month.
+    
+    2. 1 Script calculates the greeks with 0 dividend and 0 interest rate. 
 
-    2. The GEX, VEX, and CEX formulas are a work in progress.
+    3. The GEX, VEX, and CEX formulas are a work in progress.
