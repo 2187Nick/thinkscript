@@ -1,0 +1,49 @@
+# Vanna Exposure SPX Jan 16, 2024 
+# @2187Nick
+# For Options Chain Page
+# Plots in millions.
+
+#VannaExposure = (callOptionOpenInterest + putOptionOpenInterest) * Vanna*spotPrice*underlyingVolatility
+
+# Manually set for testing
+#def Vol = .12;
+#def S = 476; 
+#def exp = 240229;
+#t = 20/365;
+#strike = 472;
+input symbol = "SPXW";
+def agg = AggregationPeriod.DAY;
+
+input threshold = 0;
+def DateString = GetYYYYMMDD()-20000000+getdaystoexpiration()-1;
+def Vol = imp_volatility(getUnderlyingSymbol());
+def S = close(getUnderlyingSymbol());
+def r = getInterestRate();
+def q = getYield();
+def t = GetDaysToExpiration()/365;
+def strike = getStrike();
+def r_q_Sqr_Vol_2 = (r-q + 0.5 * Sqr(Vol))* t;
+def Sqr_IV_2 = Sqr(Vol)*.5 * t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+def d1 = (Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t;
+def N1d1 = Exp(-.5*Sqr((Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t)) / 2.5066;
+
+def d2 = d1 - Vol_Sqrt_t;
+
+def vanna = -exp(-q * t) * N1d1 * (d2/Vol);
+
+# Based on 1% move in VIX
+def VEX =  Round((open_interest("."+symbol+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY) +  open_interest("."+symbol+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY))* vanna * S * Vol*100/1000000,1);
+
+# Change in delta per one percent move in IV
+# or change in vega per one percent move in underlying
+# Vanna is same formula for calls and puts
+# Vanna Exposure: Vanna * OI * S * vol  
+
+addlabel(IsPut() and vex <= -.1, vex, if vex <= (-1*threshold) then color.red else color.light_red);
+addlabel(IsPut() and vex >= 0, "", color.black);
+addlabel(!IsPut() and vex >= .1, vex,  if vex >= threshold then color.green else color.light_green);
+addlabel(!IsPut() and vex < 0, "", color.black);
+assignBackgroundColor(color.black);
