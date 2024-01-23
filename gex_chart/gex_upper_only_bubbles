@@ -1,42 +1,52 @@
-# Gex Chart Upper Bubbles only Jan 19, 2024
+# GEX Crossover Jan 22, 2024
 # Twitter @2187Nick
 
-declare upper;
+declare lower;
 declare once_per_bar;
 input strikeSpacing = 1.0;
-#input strikes = {default "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-#"10"};
+input setThreshold = 20;
+def threshold = setThreshold;
 input strikes = 10;
 
+input PreMarket = {default "false", "true"};
+def day = if !PreMarket then 0 else 1;
+
 input ManuallySetExpiration = {default "false", "true"};
-input Expiration_YYMMDD = 240116;
+input Expiration_YYMMDD = 240216;
+
+def DateString_auto = GetYYYYMMDD()-20000000;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+DefineGlobalColor("CallColor", Color.CYAN);
+DefineGlobalColor("PutColor", Color.violet);
+AddLabel(yes, "GEX Crossover", GlobalColor("CallColor"));
+#AddLabel(yes, GetSymbol() + ": " + AsPrice(DateString) + "C", GlobalColor("CallColor"));
+#AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
+
 def agg = AggregationPeriod.DAY;
+def openlevel = close(period = agg);
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(openlevel, rounding_factor);
+def base_strike = floor_or_ceiling;
+#addlabel(yes, "base_strike: " + base_strike, color.cyan);
 
 def seconds_left = SecondsTillTime(1615);
 def hours_left = seconds_left / 3600;
 def days_left = if hours_left <= 0 then 0 else hours_left / 24;
 
 def Vol = imp_volatility(getSymbol());
-def DateString_auto = GetYYYYMMDD()-20000000;
-def DateString = if ManuallySetExpiration then Expiration_YYMMDD else  DateString_auto;
+#addlabel(yes, "Vol: " + Vol, color.white);
+def S = close();
+#def S = close(period = agg);
+#addlabel(yes, "S_close: " + S, color.white);
 
-#def S = 474;
-def S = close(period = agg);
 def t = ((DateString - DateString_auto) + days_left) / 365;
+#addlabel(yes, "t: " + t);
+#def t = 1/365;
 def Sqr_Vol_2 = Sqr(Vol)*.5* t;
 def Vol_Sqrt_t = Vol * Sqrt(t);
 def Sqrt_2pi = 2.5066;
 def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
-
-DefineGlobalColor("CallColor", Color.GREEN);
-DefineGlobalColor("PutColor", Color.RED);
-AddLabel(yes, AsPrice(DateString) + "C", GlobalColor("CallColor"));
-AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
-
-def openlevel = open(period = agg);
-def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
-def floor_or_ceiling =  Round(openlevel, rounding_factor);
-def base_strike = floor_or_ceiling;
 
 def strike_base = base_strike;
 def strike_plus1 = base_strike + strikeSpacing;
@@ -61,140 +71,145 @@ def strike_minus8 = base_strike - strikeSpacing * 8;
 def strike_minus9 = base_strike - strikeSpacing * 9;
 def strike_minus10 = base_strike - strikeSpacing * 10;
 
-### Put Option open_interest
-def putopen_interest = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_base), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_base), period = agg);
-def putopen_interest1 =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus1), period = agg);
-def putopen_interest2 =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus2), period = agg);
-def putopen_interest3 =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus3), period = agg);
-def putopen_interest4 = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus4), period = agg);
-def putopen_interest5 = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus5), period = agg);
-def putopen_interest6 = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus6), period = agg);
-def putopen_interest7 = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus7), period = agg);
-def putopen_interest8 = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus8), period = agg);
-def putopen_interest9 = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus9), period = agg);
-def putopen_interest10 = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_minus10), period = agg);
+Script GEX {
+    input strike = 0;
+    input dateString = 0;
+    input Vol = 0;
+    input t = 0;
+    input S = 0;
+    input todayoryday = 0;
+    input Sqr_Vol_2 = 0;
+    input Vol_Sqrt_t = 0;
+    input Vol_Sqrt_t_S = 0;
+    def gamma = (Exp(-.5*(Sqr((Log(S / strike) + Sqr_Vol_2) / Vol_Sqrt_t) )) /2.5066) / Vol_Sqrt_t_S;
 
-def putopen_interest1a =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus1), period = agg);
-def putopen_interest2a =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus2), period = agg);
-def putopen_interest3a =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus3), period = agg);
-def putopen_interest4a = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus4), period = agg);
-def putopen_interest5a = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus5), period = agg);
-def putopen_interest6a = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus6), period = agg);
-def putopen_interest7a = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus7), period = agg);
-def putopen_interest8a = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus8), period = agg);
-def putopen_interest9a = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus9), period = agg);
-def putopen_interest10a = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P" + AsPrice(strike_plus10), period = agg);
+    plot strikeGEX = Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/10000,0);
+}
 
-###Call Option open_interest
-def call_open_interest = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_base), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_base), period = agg);
-def call_open_interest1 =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus1), period = agg);
-def call_open_interest2 =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus2), period = agg);
-def call_open_interest3 =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus3), period = agg);
-def call_open_interest4 = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus4), period = agg);
-def call_open_interest5 = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus5), period = agg);
-def call_open_interest6 = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus6), period = agg);
-def call_open_interest7 = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus7), period = agg);
-def call_open_interest8 = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus8), period = agg);
-def call_open_interest9 = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus9), period = agg);
-def call_open_interest10 = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_plus10), period = agg);
+def strike_base_gex = GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus1_gex = GEX(strike_plus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "strike_plus1_gex : " + strike_plus1_gex);
+def strike_plus2_gex = GEX(strike_plus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus3_gex = GEX(strike_plus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus4_gex = GEX(strike_plus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus5_gex = GEX(strike_plus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus6_gex = GEX(strike_plus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus7_gex = GEX(strike_plus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus8_gex = GEX(strike_plus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus9_gex = GEX(strike_plus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus10_gex = GEX(strike_plus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 
-def call_open_interest1a =  if strikes < 1 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus1), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus1), period = agg);
-def call_open_interest2a =  if strikes < 2 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus2), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus2), period = agg);
-def call_open_interest3a =  if strikes < 3 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus3), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus3), period = agg);
-def call_open_interest4a = if strikes < 4 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus4), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus4), period = agg);
-def call_open_interest5a = if strikes < 5 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus5), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus5), period = agg);
-def call_open_interest6a = if strikes < 6 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus6), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus6), period = agg);
-def call_open_interest7a = if strikes < 7 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus7), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus7), period = agg);
-def call_open_interest8a = if strikes < 8 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus8), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus8), period = agg);
-def call_open_interest9a = if strikes < 9 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus9), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus9), period = agg);
-def call_open_interest10a = if strikes < 10 then 0 else if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus10), period = agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C" + AsPrice(strike_minus10), period = agg);
+def strike_minus1_gex = GEX(strike_minus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus2_gex = GEX(strike_minus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus3_gex = GEX(strike_minus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus4_gex = GEX(strike_minus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus5_gex = GEX(strike_minus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus6_gex = GEX(strike_minus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus7_gex = GEX(strike_minus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus8_gex = GEX(strike_minus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus9_gex = GEX(strike_minus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus10_gex = GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 
-### Gamma
-def strike_base_gamma = (Exp(-(Sqr((Log(S / strike_base) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-#AddLabel(yes, base_strike + "_gamma_v3: " + strike_base_gamma, color.cyan);
-def strike_plus1_gamma = (Exp(-(Sqr((Log(S / strike_plus1) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-#AddLabel(yes, strike_plus1 + "_gamma: " + strike_plus1_gamma);
-def strike_plus2_gamma = (Exp(-(Sqr((Log(S / strike_plus2) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus3_gamma = (Exp(-(Sqr((Log(S / strike_plus3) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus4_gamma = (Exp(-(Sqr((Log(S / strike_plus4) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus5_gamma = (Exp(-(Sqr((Log(S / strike_plus5) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus6_gamma = (Exp(-(Sqr((Log(S / strike_plus6) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus7_gamma = (Exp(-(Sqr((Log(S / strike_plus7) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus8_gamma = (Exp(-(Sqr((Log(S / strike_plus8) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus9_gamma = (Exp(-(Sqr((Log(S / strike_plus9) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_plus10_gamma = (Exp(-(Sqr((Log(S / strike_plus10) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+plot base_gex = if !IsNan(strike_base_gex) and AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else 0;
+plot plus1_gex = if !IsNan(strike_plus1_gex) and AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else 0;
+plot plus2_gex = if !IsNan(strike_plus2_gex) and AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else 0;
+plot plus3_gex = if !IsNan(strike_plus3_gex) and AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else 0;
+plot plus4_gex = if !IsNan(strike_plus4_gex) and AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else 0;
+plot plus5_gex = if !IsNan(strike_plus5_gex) and AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else 0;
+plot plus6_gex = if !IsNan(strike_plus6_gex) and AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else 0;
+plot plus7_gex = if !IsNan(strike_plus7_gex) and AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else 0;
+plot plus8_gex = if !IsNan(strike_plus8_gex) and AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else 0;
+plot plus9_gex = if !IsNan(strike_plus9_gex) and AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else 0;
+plot plus10_gex = if !IsNan(strike_plus10_gex) and AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else 0;
+    
+plot minus1_gex = if !IsNan(strike_minus1_gex) and AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else 0;
+plot minus2_gex = if !IsNan(strike_minus2_gex) and AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else 0;
+plot minus3_gex = if !IsNan(strike_minus3_gex) and AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else 0;
+plot minus4_gex = if !IsNan(strike_minus4_gex) and AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else 0;
+plot minus5_gex = if !IsNan(strike_minus5_gex) and AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else 0;
+plot minus6_gex = if !IsNan(strike_minus6_gex) and AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else 0;
+plot minus7_gex = if !IsNan(strike_minus7_gex) and AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else 0;
+plot minus8_gex = if !IsNan(strike_minus8_gex) and AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else 0;
+plot minus9_gex = if !IsNan(strike_minus9_gex) and AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else 0;
+plot minus10_gex = if !IsNan(strike_minus10_gex) and AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else 0;
 
-###
-def strike_minus1_gamma = (Exp(-(Sqr((Log(S / strike_minus1) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-#AddLabel(yes, strike_minus1 + "_gamma: " + strike_minus1_gamma);
-def strike_minus2_gamma = (Exp(-(Sqr((Log(S / strike_minus2) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-#AddLabel(yes, strike_minus2 + "_gamma: " + strike_minus2_gamma);
-def strike_minus3_gamma = (Exp(-(Sqr((Log(S / strike_minus3) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus4_gamma = (Exp(-(Sqr((Log(S / strike_minus4) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus5_gamma = (Exp(-(Sqr((Log(S / strike_minus5) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus6_gamma = (Exp(-(Sqr((Log(S / strike_minus6) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus7_gamma = (Exp(-(Sqr((Log(S / strike_minus7) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus8_gamma = (Exp(-(Sqr((Log(S / strike_minus8) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus9_gamma = (Exp(-(Sqr((Log(S / strike_minus9) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
-def strike_minus10_gamma = (Exp(-(Sqr((Log(S / strike_minus10) + Sqr_Vol_2) / Vol_Sqrt_t) / 2)) / Sqrt_2pi) / Vol_Sqrt_t_S;
+#def maxGEX = Max(Max(
+#        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+#        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+#), Max(
+#        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+#        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+#));
 
-### GEX
-def strike_base_gex = Round((strike_base_gamma * (call_open_interest - putopen_interest) * S) / 10000, 0);
-def strike_plus1_gex = Round((strike_plus1_gamma * (call_open_interest1 - putopen_interest1a) * S) / 10000, 0);
-def strike_plus2_gex =  Round((strike_plus2_gamma * (call_open_interest2 - putopen_interest2a) * S) / 10000, 0);
-def strike_plus3_gex =  Round((strike_plus3_gamma * (call_open_interest3 - putopen_interest3a) * S) / 10000, 0);
-def strike_plus4_gex =  Round((strike_plus4_gamma * (call_open_interest4 - putopen_interest4a) * S) / 10000, 0);
-def strike_plus5_gex =  Round((strike_plus5_gamma * (call_open_interest5 - putopen_interest5a) * S) / 10000, 0);
-def strike_plus6_gex =  Round((strike_plus6_gamma * (call_open_interest6 - putopen_interest6a) * S) / 10000, 0);
-def strike_plus7_gex =  Round((strike_plus7_gamma * (call_open_interest7 - putopen_interest7a) * S) / 10000, 0);
-def strike_plus8_gex =  Round((strike_plus8_gamma * (call_open_interest8 - putopen_interest8a) * S) / 10000, 0);
-def strike_plus9_gex =  Round((strike_plus9_gamma * (call_open_interest9 - putopen_interest9a) * S) / 10000, 0);
-def strike_plus10_gex =  Round((strike_plus10_gamma * (call_open_interest10 - putopen_interest10a) * S) / 10000, 0);
+def maxGEX0 = Max(
+        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+);
+def maxGEX1 = Max(
+        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+);
+def maxGEX = Max(maxGEX0, maxGEX1);
+#AddLabel(yes, "Max GEX: " + maxGEX, color.CYAN);
 
-def strike_minus1_gex =  Round((strike_minus1_gamma * (call_open_interest1a - putopen_interest1) * S) / 10000, 0);
-def strike_minus2_gex =  Round((strike_minus2_gamma * (call_open_interest2a - putopen_interest2) * S) / 10000, 0);
-def strike_minus3_gex =  Round((strike_minus3_gamma * (call_open_interest3a - putopen_interest3) * S) / 10000, 0);
-def strike_minus4_gex =  Round((strike_minus4_gamma * (call_open_interest4a - putopen_interest4) * S) / 10000, 0);
-def strike_minus5_gex =  Round((strike_minus5_gamma * (call_open_interest5a - putopen_interest5) * S) / 10000, 0);
-def strike_minus6_gex =  Round((strike_minus6_gamma * (call_open_interest6a - putopen_interest6) * S) / 10000, 0);
-def strike_minus7_gex =  Round((strike_minus7_gamma * (call_open_interest7a - putopen_interest7) * S) / 10000, 0);
-def strike_minus8_gex =  Round((strike_minus8_gamma * (call_open_interest8a - putopen_interest8) * S) / 10000, 0);
-def strike_minus9_gex =  Round((strike_minus9_gamma * (call_open_interest9a - putopen_interest9) * S) / 10000, 0);
-def strike_minus10_gex =  Round((strike_minus10_gamma * (call_open_interest10a - putopen_interest10) * S) / 10000, 0);
+# Identify the associated strike
+def maxGEXStrike = if maxGEX == base_gex then strike_base
+                   else if maxGEX == plus1_gex then strike_plus1
+                   else if maxGEX == plus2_gex then strike_plus2
+                   else if maxGEX == plus3_gex then strike_plus3
+                   else if maxGEX == plus4_gex then strike_plus4
+                   else if maxGEX == plus5_gex then strike_plus5
+                   else if maxGEX == plus6_gex then strike_plus6
+                   else if maxGEX == plus7_gex then strike_plus7
+                   else if maxGEX == minus1_gex then strike_minus1
+                   else if maxGEX == minus2_gex then strike_minus2
+                   else if maxGEX == minus3_gex then strike_minus3
+                   else if maxGEX == minus4_gex then strike_minus4
+                   else if maxGEX == minus5_gex then strike_minus5
+                   else if maxGEX == minus6_gex then strike_minus6
+                   else if maxGEX == minus7_gex then strike_minus7
+                   else strike_minus8;
 
-#####################################
+AddLabel(yes, "Max GEX Strike: " + maxGEXStrike, color.CYAN);
+Alert(maxGEXStrike != maxGEXStrike[1], "New Max GEX Strike is " + maxGEXStrike, Alert.ONCE, Sound.Bell);
 
-def shift_line_right = 5;
+#plot cross = if maxGEXStrike != maxGEXStrike[1] then low else Double.NaN;
+#cross.SetPaintingStrategy(PaintingStrategy. BOOLEAN_ARROW_UP); 
+#cross.SetDefaultColor(Color.green); 
+#cross.SetLineWeight(5); 
+
+def shift_line_right = 1;
 
 def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
               then BarNumber()  
               else lastbar[1]; 
 
-#AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarNumber() <= HighestAll(lastbar +  shift_line_right), "Gamma Exposure",color.white,Curve.LONG_DASH);
+#AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and #maxGEXStrike != maxGEXStrike[1], maxGEX, maxGEXStrike + "crossed " + #maxGEXStrike[1], color.CYAN, no);
 
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_base_gex[shift_line_right-1]) > 0 and strikes > 0, strike_base, strike_base + ": " + strike_base_gex[shift_line_right-1], if strike_base_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_base_gex[shift_line_right-1] > 0 then yes else no);
+######################
+#Chart Bubbles Puts
 
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus1_gex[shift_line_right-1]) > 0 and strikes > 0, strike_plus1, strike_plus1 + ": " + strike_plus1_gex[shift_line_right-1], if strike_plus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus1_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus2_gex[shift_line_right-1]) > 0 and strikes > 1, strike_plus2, strike_plus2 + ": " +strike_plus2_gex[shift_line_right-1], if strike_plus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus2_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus3_gex[shift_line_right-1]) > 0 and strikes > 2, strike_plus3, strike_plus3 + ": " + strike_plus3_gex[shift_line_right-1], if strike_plus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus3_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus4_gex[shift_line_right-1]) > 0 and strikes > 3, strike_plus4, strike_plus4 + ": " +strike_plus4_gex[shift_line_right-1], if strike_plus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus4_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus5_gex[shift_line_right-1]) > 0 and strikes > 4, strike_plus5, strike_plus5 + ": " +strike_plus5_gex[shift_line_right-1], if strike_plus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus5_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus6_gex[shift_line_right-1]) > 0 and strikes > 5, strike_plus6, strike_plus6 + ": " +strike_plus6_gex[shift_line_right-1], if strike_plus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus6_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus7_gex[shift_line_right-1]) > 0 and strikes > 6, strike_plus7, strike_plus7 + ": " +strike_plus7_gex[shift_line_right-1], if strike_plus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus7_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus8_gex[shift_line_right-1]) > 0 and strikes > 7, strike_plus8, strike_plus8 + ": " +strike_plus8_gex[shift_line_right-1], if strike_plus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus8_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus9_gex[shift_line_right-1]) > 0 and strikes > 8, strike_plus9, strike_plus9 + ": " +strike_plus9_gex[shift_line_right-1], if strike_plus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus9_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus10_gex[shift_line_right-1]) > 0 and strikes > 9, strike_plus10, strike_plus10 + ": " +strike_plus10_gex[shift_line_right-1], if strike_plus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_plus10_gex[shift_line_right-1] > 0 then yes else no);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_base_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_base_gex[shift_line_right-1]), strike_base + ": " + strike_base_gex[shift_line_right-1], if strike_base_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
 
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus1_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_plus1_gex[shift_line_right-1]), strike_plus1 + ": " + strike_plus1_gex[shift_line_right-1], if strike_plus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus2_gex[shift_line_right-1]) >  threshold and strikes > 1, AbsValue(strike_plus2_gex[shift_line_right-1]), strike_plus2 + ": " +strike_plus2_gex[shift_line_right-1], if strike_plus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus3_gex[shift_line_right-1]) >  threshold and strikes > 2, AbsValue(strike_plus3_gex[shift_line_right-1]), strike_plus3 + ": " + strike_plus3_gex[shift_line_right-1], if strike_plus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus4_gex[shift_line_right-1]) >  threshold and strikes > 3, AbsValue(strike_plus4_gex[shift_line_right-1]), strike_plus4 + ": " +strike_plus4_gex[shift_line_right-1], if strike_plus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus5_gex[shift_line_right-1]) >  threshold and strikes > 4, AbsValue(strike_plus5_gex[shift_line_right-1]), strike_plus5 + ": " +strike_plus5_gex[shift_line_right-1], if strike_plus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus6_gex[shift_line_right-1]) >  threshold and strikes > 5, AbsValue(strike_plus6_gex[shift_line_right-1]), strike_plus6 + ": " +strike_plus6_gex[shift_line_right-1], if strike_plus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus7_gex[shift_line_right-1]) >  threshold and strikes > 6, AbsValue(strike_plus7_gex[shift_line_right-1]), strike_plus7 + ": " +strike_plus7_gex[shift_line_right-1], if strike_plus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus8_gex[shift_line_right-1]) >  threshold and strikes > 7, AbsValue(strike_plus8_gex[shift_line_right-1]), strike_plus8 + ": " +strike_plus8_gex[shift_line_right-1], if strike_plus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus9_gex[shift_line_right-1]) >  threshold and strikes > 8, AbsValue(strike_plus9_gex[shift_line_right-1]), strike_plus9 + ": " +strike_plus9_gex[shift_line_right-1], if strike_plus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus10_gex[shift_line_right-1]) >  threshold and strikes > 9, AbsValue(strike_plus10_gex[shift_line_right-1]), strike_plus10 + ": " +strike_plus10_gex[shift_line_right-1], if strike_plus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
 
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus1_gex[shift_line_right-1]) > 0 and strikes > 0, strike_minus1, strike_minus1 + ": " + strike_minus1_gex[shift_line_right-1], if strike_minus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus1_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus2_gex[shift_line_right-1]) > 0 and strikes > 1, strike_minus2, strike_minus2 + ": " +strike_minus2_gex[shift_line_right-1], if strike_minus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus2_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus3_gex[shift_line_right-1]) > 0 and strikes > 2, strike_minus3, strike_minus3 + ": " + strike_minus3_gex[shift_line_right-1], if strike_minus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus3_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus4_gex[shift_line_right-1]) > 0 and strikes > 3, strike_minus4, strike_minus4 + ": " +strike_minus4_gex[shift_line_right-1], if strike_minus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus4_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus5_gex[shift_line_right-1]) > 0 and strikes > 4, strike_minus5, strike_minus5 + ": " +strike_minus5_gex[shift_line_right-1], if strike_minus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus5_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus6_gex[shift_line_right-1]) > 0 and strikes > 5, strike_minus6, strike_minus6 + ": " +strike_minus6_gex[shift_line_right-1], if strike_minus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus6_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus7_gex[shift_line_right-1]) > 0 and strikes > 6, strike_minus7, strike_minus7 + ": " +strike_minus7_gex[shift_line_right-1], if strike_minus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus7_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus8_gex[shift_line_right-1]) > 0 and strikes > 7, strike_minus8, strike_minus8 + ": " +strike_minus8_gex[shift_line_right-1], if strike_minus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus8_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus9_gex[shift_line_right-1]) > 0 and strikes > 8, strike_minus9, strike_minus9 + ": " +strike_minus9_gex[shift_line_right-1], if strike_minus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus9_gex[shift_line_right-1] > 0 then yes else no);
-AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus10_gex[shift_line_right-1]) > 0 and strikes > 9, strike_minus10, strike_minus10 + ": " +strike_minus10_gex[shift_line_right-1], if strike_minus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED, if strike_minus10_gex[shift_line_right-1] > 0 then yes else no);
-
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus1_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_minus1_gex[shift_line_right-1]), strike_minus1 + ": " + strike_minus1_gex[shift_line_right-1], if strike_minus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus2_gex[shift_line_right-1]) >  threshold and strikes > 1, AbsValue(strike_minus2_gex[shift_line_right-1]), strike_minus2 + ": " +strike_minus2_gex[shift_line_right-1], if strike_minus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus3_gex[shift_line_right-1]) >  threshold and strikes > 2, AbsValue(strike_minus3_gex[shift_line_right-1]), strike_minus3 + ": " + strike_minus3_gex[shift_line_right-1], if strike_minus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus4_gex[shift_line_right-1]) >  threshold and strikes > 3, AbsValue(strike_minus4_gex[shift_line_right-1]), strike_minus4 + ": " +strike_minus4_gex[shift_line_right-1], if strike_minus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus5_gex[shift_line_right-1]) >  threshold and strikes > 4, AbsValue(strike_minus5_gex[shift_line_right-1]), strike_minus5 + ": " +strike_minus5_gex[shift_line_right-1], if strike_minus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus6_gex[shift_line_right-1]) >  threshold and strikes > 5, AbsValue(strike_minus6_gex[shift_line_right-1]), strike_minus6 + ": " +strike_minus6_gex[shift_line_right-1], if strike_minus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus7_gex[shift_line_right-1]) >  threshold and strikes > 6, AbsValue(strike_minus7_gex[shift_line_right-1]), strike_minus7 + ": " +strike_minus7_gex[shift_line_right-1], if strike_minus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus8_gex[shift_line_right-1]) >  threshold and strikes > 7, AbsValue(strike_minus8_gex[shift_line_right-1]), strike_minus8 + ": " +strike_minus8_gex[shift_line_right-1], if strike_minus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus9_gex[shift_line_right-1]) >  threshold and strikes > 8, AbsValue(strike_minus9_gex[shift_line_right-1]), strike_minus9 + ": " +strike_minus9_gex[shift_line_right-1], if strike_minus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus10_gex[shift_line_right-1]) >  threshold and strikes > 9, AbsValue(strike_minus10_gex[shift_line_right-1]), strike_minus10 + ": " +strike_minus10_gex[shift_line_right-1], if strike_minus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
 
