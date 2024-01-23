@@ -1,0 +1,69 @@
+# Charm Exposure SPX Jan 22, 2024
+# @2187Nick
+# For Options Chain Page
+# Displayed in Millions
+
+# change in delta per day until expiration
+
+#CharmExposure = (callOptionOpenInterest + putCallOptionOpenInterest)*Charm*spotPrice*365
+# ITM Calls & OTM Puts = Positive Charm
+# OTM Calls & ITM Puts = Negative Charm
+def DateString = GetYYYYMMDD()-20000000+getdaystoexpiration()-1;
+input symbol = "SPXW";
+input threshold = 0; # millions
+def Vol = imp_volatility(getUnderlyingSymbol());
+def S = close(getUnderlyingSymbol());
+def t = GetDaysToExpiration()/365;
+def strike = getStrike();
+def r = getInterestRate();
+def q = getYield();
+
+def Sqr_IV_2 = Sqr(Vol)*.5 * t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def r_q_Sqr_Vol_2 = (r-q + 0.5 * Sqr(Vol))* t;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+def d1 = (Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t;
+def N1d1 = Exp(-.5*Sqr((Log(S / strike) +  r_q_Sqr_Vol_2) / Vol_Sqrt_t)) / 2.5066;
+
+def d2 = d1 - Vol_Sqrt_t;
+
+# Abramowiz Stegun Approximation for Cumulative Normal Distribution
+script cnd
+    {
+     input data  = 1;
+     def a = AbsValue(data);
+     def b1 =  .31938153;
+     def b2 = -.356563782;
+     def b3 = 1.781477937;
+     def b4 = -1.821255978;
+     def b5 = 1.330274429;
+     def b6 =  .2316419;
+     def e = 1 / (1 + b6 * a);
+     def i = 1 - 1 / Sqrt(2 * Double.Pi) * Exp(-Power(a, 2) / 2) * 
+            (b1 * e + b2 * e * e + b3 * Power(e, 3) + b4 * Power(e, 4) + b5 * Power(e, 5));
+     plot CND = if data < 0
+                then 1 - i
+                else i;
+}
+
+# for charm call
+def normcdf_d1 = cnd(d1).CND;
+
+# for charm put
+#def normcdf_d1_put = cnd(-d1).CND;
+#addlabel(yes, strike + "_normcdf_d1_put: " + normcdf_d1_put, color.yellow);
+
+def term1 = N1d1 * (( 2*(r-q) *t - d2 * Vol_Sqrt_t ) / ( 2 * t * Vol_Sqrt_t));
+
+# Divide by 365 to get single day value of Charm.
+def charm = (q*exp(-q *t)*normcdf_d1 - exp(-q *t) * term1)/365;
+
+def cex = Round((open_interest("." + symbol + AsPrice(DateString) + "C" + AsPrice(getStrike())) +  open_interest("." + symbol + AsPrice(DateString) + "P" + AsPrice(getStrike()))) * 100 * charm * S * 365 /1000000,1);
+
+addlabel(IsPut() and cex <= -.1, cex, if cex <= (-1*threshold) then color.red else color.light_red);
+addlabel(IsPut() and cex >= 0, "", color.black);
+
+addlabel(!IsPut() and cex >= .1, cex,  if cex >= threshold then color.green else color.light_green);
+addlabel(!IsPut() and cex < 0, "", color.black);
+assignBackgroundColor(color.black);
