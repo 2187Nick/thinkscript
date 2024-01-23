@@ -65,7 +65,7 @@ def openPrice = if !IsNaN(todayOpen) then todayOpen
 def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
 def floor_or_ceiling =  Round(openPrice, rounding_factor);
 def base_strike = floor_or_ceiling;
-addlabel(yes, "centerStrike: " + base_strike);
+#addlabel(yes, "centerStrike: " + base_strike);
 
 def r = getInterestRate();
 def q = getYield();
@@ -154,7 +154,7 @@ def strike_minus10 = base_strike - strikeSpacing * 10;
 def strike_base_d1 = GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_base_normcdf_d1 = cnd(strike_base_d1).CND;
 def strike_base_cex = GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_base_normcdf_d1).strikeCEX;
-addlabel(yes, "strike_base_charmX : " + strike_base_cex , color.yellow);
+#addlabel(yes, "strike_base_charmX : " + strike_base_cex , color.yellow);
 
 def strike_plus1_d1 = GREEKS(strike_plus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus1_normcdf_d1 = cnd(strike_base_d1).CND;
