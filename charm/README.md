@@ -1,4 +1,4 @@
-Coming Soon..
+# Working on the Charm Exposure Calculations. Charm itself is spot on. 
 
 
 # Charm Exposure (Naive)
@@ -15,12 +15,12 @@ The Charm Exposure is displayed in millions.
 
 Charm Exposure based on Open Interest:
 
-    Option's Charm * Contract Size * Open Interest * Spot Price
+    Option's Charm * Contract Size * Open Interest * Spot Price * 365  ????
     Total Charm Exposure = Call Charm Exposure - Put Charm Exposure????
 
 Charm Exposure based on Live Volume:
 
-    Option's Charm * Contract Size * Volume * Spot Price
+    Option's Charm * Contract Size * Volume * Spot Price * 365 ???
     Total Charm Exposure = Call Charm Exposure - Put Charm Exposure????
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/0a8a52b9-c835-4582-a59c-84a66c891a04)
