@@ -1,5 +1,6 @@
-# GEX Crossover Jan 23, 2024
+# GEX Crossover Jan 24, 2024
 # Twitter @2187Nick
+# Fixed NAN issue
 
 declare lower;
 declare once_per_bar;
@@ -83,7 +84,10 @@ Script GEX {
     input Vol_Sqrt_t_S = 0;
     def gamma = (Exp(-.5*(Sqr((Log(S / strike) + Sqr_Vol_2) / Vol_Sqrt_t) )) /2.5066) / Vol_Sqrt_t_S;
 
-    plot strikeGEX = Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/10000,0);
+    plot strikeGEX = if IsNan(Round(open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma)
+then double.nan else 
+
+Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/10000,0);
 }
 
 def strike_base_gex = GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
@@ -110,28 +114,51 @@ def strike_minus8_gex = GEX(strike_minus8, dateString, Vol, t, S, day, Sqr_Vol_2
 def strike_minus9_gex = GEX(strike_minus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 def strike_minus10_gex = GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 
-plot base_gex = if !IsNan(strike_base_gex) and AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else 0;
-plot plus1_gex = if !IsNan(strike_plus1_gex) and AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else 0;
-plot plus2_gex = if !IsNan(strike_plus2_gex) and AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else 0;
-plot plus3_gex = if !IsNan(strike_plus3_gex) and AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else 0;
-plot plus4_gex = if !IsNan(strike_plus4_gex) and AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else 0;
-plot plus5_gex = if !IsNan(strike_plus5_gex) and AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else 0;
-plot plus6_gex = if !IsNan(strike_plus6_gex) and AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else 0;
-plot plus7_gex = if !IsNan(strike_plus7_gex) and AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else 0;
-plot plus8_gex = if !IsNan(strike_plus8_gex) and AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else 0;
-plot plus9_gex = if !IsNan(strike_plus9_gex) and AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else 0;
-plot plus10_gex = if !IsNan(strike_plus10_gex) and AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else 0;
+plot base_gex_c = if !IsNan(strike_base_gex) and AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else double.nan;
+plot plus1_gex_c = if !IsNan(strike_plus1_gex) and AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else double.nan;
+plot plus2_gex_c = if !IsNan(strike_plus2_gex) and AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else double.nan;
+plot plus3_gex_c = if !IsNan(strike_plus3_gex) and AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else double.nan;
+plot plus4_gex_c = if !IsNan(strike_plus4_gex) and AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else double.nan;
+plot plus5_gex_c = if !IsNan(strike_plus5_gex) and AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else double.nan;
+plot plus6_gex_c = if !IsNan(strike_plus6_gex) and AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else double.nan;
+plot plus7_gex_c = if !IsNan(strike_plus7_gex) and AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else double.nan;
+plot plus8_gex_c = if !IsNan(strike_plus8_gex) and AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else double.nan;
+plot plus9_gex_c = if !IsNan(strike_plus9_gex) and AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else double.nan;
+plot plus10_gex_c = if !IsNan(strike_plus10_gex) and AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else double.nan;
     
-plot minus1_gex = if !IsNan(strike_minus1_gex) and AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else 0;
-plot minus2_gex = if !IsNan(strike_minus2_gex) and AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else 0;
-plot minus3_gex = if !IsNan(strike_minus3_gex) and AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else 0;
-plot minus4_gex = if !IsNan(strike_minus4_gex) and AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else 0;
-plot minus5_gex = if !IsNan(strike_minus5_gex) and AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else 0;
-plot minus6_gex = if !IsNan(strike_minus6_gex) and AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else 0;
-plot minus7_gex = if !IsNan(strike_minus7_gex) and AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else 0;
-plot minus8_gex = if !IsNan(strike_minus8_gex) and AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else 0;
-plot minus9_gex = if !IsNan(strike_minus9_gex) and AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else 0;
-plot minus10_gex = if !IsNan(strike_minus10_gex) and AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else 0;
+plot minus1_gex_c = if !IsNan(strike_minus1_gex) and AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else double.nan;
+plot minus2_gex_c = if !IsNan(strike_minus2_gex) and AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else double.nan;
+plot minus3_gex_c = if !IsNan(strike_minus3_gex) and AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else double.nan;
+plot minus4_gex_c = if !IsNan(strike_minus4_gex) and AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else double.nan;
+plot minus5_gex_c = if !IsNan(strike_minus5_gex) and AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else double.nan;
+plot minus6_gex_c = if !IsNan(strike_minus6_gex) and AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else double.nan;
+plot minus7_gex_c = if !IsNan(strike_minus7_gex) and AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else double.nan;
+plot minus8_gex_c = if !IsNan(strike_minus8_gex) and AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else double.nan;
+plot minus9_gex_c = if !IsNan(strike_minus9_gex) and AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else double.nan;
+plot minus10_gex_c = if !IsNan(strike_minus10_gex) and AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else double.nan;
+
+def base_gex = if IsNan(strike_base_gex) then 0 else if AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else 0;
+    def plus1_gex = if IsNan(strike_plus1_gex) then 0 else if AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else 0;
+    def plus2_gex = if IsNan(strike_plus2_gex) then 0 else if AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else 0;
+    def plus3_gex = if IsNan(strike_plus3_gex) then 0 else if AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else 0;
+    def plus4_gex = if IsNan(strike_plus4_gex) then 0 else if AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else 0;
+    def plus5_gex = if IsNan(strike_plus5_gex) then 0 else if AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else 0;
+    def plus6_gex = if IsNan(strike_plus6_gex) then 0 else if AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else 0;
+    def plus7_gex = if IsNan(strike_plus7_gex) then 0 else if AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else 0;
+    def plus8_gex = if IsNan(strike_plus8_gex) then 0 else if AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else 0;
+    def plus9_gex = if IsNan(strike_plus9_gex) then 0 else if AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else 0;
+    def plus10_gex = if IsNan(strike_plus10_gex) then 0 else if AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else 0;
+        
+    def minus1_gex = if IsNan(strike_minus1_gex) then 0 else if AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else 0;
+    def minus2_gex = if IsNan(strike_minus2_gex) then 0 else if AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else 0;
+    def minus3_gex = if IsNan(strike_minus3_gex) then 0 else if AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else 0;
+    def minus4_gex = if IsNan(strike_minus4_gex) then 0 else if AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else 0;
+    def minus5_gex = if IsNan(strike_minus5_gex) then 0 else if AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else 0;
+    def minus6_gex = if IsNan(strike_minus6_gex) then 0 else if AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else 0;
+    def minus7_gex = if IsNan(strike_minus7_gex) then 0 else if AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else 0;
+    def minus8_gex = if IsNan(strike_minus8_gex) then 0 else if AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else 0;
+    def minus9_gex = if IsNan(strike_minus9_gex) then 0 else if AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else 0;
+    def minus10_gex = if IsNan(strike_minus10_gex) then 0 else if AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else 0;
 
 #def maxGEX = Max(Max(
 #        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
@@ -150,7 +177,7 @@ def maxGEX1 = Max(
         Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
 );
 def maxGEX = Max(maxGEX0, maxGEX1);
-AddLabel(yes, "Max GEX: " + maxGEX, color.CYAN);
+#AddLabel(yes, "Max GEX: " + maxGEX, color.CYAN);
 
 # Identify the associated strike
 def maxGEXStrike = if maxGEX == base_gex then strike_base
