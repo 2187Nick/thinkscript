@@ -1,6 +1,6 @@
 # GEX Crossover Jan 24, 2024
 # Twitter @2187Nick
-# Fixed NAN issue
+# Added option to set alert for a single strike.
 
 declare lower;
 declare once_per_bar;
@@ -9,11 +9,15 @@ input setThreshold = 20;
 def threshold = setThreshold;
 input strikes = 10;
 
+
 input PreMarket = {default "false", "true"};
 def day = if !PreMarket then 0 else 1;
 
 input ManuallySetExpiration = {default "false", "true"};
 input Expiration_YYMMDD = 240216;
+input SingleStrikeAlert = {default "false", "true"};
+input SingleStrikeThreshold = 50;
+input SingleStrike = 487;
 
 def DateString_auto = GetYYYYMMDD()-20000000;
 def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
@@ -91,6 +95,7 @@ Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(stri
 }
 
 def strike_base_gex = GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
 def strike_plus1_gex = GEX(strike_plus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 #addlabel(yes, "strike_plus1_gex : " + strike_plus1_gex);
 def strike_plus2_gex = GEX(strike_plus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
@@ -210,6 +215,14 @@ def shift_line_right = 1;
 def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
               then BarNumber()  
               else lastbar[1]; 
+
+# Single Strike Alert
+def single_strike_gex = GEX(singleStrike, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "single_strike_gex: " + single_strike_gex);
+
+Alert(SingleStrikeAlert and AbsValue(single_strike_gex[1]) < singleStrikeThreshold and AbsValue(single_strike_gex) >= singleStrikeThreshold, "GEX Threshold Reached Strike: " + base_gex, Alert.ONCE, Sound.Ding);
+
+addlabel(SingleStrikeAlert, "Alert set for strike " + singleStrike + " GEX > " + SingleStrikeThreshold, color.green);
 
 #AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and #maxGEXStrike != maxGEXStrike[1], maxGEX, maxGEXStrike + "crossed " + #maxGEXStrike[1], color.CYAN, no);
 
