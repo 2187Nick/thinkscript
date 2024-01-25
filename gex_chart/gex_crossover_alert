@@ -1,6 +1,7 @@
-# GEX Crossover Jan 24, 2024
+# GEX Crossover Jan 25, 2024
 # Twitter @2187Nick
-# Added option to set alert for a single strike.
+# Add Single Strike Alert
+# Add shift right option. Moves the bubbles to the right.
 
 declare lower;
 declare once_per_bar;
@@ -8,7 +9,7 @@ input strikeSpacing = 1.0;
 input setThreshold = 20;
 def threshold = setThreshold;
 input strikes = 10;
-
+input shift_right = 1;
 
 input PreMarket = {default "false", "true"};
 def day = if !PreMarket then 0 else 1;
@@ -210,7 +211,7 @@ Alert(maxGEXStrike != maxGEXStrike[1], "New Max GEX Strike is " + maxGEXStrike, 
 #cross.SetDefaultColor(Color.green); 
 #cross.SetLineWeight(5); 
 
-def shift_line_right = 1;
+def shift_line_right = shift_right;
 
 def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
               then BarNumber()  
