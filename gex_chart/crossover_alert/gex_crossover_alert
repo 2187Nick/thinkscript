@@ -1,0 +1,255 @@
+# GEX Crossover Jan 25, 2024
+# Twitter @2187Nick
+# Add Single Strike Alert
+# Add shift right option. Moves the bubbles to the right.
+
+declare lower;
+declare once_per_bar;
+input strikeSpacing = 1.0;
+input setThreshold = 20;
+def threshold = setThreshold;
+input strikes = 10;
+input shift_right = 1;
+
+input PreMarket = {default "false", "true"};
+def day = if !PreMarket then 0 else 1;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 240216;
+input SingleStrikeAlert = {default "false", "true"};
+input SingleStrikeThreshold = 50;
+input SingleStrike = 487;
+
+def DateString_auto = GetYYYYMMDD()-20000000;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+DefineGlobalColor("CallColor", Color.CYAN);
+DefineGlobalColor("PutColor", Color.violet);
+AddLabel(yes, "GEX Crossover", GlobalColor("CallColor"));
+#AddLabel(yes, GetSymbol() + ": " + AsPrice(DateString) + "C", GlobalColor("CallColor"));
+#AddLabel(yes, AsPrice(DateString) + "P", GlobalColor("PutColor"));
+
+def agg = AggregationPeriod.DAY;
+def openlevel = close(period = agg);
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(openlevel, rounding_factor);
+def base_strike = floor_or_ceiling;
+#addlabel(yes, "base_strike: " + base_strike, color.cyan);
+
+def seconds_left = SecondsTillTime(1615);
+def hours_left = seconds_left / 3600;
+def days_left = if hours_left <= 0 then 0 else hours_left / 24;
+
+def Vol = imp_volatility(getSymbol());
+#addlabel(yes, "Vol: " + Vol, color.white);
+def S = close();
+#def S = close(period = agg);
+#addlabel(yes, "S_close: " + S, color.white);
+
+def t = ((DateString - DateString_auto) + days_left) / 365;
+#addlabel(yes, "t: " + t);
+#def t = 1/365;
+def Sqr_Vol_2 = Sqr(Vol)*.5* t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+
+def strike_base = base_strike;
+def strike_plus1 = base_strike + strikeSpacing;
+def strike_plus2 = base_strike + strikeSpacing * 2;
+def strike_plus3 = base_strike + strikeSpacing * 3;
+def strike_plus4 = base_strike + strikeSpacing * 4;
+def strike_plus5 = base_strike + strikeSpacing * 5;
+def strike_plus6 = base_strike + strikeSpacing * 6;
+def strike_plus7 = base_strike + strikeSpacing * 7;
+def strike_plus8 = base_strike + strikeSpacing * 8;
+def strike_plus9 = base_strike + strikeSpacing * 9;
+def strike_plus10 = base_strike + strikeSpacing * 10;
+
+def strike_minus1 = base_strike - strikeSpacing;
+def strike_minus2 = base_strike - strikeSpacing * 2;
+def strike_minus3 = base_strike - strikeSpacing * 3;
+def strike_minus4 = base_strike - strikeSpacing * 4;
+def strike_minus5 = base_strike - strikeSpacing * 5;
+def strike_minus6 = base_strike - strikeSpacing * 6;
+def strike_minus7 = base_strike - strikeSpacing * 7;
+def strike_minus8 = base_strike - strikeSpacing * 8;
+def strike_minus9 = base_strike - strikeSpacing * 9;
+def strike_minus10 = base_strike - strikeSpacing * 10;
+
+Script GEX {
+    input strike = 0;
+    input dateString = 0;
+    input Vol = 0;
+    input t = 0;
+    input S = 0;
+    input todayoryday = 0;
+    input Sqr_Vol_2 = 0;
+    input Vol_Sqrt_t = 0;
+    input Vol_Sqrt_t_S = 0;
+    def gamma = (Exp(-.5*(Sqr((Log(S / strike) + Sqr_Vol_2) / Vol_Sqrt_t) )) /2.5066) / Vol_Sqrt_t_S;
+
+    plot strikeGEX = if IsNan(Round(open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma)
+then double.nan else 
+
+Round((open_interest("."+ getSymbol() + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest("."+ getSymbol() + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/10000,0);
+}
+
+def strike_base_gex = GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def strike_plus1_gex = GEX(strike_plus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "strike_plus1_gex : " + strike_plus1_gex);
+def strike_plus2_gex = GEX(strike_plus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus3_gex = GEX(strike_plus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus4_gex = GEX(strike_plus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus5_gex = GEX(strike_plus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus6_gex = GEX(strike_plus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus7_gex = GEX(strike_plus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus8_gex = GEX(strike_plus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus9_gex = GEX(strike_plus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus10_gex = GEX(strike_plus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def strike_minus1_gex = GEX(strike_minus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus2_gex = GEX(strike_minus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus3_gex = GEX(strike_minus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus4_gex = GEX(strike_minus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus5_gex = GEX(strike_minus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus6_gex = GEX(strike_minus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus7_gex = GEX(strike_minus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus8_gex = GEX(strike_minus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus9_gex = GEX(strike_minus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus10_gex = GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+plot base_gex_c = if !IsNan(strike_base_gex) and AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else double.nan;
+plot plus1_gex_c = if !IsNan(strike_plus1_gex) and AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else double.nan;
+plot plus2_gex_c = if !IsNan(strike_plus2_gex) and AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else double.nan;
+plot plus3_gex_c = if !IsNan(strike_plus3_gex) and AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else double.nan;
+plot plus4_gex_c = if !IsNan(strike_plus4_gex) and AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else double.nan;
+plot plus5_gex_c = if !IsNan(strike_plus5_gex) and AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else double.nan;
+plot plus6_gex_c = if !IsNan(strike_plus6_gex) and AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else double.nan;
+plot plus7_gex_c = if !IsNan(strike_plus7_gex) and AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else double.nan;
+plot plus8_gex_c = if !IsNan(strike_plus8_gex) and AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else double.nan;
+plot plus9_gex_c = if !IsNan(strike_plus9_gex) and AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else double.nan;
+plot plus10_gex_c = if !IsNan(strike_plus10_gex) and AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else double.nan;
+    
+plot minus1_gex_c = if !IsNan(strike_minus1_gex) and AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else double.nan;
+plot minus2_gex_c = if !IsNan(strike_minus2_gex) and AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else double.nan;
+plot minus3_gex_c = if !IsNan(strike_minus3_gex) and AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else double.nan;
+plot minus4_gex_c = if !IsNan(strike_minus4_gex) and AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else double.nan;
+plot minus5_gex_c = if !IsNan(strike_minus5_gex) and AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else double.nan;
+plot minus6_gex_c = if !IsNan(strike_minus6_gex) and AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else double.nan;
+plot minus7_gex_c = if !IsNan(strike_minus7_gex) and AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else double.nan;
+plot minus8_gex_c = if !IsNan(strike_minus8_gex) and AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else double.nan;
+plot minus9_gex_c = if !IsNan(strike_minus9_gex) and AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else double.nan;
+plot minus10_gex_c = if !IsNan(strike_minus10_gex) and AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else double.nan;
+
+def base_gex = if IsNan(strike_base_gex) then 0 else if AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else 0;
+    def plus1_gex = if IsNan(strike_plus1_gex) then 0 else if AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else 0;
+    def plus2_gex = if IsNan(strike_plus2_gex) then 0 else if AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else 0;
+    def plus3_gex = if IsNan(strike_plus3_gex) then 0 else if AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else 0;
+    def plus4_gex = if IsNan(strike_plus4_gex) then 0 else if AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else 0;
+    def plus5_gex = if IsNan(strike_plus5_gex) then 0 else if AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else 0;
+    def plus6_gex = if IsNan(strike_plus6_gex) then 0 else if AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else 0;
+    def plus7_gex = if IsNan(strike_plus7_gex) then 0 else if AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else 0;
+    def plus8_gex = if IsNan(strike_plus8_gex) then 0 else if AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else 0;
+    def plus9_gex = if IsNan(strike_plus9_gex) then 0 else if AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else 0;
+    def plus10_gex = if IsNan(strike_plus10_gex) then 0 else if AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else 0;
+        
+    def minus1_gex = if IsNan(strike_minus1_gex) then 0 else if AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else 0;
+    def minus2_gex = if IsNan(strike_minus2_gex) then 0 else if AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else 0;
+    def minus3_gex = if IsNan(strike_minus3_gex) then 0 else if AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else 0;
+    def minus4_gex = if IsNan(strike_minus4_gex) then 0 else if AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else 0;
+    def minus5_gex = if IsNan(strike_minus5_gex) then 0 else if AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else 0;
+    def minus6_gex = if IsNan(strike_minus6_gex) then 0 else if AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else 0;
+    def minus7_gex = if IsNan(strike_minus7_gex) then 0 else if AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else 0;
+    def minus8_gex = if IsNan(strike_minus8_gex) then 0 else if AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else 0;
+    def minus9_gex = if IsNan(strike_minus9_gex) then 0 else if AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else 0;
+    def minus10_gex = if IsNan(strike_minus10_gex) then 0 else if AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else 0;
+
+#def maxGEX = Max(Max(
+#        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+#        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+#), Max(
+#        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+#        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+#));
+
+def maxGEX0 = Max(
+        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+);
+def maxGEX1 = Max(
+        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+);
+def maxGEX = Max(maxGEX0, maxGEX1);
+#AddLabel(yes, "Max GEX: " + maxGEX, color.CYAN);
+
+# Identify the associated strike
+def maxGEXStrike = if maxGEX == base_gex then strike_base
+                   else if maxGEX == plus1_gex then strike_plus1
+                   else if maxGEX == plus2_gex then strike_plus2
+                   else if maxGEX == plus3_gex then strike_plus3
+                   else if maxGEX == plus4_gex then strike_plus4
+                   else if maxGEX == plus5_gex then strike_plus5
+                   else if maxGEX == plus6_gex then strike_plus6
+                   else if maxGEX == plus7_gex then strike_plus7
+                   else if maxGEX == minus1_gex then strike_minus1
+                   else if maxGEX == minus2_gex then strike_minus2
+                   else if maxGEX == minus3_gex then strike_minus3
+                   else if maxGEX == minus4_gex then strike_minus4
+                   else if maxGEX == minus5_gex then strike_minus5
+                   else if maxGEX == minus6_gex then strike_minus6
+                   else if maxGEX == minus7_gex then strike_minus7
+                   else strike_minus8;
+
+AddLabel(yes, "Max Strike: " + maxGEXStrike, color.CYAN);
+Alert(maxGEXStrike != maxGEXStrike[1], "New Max GEX Strike is " + maxGEXStrike, Alert.ONCE, Sound.Bell);
+
+#plot cross = if maxGEXStrike != maxGEXStrike[1] then low else Double.NaN;
+#cross.SetPaintingStrategy(PaintingStrategy. BOOLEAN_ARROW_UP); 
+#cross.SetDefaultColor(Color.green); 
+#cross.SetLineWeight(5); 
+
+def shift_line_right = shift_right;
+
+def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
+              then BarNumber()  
+              else lastbar[1]; 
+
+# Single Strike Alert
+def single_strike_gex = GEX(singleStrike, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "single_strike_gex: " + single_strike_gex);
+
+Alert(SingleStrikeAlert and AbsValue(single_strike_gex[1]) < singleStrikeThreshold and AbsValue(single_strike_gex) >= singleStrikeThreshold, "GEX Threshold Reached Strike: " + base_gex, Alert.ONCE, Sound.Ding);
+
+addlabel(SingleStrikeAlert, "Alert set for strike " + singleStrike + " GEX > " + SingleStrikeThreshold, color.green);
+
+#AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and #maxGEXStrike != maxGEXStrike[1], maxGEX, maxGEXStrike + "crossed " + #maxGEXStrike[1], color.CYAN, no);
+
+######################
+#Chart Bubbles Puts
+
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_base_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_base_gex[shift_line_right-1]), strike_base + ": " + strike_base_gex[shift_line_right-1], if strike_base_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus1_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_plus1_gex[shift_line_right-1]), strike_plus1 + ": " + strike_plus1_gex[shift_line_right-1], if strike_plus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus2_gex[shift_line_right-1]) >  threshold and strikes > 1, AbsValue(strike_plus2_gex[shift_line_right-1]), strike_plus2 + ": " +strike_plus2_gex[shift_line_right-1], if strike_plus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus3_gex[shift_line_right-1]) >  threshold and strikes > 2, AbsValue(strike_plus3_gex[shift_line_right-1]), strike_plus3 + ": " + strike_plus3_gex[shift_line_right-1], if strike_plus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus4_gex[shift_line_right-1]) >  threshold and strikes > 3, AbsValue(strike_plus4_gex[shift_line_right-1]), strike_plus4 + ": " +strike_plus4_gex[shift_line_right-1], if strike_plus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus5_gex[shift_line_right-1]) >  threshold and strikes > 4, AbsValue(strike_plus5_gex[shift_line_right-1]), strike_plus5 + ": " +strike_plus5_gex[shift_line_right-1], if strike_plus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus6_gex[shift_line_right-1]) >  threshold and strikes > 5, AbsValue(strike_plus6_gex[shift_line_right-1]), strike_plus6 + ": " +strike_plus6_gex[shift_line_right-1], if strike_plus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus7_gex[shift_line_right-1]) >  threshold and strikes > 6, AbsValue(strike_plus7_gex[shift_line_right-1]), strike_plus7 + ": " +strike_plus7_gex[shift_line_right-1], if strike_plus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus8_gex[shift_line_right-1]) >  threshold and strikes > 7, AbsValue(strike_plus8_gex[shift_line_right-1]), strike_plus8 + ": " +strike_plus8_gex[shift_line_right-1], if strike_plus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus9_gex[shift_line_right-1]) >  threshold and strikes > 8, AbsValue(strike_plus9_gex[shift_line_right-1]), strike_plus9 + ": " +strike_plus9_gex[shift_line_right-1], if strike_plus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_plus10_gex[shift_line_right-1]) >  threshold and strikes > 9, AbsValue(strike_plus10_gex[shift_line_right-1]), strike_plus10 + ": " +strike_plus10_gex[shift_line_right-1], if strike_plus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus1_gex[shift_line_right-1]) >  threshold and strikes > 0, AbsValue(strike_minus1_gex[shift_line_right-1]), strike_minus1 + ": " + strike_minus1_gex[shift_line_right-1], if strike_minus1_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus2_gex[shift_line_right-1]) >  threshold and strikes > 1, AbsValue(strike_minus2_gex[shift_line_right-1]), strike_minus2 + ": " +strike_minus2_gex[shift_line_right-1], if strike_minus2_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus3_gex[shift_line_right-1]) >  threshold and strikes > 2, AbsValue(strike_minus3_gex[shift_line_right-1]), strike_minus3 + ": " + strike_minus3_gex[shift_line_right-1], if strike_minus3_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus4_gex[shift_line_right-1]) >  threshold and strikes > 3, AbsValue(strike_minus4_gex[shift_line_right-1]), strike_minus4 + ": " +strike_minus4_gex[shift_line_right-1], if strike_minus4_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus5_gex[shift_line_right-1]) >  threshold and strikes > 4, AbsValue(strike_minus5_gex[shift_line_right-1]), strike_minus5 + ": " +strike_minus5_gex[shift_line_right-1], if strike_minus5_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus6_gex[shift_line_right-1]) >  threshold and strikes > 5, AbsValue(strike_minus6_gex[shift_line_right-1]), strike_minus6 + ": " +strike_minus6_gex[shift_line_right-1], if strike_minus6_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus7_gex[shift_line_right-1]) >  threshold and strikes > 6, AbsValue(strike_minus7_gex[shift_line_right-1]), strike_minus7 + ": " +strike_minus7_gex[shift_line_right-1], if strike_minus7_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus8_gex[shift_line_right-1]) >  threshold and strikes > 7, AbsValue(strike_minus8_gex[shift_line_right-1]), strike_minus8 + ": " +strike_minus8_gex[shift_line_right-1], if strike_minus8_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus9_gex[shift_line_right-1]) >  threshold and strikes > 8, AbsValue(strike_minus9_gex[shift_line_right-1]), strike_minus9 + ": " +strike_minus9_gex[shift_line_right-1], if strike_minus9_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
+AddChartBubble(BarNumber() == HighestAll(lastbar + shift_line_right -1) and AbsValue(strike_minus10_gex[shift_line_right-1]) >  threshold and strikes > 9, AbsValue(strike_minus10_gex[shift_line_right-1]), strike_minus10 + ": " +strike_minus10_gex[shift_line_right-1], if strike_minus10_gex[shift_line_right-1] > 0 then Color.GREEN else Color.RED);
