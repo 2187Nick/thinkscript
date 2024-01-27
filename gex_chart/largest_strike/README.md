@@ -5,8 +5,6 @@ This calculates gex per $1 move in the underlying asset. Based on open interest.
 It automatically selects todays date for the option contract. 
 To change the contract date set ManuallySetExpiration to "true" and type in the date you want.
 
-The GEX is displayed in millions.
-
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/34d69d2e-e034-4398-9474-0c589d4480d1)
 
 
