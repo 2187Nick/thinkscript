@@ -1,14 +1,14 @@
 Vanna Exposure (Naive)
 
-This calculates Vex per $1 move in the underlying asset. Based on open interest.
+This calculates Vex per 1& move in the underlying volatility. Based on open interest.
 
 (Currently it only works for option contracts in the current month.)
 
 The VEX is displayed in millions.
 
 VEX based on Open Interest:
+Vanna Exposure = (Call Open Interest + Put Open Interest) * Contract Size * Vanna * Spot Price * Underlying Volatility
 
-Option's Vanna * Contract Size * Open Interest * Spot Price * Volume
 Total VEX = Call VEX - Put VEX
 
 ![image](https://github.com/revelldd/thinkscript/assets/158004168/7a2857be-f690-46ff-91de-d64e32a60cb3)
