@@ -7,6 +7,10 @@ To change the contract date set ManuallySetExpiration to "true" and type in the 
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/34d69d2e-e034-4398-9474-0c589d4480d1)
 
+### SPX Number 1 GEX Strike on ES Chart
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/c6c25c7e-a78b-4470-96dc-666e639e138a)
+
+
 
 > Chart requirements for optimal use:
 ```bash
