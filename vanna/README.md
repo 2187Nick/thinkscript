@@ -1,6 +1,6 @@
 Vanna Exposure (Naive)
 
-This calculates Vex per 1& move in the underlying volatility. Based on open interest.
+This calculates Vex per 1% move in the underlying volatility. Based on open interest.
 
 (Currently it only works for option contracts in the current month.)
 
