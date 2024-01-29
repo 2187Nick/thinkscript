@@ -7,9 +7,9 @@ This calculates Vex per 1& move in the underlying volatility. Based on open inte
 The VEX is displayed in millions.
 
 VEX based on Open Interest:
-Vanna Exposure = (Call Open Interest + Put Open Interest) * Contract Size * Vanna * Spot Price * Underlying Volatility
+Vanna Exposure = Open Interest * Contract Size * Vanna * Spot Price * Underlying Volatility
 
-Total VEX = Call VEX - Put VEX
+Total VEX = Call VEX + Put VEX
 
 ![image](https://github.com/revelldd/thinkscript/assets/158004168/7a2857be-f690-46ff-91de-d64e32a60cb3)
 
