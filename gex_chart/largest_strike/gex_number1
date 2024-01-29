@@ -1,5 +1,6 @@
-# GEX Number 1 Jan 26, 2024
+# GEX Number 1 v1a Jan 29, 2024
 # Twitter @2187Nick
+# Fixed project wrong level into the future
 
 declare upper;
 declare once_per_bar;
@@ -172,7 +173,11 @@ def maxGEXStrike = if maxGEX == base_gex then strike_base
 AddLabel(yes, "Max Strike: " + maxGEXStrike + "  ", color.CYAN);
 Alert(maxGEXStrike != maxGEXStrike[1], "New Max GEX Strike is " + maxGEXStrike, Alert.ONCE, Sound.Bell);
 
-plot maxStrikeLine = maxGEXStrike;
+def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
+              then BarNumber()  
+              else lastbar[1]; 
+
+plot maxStrikeLine = if barnumber() <= HighestAll(lastbar) then maxGEXStrike else double.nan;
 maxStrikeLine.setDefaultColor(color.Cyan);
 maxStrikeLine.setLineWeight(5);
 maxStrikeLine.setPaintingStrategy(paintingStrategy.Horizontal);
