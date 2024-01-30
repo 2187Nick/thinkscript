@@ -6,7 +6,8 @@ This calculates Vex per 1% move in the underlying volatility. Based on open inte
 
 The VEX is displayed in millions.
 
-VEX based on Open Interest:
+VEX based on Open Interest.
+
 Vanna Exposure = Open Interest * Contract Size * Vanna * Spot Price * Underlying Volatility
 
 Total VEX = Call VEX + Put VEX
