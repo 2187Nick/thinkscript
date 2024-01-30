@@ -29,4 +29,5 @@ To install:
 
 ![image](https://github.com/revelldd/thinkscript/assets/158004168/352debd1-8eb1-451e-be6d-fd95e6eece6b)
 
+### Vanna Chart Version
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/38a6b673-2780-4e1c-a9dd-85299ee37754)
