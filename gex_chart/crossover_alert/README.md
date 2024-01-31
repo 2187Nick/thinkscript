@@ -5,7 +5,6 @@ This gives an alert when the largest gex level changes.
 It automatically selects todays date for the option contract. 
 To change the contract date set ManuallySetExpiration to "true" and type in the date you want.
 
-*** The default setting only shows 1 strike. Adjust the "Strikes" setting to see more than 1 strike.
 
 The GEX is displayed in millions.
 
