@@ -1,14 +1,14 @@
-# Gamma Exposure with Crossover Alerts
+# Plots Strike with Largest Gamma Exposure (For that Expiration)
 
-This gives an alert when the largest gex level changes.
+This calculates gex per $1 move in the underlying asset. Based on open interest.
 
 It automatically selects todays date for the option contract. 
 To change the contract date set ManuallySetExpiration to "true" and type in the date you want.
 
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/34d69d2e-e034-4398-9474-0c589d4480d1)
 
-The GEX is displayed in millions.
-
-![image](https://github.com/2187Nick/thinkscript/assets/75052782/39a0976c-2c02-440c-8dce-be982c46abc8)
+### SPX Number 1 GEX Strike on ES Chart
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/c6c25c7e-a78b-4470-96dc-666e639e138a)
 
 
 

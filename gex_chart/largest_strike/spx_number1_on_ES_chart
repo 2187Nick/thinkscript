@@ -1,0 +1,359 @@
+# spx_number1_on_ES_chart Jan 29, 2024
+# Modified by Glefdar on 01-28: Plots highest GEX SPX strike on /ES instead of SPY. Added toggle to show strike bubbles. Also added automatic detection of premarket and label explaining that prev. day's OI is used during premarket, which replaced manual premarket toggle.
+
+# Need to add this to ES chart
+
+declare upper;
+declare once_per_bar;
+input symbol = "SPXW";
+input underlying_symbol = "SPX";
+input strikeSpacing = 5.0;
+input use_max_GEX_strike_change_alert = yes;
+input show_premarket_explanation_label = yes;
+input show_strike_level_bubbles = no;
+input strikes = 15;
+
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 230216;
+
+def DateString_auto = GetYYYYMMDD() - 20000000;
+def DateString = if ManuallySetExpiration then Expiration_YYMMDD else  DateString_auto;
+
+####
+# Open Price
+def todayOpen = open("SPX", period = "DAY");
+def yesterdayOpen = open("SPX", period = "DAY")[1];
+def lastPrice = if !IsNaN(close("SPX")) 
+                then close("SPX")
+                else close("SPX", period = "DAY", PriceType.LAST);
+def openPrice = if !IsNaN(todayOpen) then todayOpen 
+                else if !IsNaN(yesterdayOpen) then yesterdayOpen 
+                else lastPrice;
+
+#def openlevel = open(period = agg);
+#addlabel(yes, "open: " + openPrice, color.cyan);
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(openPrice, rounding_factor);
+
+####
+####
+
+def isSaturday = GetDayofWeek(GetYYYYMMDD())==6;
+def isSunday = GetDayofWeek(GetYYYYMMDD())==7;
+def spx_close_price =   if isnan(close(symbol = "SPX", period = aggregationPeriod.DAY)) then spx_close_price[1] else close(symbol = "SPX",period=aggregationPeriod.DAY )[0];
+def es_close_price =  if isSaturday then close(symbol = "/ES", period = aggregationPeriod.DAY)[1] else if isSunday then close(symbol = "/ES", period = aggregationPeriod.DAY)[2] else if isNan(close(symbol = "/ES", period = aggregationPeriod.DAY)) then es_close_price[1] else close(symbol = "/ES",period=aggregationPeriod.DAY)[0];
+
+def es_fv =    Round(es_close_price - spx_close_price, 0);
+
+def SPX_open_nonan = if isNan(open(symbol = "SPX", AggregationPeriod.DAY)) then SPX_open_nonan[1] else open(symbol = "SPX", AggregationPeriod.DAY);
+
+def ES_spx_diff = es_fv[1];
+
+def spx_open = SPX_open_nonan;
+def base_strike = (Round((spx_open / 5), 0) * 5);
+#addlabel(yes, "centerStrike: " + base_strike);
+
+input offset = 10;
+def showBubbleNow = !IsNaN(close) and IsNaN(close[-1]);
+
+############
+
+# If testing premarket then you can only use the previous days Open Interest
+# The Open Interest will update once the market opens.
+#def isETH = !isRTH;
+
+def AfterRTHStart = GetTime() >= regularTradingStart(getYYYYMMDD());
+AddLabel(!AfterRTHStart and show_premarket_explanation_label,"Premarket: GEX Calculation Using Prev. Day OI",Color.Gray);
+
+#input PreMarket = {default "false", "true"};
+def day = 0;
+def yday = 1;
+
+#input shift_left = 1;
+input threshold = 20;
+
+def lastbar = if IsNaN(close[-1]) and !IsNaN(close)  
+              then BarNumber()  
+              else lastbar[1]; 
+
+def agg = AggregationPeriod.Day;
+def seconds_left = SecondsTillTime(1615);
+def hours_left = seconds_left / 3600;
+def days_left = if hours_left <= 0 then 0 else hours_left / 24;
+
+def Vol = imp_volatility(symbol="SPY", agg);
+#addlabel(yes, "Vol: " + Vol, color.white);
+def S = close(symbol="SPX"); #, agg);
+#def S = close(period = agg);
+#(yes, "S_close: " + S, color.white);
+
+def t = ((DateString - DateString_auto) + days_left) / 365;
+#addlabel(yes, "t: " + t);
+#def t = 1/365;
+def Sqr_Vol_2 = Sqr(Vol)*.5* t;
+def Vol_Sqrt_t = Vol * Sqrt(t);
+def Sqrt_2pi = 2.5066;
+def Vol_Sqrt_t_S = S * Vol_Sqrt_t;
+
+# This is roughly the open price of SPX minus 18 and divided by 10
+# This estimates the spy level that would match spx
+def base_strike_spy = (base_strike + ES_spx_diff);
+#addlabel(yes, "base_strike_spx_on_spy: " + base_strike_spy);
+def strike_base_spy = base_strike_spy;
+def strike_plus1_spy = base_strike_spy + (5);
+def strike_plus2_spy = base_strike_spy + (5 *2);
+def strike_plus3_spy = base_strike_spy + (5 *3);
+def strike_plus4_spy = base_strike_spy + (5 *4);
+def strike_plus5_spy = base_strike_spy + (5 *5);
+def strike_plus6_spy = base_strike_spy + (5 *6);
+def strike_plus7_spy = base_strike_spy + (5 *7);
+def strike_plus8_spy = base_strike_spy + (5 *8);
+def strike_plus9_spy = base_strike_spy + (5 *9);
+def strike_plus10_spy = base_strike_spy + (5 *10);
+def strike_plus11_spy = base_strike_spy + (5 *11);
+def strike_plus12_spy = base_strike_spy + (5 *12);
+def strike_plus13_spy = base_strike_spy + (5 *13);
+def strike_plus14_spy = base_strike_spy + (5 *14);
+def strike_plus15_spy = base_strike_spy + (5 *15);
+def strike_plus16_spy = base_strike_spy + (5 *16);
+def strike_plus17_spy = base_strike_spy + (5 *17);
+def strike_plus18_spy = base_strike_spy + (5 *18);
+def strike_plus19_spy = base_strike_spy + (5 *19);
+def strike_plus20_spy = base_strike_spy + (5 *20);
+def strike_plus21_spy = base_strike_spy + (5 *21);
+
+def strike_minus1_spy = base_strike_spy - (5);
+def strike_minus2_spy = base_strike_spy - (5 *2);
+def strike_minus3_spy = base_strike_spy - (5 *3);
+def strike_minus4_spy = base_strike_spy - (5 *4);
+def strike_minus5_spy = base_strike_spy - (5 *5);
+def strike_minus6_spy = base_strike_spy - (5 *6);
+def strike_minus7_spy = base_strike_spy - (5 *7);
+def strike_minus8_spy = base_strike_spy - (5 *8);
+def strike_minus9_spy = base_strike_spy - (5 *9);
+def strike_minus10_spy = base_strike_spy - (5 *10);
+def strike_minus11_spy = base_strike_spy - (5 *11);
+def strike_minus12_spy = base_strike_spy - (5 *12);
+def strike_minus13_spy = base_strike_spy - (5 *13);
+def strike_minus14_spy = base_strike_spy - (5 *14);
+def strike_minus15_spy = base_strike_spy - (5 *15);
+def strike_minus16_spy = base_strike_spy - (5 *16);
+def strike_minus17_spy = base_strike_spy - (5 *17);
+def strike_minus18_spy = base_strike_spy - (5 *18);
+def strike_minus19_spy = base_strike_spy - (5 *19);
+def strike_minus20_spy = base_strike_spy - (5 *20);
+def strike_minus21_spy = base_strike_spy - (5 *21);
+
+def strike_base = base_strike;
+#addlabel(yes, "base_strike_spx: " + strike_base);
+def strike_plus1 = base_strike + strikeSpacing;
+def strike_plus2 = base_strike + strikeSpacing * 2;
+def strike_plus3 = base_strike + strikeSpacing * 3;
+def strike_plus4 = base_strike + strikeSpacing * 4;
+def strike_plus5 = base_strike + strikeSpacing * 5;
+def strike_plus6 = base_strike + strikeSpacing * 6;
+def strike_plus7 = base_strike + strikeSpacing * 7;
+def strike_plus8 = base_strike + strikeSpacing * 8;
+def strike_plus9 = base_strike + strikeSpacing * 9;
+def strike_plus10 = base_strike + strikeSpacing * 10;
+def strike_plus11 = base_strike + strikeSpacing * 11;
+def strike_plus12 = base_strike + strikeSpacing * 12;
+def strike_plus13 = base_strike + strikeSpacing * 13;
+def strike_plus14 = base_strike + strikeSpacing * 14;
+def strike_plus15 = base_strike + strikeSpacing * 15;
+def strike_plus16 = base_strike + strikeSpacing * 16;
+def strike_plus17 = base_strike + strikeSpacing * 17;
+def strike_plus18 = base_strike + strikeSpacing * 18;
+def strike_plus19 = base_strike + strikeSpacing * 19;
+def strike_plus20 = base_strike + strikeSpacing * 20;
+def strike_plus21 = base_strike + strikeSpacing * 21;
+
+def strike_minus1 = base_strike - strikeSpacing;
+def strike_minus2 = base_strike - strikeSpacing * 2;
+def strike_minus3 = base_strike - strikeSpacing * 3;
+def strike_minus4 = base_strike - strikeSpacing * 4;
+def strike_minus5 = base_strike - strikeSpacing * 5;
+def strike_minus6 = base_strike - strikeSpacing * 6;
+def strike_minus7 = base_strike - strikeSpacing * 7;
+def strike_minus8 = base_strike - strikeSpacing * 8;
+def strike_minus9 = base_strike - strikeSpacing * 9;
+def strike_minus10 = base_strike - strikeSpacing * 10;
+def strike_minus11 = base_strike - strikeSpacing * 11;
+def strike_minus12 = base_strike - strikeSpacing * 12;
+def strike_minus13 = base_strike - strikeSpacing * 13;
+def strike_minus14 = base_strike - strikeSpacing * 14;
+def strike_minus15 = base_strike - strikeSpacing * 15;
+def strike_minus16 = base_strike - strikeSpacing * 16;
+def strike_minus17 = base_strike - strikeSpacing * 17;
+def strike_minus18 = base_strike - strikeSpacing * 18;
+def strike_minus19 = base_strike - strikeSpacing * 19;
+def strike_minus20 = base_strike - strikeSpacing * 20;
+def strike_minus21 = base_strike - strikeSpacing * 21;
+
+
+Script GEX {
+    input strike = 0;
+    input dateString = 0;
+    input Vol = 0;
+    input t = 0;
+    input S = 0;
+    input todayoryday = 0;
+    input Sqr_Vol_2 = 0;
+    input Vol_Sqrt_t = 0;
+    input Vol_Sqrt_t_S = 0;
+    def gamma = (Exp(-.5*(Sqr((Log(S / strike) + Sqr_Vol_2) / Vol_Sqrt_t) )) /2.5066) / Vol_Sqrt_t_S;
+
+    # GEX per $10 move is SPX.(GEX per $1 move in SPY)
+    plot strikeGEX = Round((open_interest(".SPXW" + AsPrice(dateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] - open_interest(".SPXW" + AsPrice(dateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday]) * gamma*S/1000,0);
+}
+
+def strike_base_gex = if AfterRTHStart then GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_base, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def strike_plus1_gex = if AfterRTHStart then GEX(strike_plus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus1, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+#addlabel(yes, "strike_plus1_gex : " + strike_plus1_gex);
+def strike_plus2_gex = if AfterRTHStart then GEX(strike_plus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus2, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus3_gex = if AfterRTHStart then GEX(strike_plus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus3, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus4_gex = if AfterRTHStart then GEX(strike_plus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus4, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus5_gex = if AfterRTHStart then GEX(strike_plus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus5, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus6_gex = if AfterRTHStart then GEX(strike_plus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus6, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus7_gex = if AfterRTHStart then GEX(strike_plus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus7, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus8_gex = if AfterRTHStart then GEX(strike_plus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus8, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus9_gex = if AfterRTHStart then GEX(strike_plus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus9, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus10_gex = if AfterRTHStart then GEX(strike_plus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus10, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def strike_minus1_gex = if AfterRTHStart then GEX(strike_minus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus1, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus2_gex = if AfterRTHStart then GEX(strike_minus2, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus2, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus3_gex = if AfterRTHStart then GEX(strike_minus3, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus3, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus4_gex = if AfterRTHStart then GEX(strike_minus4, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus4, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus5_gex = if AfterRTHStart then GEX(strike_minus5, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus5, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus6_gex = if AfterRTHStart then GEX(strike_minus6, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus6, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus7_gex = if AfterRTHStart then GEX(strike_minus7, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus7, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus8_gex = if AfterRTHStart then GEX(strike_minus8, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus8, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus9_gex = if AfterRTHStart then GEX(strike_minus9, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus9, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus10_gex = if AfterRTHStart then GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus10, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+
+def base_gex = if IsNan(strike_base_gex) then 0 else if AbsValue(strike_base_gex) > threshold then AbsValue(strike_base_gex) else 0;
+    def plus1_gex = if IsNan(strike_plus1_gex) then 0 else if AbsValue(strike_plus1_gex) > threshold then AbsValue(strike_plus1_gex) else 0;
+    def plus2_gex = if IsNan(strike_plus2_gex) then 0 else if AbsValue(strike_plus2_gex) > threshold then AbsValue(strike_plus2_gex) else 0;
+    def plus3_gex = if IsNan(strike_plus3_gex) then 0 else if AbsValue(strike_plus3_gex) > threshold then AbsValue(strike_plus3_gex) else 0;
+    def plus4_gex = if IsNan(strike_plus4_gex) then 0 else if AbsValue(strike_plus4_gex) > threshold then AbsValue(strike_plus4_gex) else 0;
+    def plus5_gex = if IsNan(strike_plus5_gex) then 0 else if AbsValue(strike_plus5_gex) > threshold then AbsValue(strike_plus5_gex) else 0;
+    def plus6_gex = if IsNan(strike_plus6_gex) then 0 else if AbsValue(strike_plus6_gex) > threshold then AbsValue(strike_plus6_gex) else 0;
+    def plus7_gex = if IsNan(strike_plus7_gex) then 0 else if AbsValue(strike_plus7_gex) > threshold then AbsValue(strike_plus7_gex) else 0;
+    def plus8_gex = if IsNan(strike_plus8_gex) then 0 else if AbsValue(strike_plus8_gex) > threshold then AbsValue(strike_plus8_gex) else 0;
+    def plus9_gex = if IsNan(strike_plus9_gex) then 0 else if AbsValue(strike_plus9_gex) > threshold then AbsValue(strike_plus9_gex) else 0;
+    def plus10_gex = if IsNan(strike_plus10_gex) then 0 else if AbsValue(strike_plus10_gex) > threshold then AbsValue(strike_plus10_gex) else 0;
+        
+    def minus1_gex = if IsNan(strike_minus1_gex) then 0 else if AbsValue(strike_minus1_gex) > threshold then AbsValue(strike_minus1_gex) else 0;
+    def minus2_gex = if IsNan(strike_minus2_gex) then 0 else if AbsValue(strike_minus2_gex) > threshold then AbsValue(strike_minus2_gex) else 0;
+    def minus3_gex = if IsNan(strike_minus3_gex) then 0 else if AbsValue(strike_minus3_gex) > threshold then AbsValue(strike_minus3_gex) else 0;
+    def minus4_gex = if IsNan(strike_minus4_gex) then 0 else if AbsValue(strike_minus4_gex) > threshold then AbsValue(strike_minus4_gex) else 0;
+    def minus5_gex = if IsNan(strike_minus5_gex) then 0 else if AbsValue(strike_minus5_gex) > threshold then AbsValue(strike_minus5_gex) else 0;
+    def minus6_gex = if IsNan(strike_minus6_gex) then 0 else if AbsValue(strike_minus6_gex) > threshold then AbsValue(strike_minus6_gex) else 0;
+    def minus7_gex = if IsNan(strike_minus7_gex) then 0 else if AbsValue(strike_minus7_gex) > threshold then AbsValue(strike_minus7_gex) else 0;
+    def minus8_gex = if IsNan(strike_minus8_gex) then 0 else if AbsValue(strike_minus8_gex) > threshold then AbsValue(strike_minus8_gex) else 0;
+    def minus9_gex = if IsNan(strike_minus9_gex) then 0 else if AbsValue(strike_minus9_gex) > threshold then AbsValue(strike_minus9_gex) else 0;
+    def minus10_gex = if IsNan(strike_minus10_gex) then 0 else if AbsValue(strike_minus10_gex) > threshold then AbsValue(strike_minus10_gex) else 0;
+
+#def maxGEX = Max(Max(
+#        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+#        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+#), Max(
+#        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+#        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+#));
+
+def maxGEX0 = Max(
+        Max(Max(base_gex, plus1_gex), Max(plus2_gex, plus3_gex)),
+        Max(Max(plus4_gex, plus5_gex), Max(plus6_gex, plus7_gex))
+);
+def maxGEX1 = Max(
+        Max(Max(minus1_gex, minus2_gex), Max(minus3_gex, minus4_gex)),
+        Max(Max(minus5_gex, minus6_gex), Max(minus7_gex, minus8_gex))
+);
+def maxGEX = Max(maxGEX0, maxGEX1);
+
+#AddLabel(yes, "Max GEX: " + maxGEX, color.CYAN);
+
+# Identify the associated strike
+def maxGEXStrike = if maxGEX == base_gex then strike_base
+                   else if maxGEX == plus1_gex then strike_plus1
+                   else if maxGEX == plus2_gex then strike_plus2
+                   else if maxGEX == plus3_gex then strike_plus3
+                   else if maxGEX == plus4_gex then strike_plus4
+                   else if maxGEX == plus5_gex then strike_plus5
+                   else if maxGEX == plus6_gex then strike_plus6
+                   else if maxGEX == plus7_gex then strike_plus7
+                   else if maxGEX == minus1_gex then strike_minus1
+                   else if maxGEX == minus2_gex then strike_minus2
+                   else if maxGEX == minus3_gex then strike_minus3
+                   else if maxGEX == minus4_gex then strike_minus4
+                   else if maxGEX == minus5_gex then strike_minus5
+                   else if maxGEX == minus6_gex then strike_minus6
+                   else if maxGEX == minus7_gex then strike_minus7
+                   else strike_minus8;
+
+
+
+Alert(maxGEXStrike != maxGEXStrike[1] and use_max_GEX_strike_change_alert, "New Max GEX Strike is " + maxGEXStrike, Alert.ONCE, Sound.Bell);
+
+plot maxStrikeLine = if barnumber() <= HighestAll(lastbar) then (maxGEXStrike + ES_spx_diff) else double.nan;
+maxStrikeLine.setDefaultColor(CreateColor(0,100,200));
+maxStrikeLine.setLineWeight(3);
+maxStrikeLine.setPaintingStrategy(paintingStrategy.Horizontal);
+
+AddLabel(yes, "Highest GEX Strike: " + AsPrice(maxGEXStrike) + "  ("+AsPrice(round((maxGEXStrike + ES_spx_diff),0))+" /ES) ", maxStrikeLine.takevaluecolor());
+
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset], strike_base_spy, strike_base, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset], strike_plus1_spy, strike_plus1, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >1, strike_plus2_spy, strike_plus2, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >2, strike_plus3_spy, strike_plus3, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >3, strike_plus4_spy, strike_plus4, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >4, strike_plus5_spy, strike_plus5, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >5, strike_plus6_spy, strike_plus6, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >6, strike_plus7_spy, strike_plus7, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >7, strike_plus8_spy, strike_plus8, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >8, strike_plus9_spy, strike_plus9, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >9, strike_plus10_spy, strike_plus10, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >10, strike_plus11_spy, strike_plus11, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >11, strike_plus12_spy, strike_plus12, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >12, strike_plus13_spy, strike_plus13, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >13, strike_plus14_spy, strike_plus14, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >14, strike_plus15_spy, strike_plus15, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset], strike_minus1_spy, strike_minus1, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >1, strike_minus2_spy, strike_minus2, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >2, strike_minus3_spy, strike_minus3, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >3, strike_minus4_spy, strike_minus4, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >4, strike_minus5_spy, strike_minus5, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >5, strike_minus6_spy, strike_minus6, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >6, strike_minus7_spy, strike_minus7, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >7, strike_minus8_spy, strike_minus8, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >8, strike_minus9_spy, strike_minus9, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >9, strike_minus10_spy, strike_minus10, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >10, strike_minus11_spy, strike_minus11, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >11, strike_minus12_spy, strike_minus12, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >12, strike_minus13_spy, strike_minus13, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >13, strike_minus14_spy, strike_minus14, color.gray);
+AddChartBubble(show_strike_level_bubbles and showBubbleNow[offset] and strikes >14, strike_minus15_spy, strike_minus15, color.gray);
