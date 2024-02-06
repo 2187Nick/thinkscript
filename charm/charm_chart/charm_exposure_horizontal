@@ -95,7 +95,7 @@ Script GREEKS {
     def call_charm = (q*exp(-q *t)*normcdf_d1 - exp(-q *t) * term1)/365;
     def put_charm = (-q*exp(-q *t)*normcdf_d1_put - exp(-q *t) * term1)/365;
   
-    plot strikeCEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] +  open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* 100 * call_charm * S*365/1000000,1);
+    plot strikeCEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] +  open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* 100 * call_charm * S/1000000,0);
 }
 
 # Abramowiz Stegun Approximation for Cumulative Normal Distribution
