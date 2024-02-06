@@ -1,7 +1,10 @@
-# Charm Exposure Jan 22, 2024
+# Charm Exposure Feb 6, 2024
 # @2187Nick
 # For Options Chain Page
 # Displayed in Millions
+### Updating the formula
+# From: OI * charm * S * 365 /1000000,1
+# To:   OI * charm * S /1000000,0
 
 # change in delta per day until expiration
 
@@ -60,7 +63,7 @@ def term1 = N1d1 * (( 2*(r-q) *t - d2 * Vol_Sqrt_t ) / ( 2 * t * Vol_Sqrt_t));
 def charm = (q*exp(-q *t)*normcdf_d1 - exp(-q *t) * term1)/365;
 
 
-def cex = round((open_interest("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" + getStrike()) +  open_interest("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + getStrike())) * 100 * charm * S * 365 /1000000,1);
+def cex = round((open_interest("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" + getStrike()) +  open_interest("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + getStrike())) * 100 * charm * S/1000000,0);
 
 addlabel(IsPut() and cex <= -.1, cex, if cex <= (-1*threshold) then color.red else color.light_red);
 addlabel(IsPut() and cex >= 0, "", color.black);
