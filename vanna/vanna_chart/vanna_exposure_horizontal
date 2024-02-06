@@ -1,5 +1,7 @@
-# Vanna Exposure Horizontal Axis Jan 22, 2024
+# Vanna Exposure Horizontal Axis Feb 6, 2024 update
 # Twitter @2187Nick
+
+# Changing formula to add put and call OI at each strike.
 
 # For testing purposes only....
 # Still working on the correct equation for Vanna Exposure. 
@@ -91,7 +93,7 @@ Script GREEKS {
     def d2 = d1 - Vol_Sqrt_t;
     def vanna = -exp(-q * t) * N1d1 * (d2/Vol);
 
-    plot strikeVEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] -  open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* vanna *100 * S * Vol/1000000,0);
+    plot strikeVEX =  Round((open_interest("."+getSymbol()+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday] + open_interest("."+getSymbol()+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY)[todayoryday])* vanna *100 * S * Vol/1000000,0);
 }
 
 def strike_base = base_strike;
