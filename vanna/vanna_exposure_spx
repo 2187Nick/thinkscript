@@ -35,7 +35,7 @@ def d2 = d1 - Vol_Sqrt_t;
 def vanna = -exp(-q * t) * N1d1 * (d2/Vol);
 
 # Based on 1% move in VIX
-def VEX =  Round((open_interest("."+symbol+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY) +  open_interest("."+symbol+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY))* vanna * S * Vol*100/1000000,1);
+def VEX =  Round((open_interest("."+symbol+ AsPrice(DateString) + "C" + AsPrice(strike),AggregationPeriod.DAY) +  open_interest("."+symbol+AsPrice(DateString) + "P" + AsPrice(strike),AggregationPeriod.DAY))* vanna * S * Vol*100/1000000,0);
 
 # Change in delta per one percent move in IV
 # or change in vega per one percent move in underlying
