@@ -1,6 +1,7 @@
 # Charm Exposure Horizontal Axis V2 Feb 7, 2024
 # Twitter @2187Nick
 # Adding premarket check. Displays Charm based on previous days Open Interest, until market opens.
+# Feb 8 premarket now works.
 
 # Currently works only for current month expirations.
 declare lower;
@@ -157,88 +158,88 @@ def strike_minus10 = base_strike - strikeSpacing * 10;
 ## Charm Exposure
 def strike_base_d1 = GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_base_normcdf_d1 = cnd(strike_base_d1).CND;
-def strike_base_cex = if AfterRTHStart then GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_base_normcdf_d1).strikeCEX else GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_base_normcdf_d1).strikeCEX;
+def strike_base_cex = if AfterRTHStart then GREEKS(strike_base, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_base_normcdf_d1).strikeCEX else GREEKS(strike_base, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_base_normcdf_d1).strikeCEX;
 #addlabel(yes, "strike_base_charmX : " + strike_base_cex , color.yellow);
 
 def strike_plus1_d1 = GREEKS(strike_plus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus1_normcdf_d1 = cnd(strike_base_d1).CND;
-def strike_plus1_cex = if AfterRTHStart then GREEKS(strike_plus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus1_normcdf_d1).strikeCEX else GREEKS(strike_plus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus1_normcdf_d1).strikeCEX;
+def strike_plus1_cex = if AfterRTHStart then GREEKS(strike_plus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus1_normcdf_d1).strikeCEX else GREEKS(strike_plus1, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus1_normcdf_d1).strikeCEX;
 
 def strike_plus2_d1 = GREEKS(strike_plus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus2_normcdf_d1 = cnd(strike_plus2_d1).CND;
-def strike_plus2_cex = if AfterRTHStart then GREEKS(strike_plus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus2_normcdf_d1).strikeCEX else GREEKS(strike_plus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus2_normcdf_d1).strikeCEX;
+def strike_plus2_cex = if AfterRTHStart then GREEKS(strike_plus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus2_normcdf_d1).strikeCEX else GREEKS(strike_plus2, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus2_normcdf_d1).strikeCEX;
 
 def strike_plus3_d1 = GREEKS(strike_plus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus3_normcdf_d1 = cnd(strike_plus3_d1).CND;
-def strike_plus3_cex = if AfterRTHStart then GREEKS(strike_plus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus3_normcdf_d1).strikeCEX else GREEKS(strike_plus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus3_normcdf_d1).strikeCEX;
+def strike_plus3_cex = if AfterRTHStart then GREEKS(strike_plus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus3_normcdf_d1).strikeCEX else GREEKS(strike_plus3, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus3_normcdf_d1).strikeCEX;
 
 def strike_plus4_d1 = GREEKS(strike_plus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus4_normcdf_d1 = cnd(strike_plus4_d1).CND;
-def strike_plus4_cex = if AfterRTHStart then GREEKS(strike_plus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus4_normcdf_d1).strikeCEX else GREEKS(strike_plus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus4_normcdf_d1).strikeCEX;
+def strike_plus4_cex = if AfterRTHStart then GREEKS(strike_plus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus4_normcdf_d1).strikeCEX else GREEKS(strike_plus4, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus4_normcdf_d1).strikeCEX;
 
 def strike_plus5_d1 = GREEKS(strike_plus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus5_normcdf_d1 = cnd(strike_plus5_d1).CND;
-def strike_plus5_cex = if AfterRTHStart then GREEKS(strike_plus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus5_normcdf_d1).strikeCEX else  GREEKS(strike_plus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus5_normcdf_d1).strikeCEX;
+def strike_plus5_cex = if AfterRTHStart then GREEKS(strike_plus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus5_normcdf_d1).strikeCEX else  GREEKS(strike_plus5, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus5_normcdf_d1).strikeCEX;
 
 def strike_plus6_d1 = GREEKS(strike_plus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus6_normcdf_d1 = cnd(strike_plus6_d1).CND;
-def strike_plus6_cex = if AfterRTHStart then GREEKS(strike_plus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus6_normcdf_d1).strikeCEX else GREEKS(strike_plus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus6_normcdf_d1).strikeCEX;
+def strike_plus6_cex = if AfterRTHStart then GREEKS(strike_plus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus6_normcdf_d1).strikeCEX else GREEKS(strike_plus6, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus6_normcdf_d1).strikeCEX;
 
 def strike_plus7_d1 = GREEKS(strike_plus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus7_normcdf_d1 = cnd(strike_plus7_d1).CND;
-def strike_plus7_cex = if AfterRTHStart then GREEKS(strike_plus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus7_normcdf_d1).strikeCEX else GREEKS(strike_plus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus7_normcdf_d1).strikeCEX;
+def strike_plus7_cex = if AfterRTHStart then GREEKS(strike_plus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus7_normcdf_d1).strikeCEX else GREEKS(strike_plus7, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus7_normcdf_d1).strikeCEX;
 
 def strike_plus8_d1 = GREEKS(strike_plus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus8_normcdf_d1 = cnd(strike_plus8_d1).CND;
-def strike_plus8_cex = if AfterRTHStart then GREEKS(strike_plus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus8_normcdf_d1).strikeCEX else GREEKS(strike_plus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus8_normcdf_d1).strikeCEX;
+def strike_plus8_cex = if AfterRTHStart then GREEKS(strike_plus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus8_normcdf_d1).strikeCEX else GREEKS(strike_plus8, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus8_normcdf_d1).strikeCEX;
 
 def strike_plus9_d1 = GREEKS(strike_plus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus9_normcdf_d1 = cnd(strike_plus9_d1).CND;
-def strike_plus9_cex = if AfterRTHStart then GREEKS(strike_plus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus9_normcdf_d1).strikeCEX else GREEKS(strike_plus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus9_normcdf_d1).strikeCEX;
+def strike_plus9_cex = if AfterRTHStart then GREEKS(strike_plus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus9_normcdf_d1).strikeCEX else GREEKS(strike_plus9, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus9_normcdf_d1).strikeCEX;
 
 def strike_plus10_d1 = GREEKS(strike_plus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_plus10_normcdf_d1 = cnd(strike_plus10_d1).CND;
-def strike_plus10_cex = if AfterRTHStart then GREEKS(strike_plus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus10_normcdf_d1).strikeCEX else GREEKS(strike_plus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus10_normcdf_d1).strikeCEX;
+def strike_plus10_cex = if AfterRTHStart then GREEKS(strike_plus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus10_normcdf_d1).strikeCEX else GREEKS(strike_plus10, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_plus10_normcdf_d1).strikeCEX;
 
 def strike_minus1_d1 = GREEKS(strike_minus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus1_normcdf_d1 = cnd(strike_base_d1).CND;
-def strike_minus1_cex = if AfterRTHStart then GREEKS(strike_minus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus1_normcdf_d1).strikeCEX else GREEKS(strike_minus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus1_normcdf_d1).strikeCEX;
+def strike_minus1_cex = if AfterRTHStart then GREEKS(strike_minus1, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus1_normcdf_d1).strikeCEX else GREEKS(strike_minus1, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus1_normcdf_d1).strikeCEX;
 
 def strike_minus2_d1 = GREEKS(strike_minus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus2_normcdf_d1 = cnd(strike_minus2_d1).CND;
-def strike_minus2_cex = if AfterRTHStart then GREEKS(strike_minus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus2_normcdf_d1).strikeCEX else GREEKS(strike_minus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus2_normcdf_d1).strikeCEX;
+def strike_minus2_cex = if AfterRTHStart then GREEKS(strike_minus2, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus2_normcdf_d1).strikeCEX else GREEKS(strike_minus2, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus2_normcdf_d1).strikeCEX;
 
 def strike_minus3_d1 = GREEKS(strike_minus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus3_normcdf_d1 = cnd(strike_minus3_d1).CND;
-def strike_minus3_cex = if AfterRTHStart then GREEKS(strike_minus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus3_normcdf_d1).strikeCEX else GREEKS(strike_minus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus3_normcdf_d1).strikeCEX;
+def strike_minus3_cex = if AfterRTHStart then GREEKS(strike_minus3, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus3_normcdf_d1).strikeCEX else GREEKS(strike_minus3, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus3_normcdf_d1).strikeCEX;
 
 def strike_minus4_d1 = GREEKS(strike_minus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus4_normcdf_d1 = cnd(strike_minus4_d1).CND;
-def strike_minus4_cex = if AfterRTHStart then GREEKS(strike_minus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus4_normcdf_d1).strikeCEX else GREEKS(strike_minus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus4_normcdf_d1).strikeCEX;
+def strike_minus4_cex = if AfterRTHStart then GREEKS(strike_minus4, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus4_normcdf_d1).strikeCEX else GREEKS(strike_minus4, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus4_normcdf_d1).strikeCEX;
 
 def strike_minus5_d1 = GREEKS(strike_minus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus5_normcdf_d1 = cnd(strike_minus5_d1).CND;
-def strike_minus5_cex = if AfterRTHStart then GREEKS(strike_minus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus5_normcdf_d1).strikeCEX else  GREEKS(strike_minus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus5_normcdf_d1).strikeCEX;
+def strike_minus5_cex = if AfterRTHStart then GREEKS(strike_minus5, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus5_normcdf_d1).strikeCEX else  GREEKS(strike_minus5, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus5_normcdf_d1).strikeCEX;
 
 def strike_minus6_d1 = GREEKS(strike_minus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus6_normcdf_d1 = cnd(strike_minus6_d1).CND;
-def strike_minus6_cex = if AfterRTHStart then GREEKS(strike_minus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus6_normcdf_d1).strikeCEX else GREEKS(strike_minus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus6_normcdf_d1).strikeCEX;
+def strike_minus6_cex = if AfterRTHStart then GREEKS(strike_minus6, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus6_normcdf_d1).strikeCEX else GREEKS(strike_minus6, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus6_normcdf_d1).strikeCEX;
 
 def strike_minus7_d1 = GREEKS(strike_minus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus7_normcdf_d1 = cnd(strike_minus7_d1).CND;
-def strike_minus7_cex = if AfterRTHStart then GREEKS(strike_minus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus7_normcdf_d1).strikeCEX else GREEKS(strike_minus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus7_normcdf_d1).strikeCEX;
+def strike_minus7_cex = if AfterRTHStart then GREEKS(strike_minus7, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus7_normcdf_d1).strikeCEX else GREEKS(strike_minus7, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus7_normcdf_d1).strikeCEX;
 
 def strike_minus8_d1 = GREEKS(strike_minus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus8_normcdf_d1 = cnd(strike_minus8_d1).CND;
-def strike_minus8_cex = if AfterRTHStart then GREEKS(strike_minus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus8_normcdf_d1).strikeCEX else GREEKS(strike_minus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus8_normcdf_d1).strikeCEX;
+def strike_minus8_cex = if AfterRTHStart then GREEKS(strike_minus8, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus8_normcdf_d1).strikeCEX else GREEKS(strike_minus8, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus8_normcdf_d1).strikeCEX;
 
 def strike_minus9_d1 = GREEKS(strike_minus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus9_normcdf_d1 = cnd(strike_minus9_d1).CND;
-def strike_minus9_cex = if AfterRTHStart then GREEKS(strike_minus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus9_normcdf_d1).strikeCEX else GREEKS(strike_minus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus9_normcdf_d1).strikeCEX;
+def strike_minus9_cex = if AfterRTHStart then GREEKS(strike_minus9, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus9_normcdf_d1).strikeCEX else GREEKS(strike_minus9, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus9_normcdf_d1).strikeCEX;
 
 def strike_minus10_d1 = GREEKS(strike_minus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).d1;
 def strike_minus10_normcdf_d1 = cnd(strike_minus10_d1).CND;
-def strike_minus10_cex = if AfterRTHStart then GREEKS(strike_minus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus10_normcdf_d1).strikeCEX else GREEKS(strike_minus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus10_normcdf_d1).strikeCEX;
+def strike_minus10_cex = if AfterRTHStart then GREEKS(strike_minus10, dateString, Vol, t, r, q, S, day, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus10_normcdf_d1).strikeCEX else GREEKS(strike_minus10, dateString, Vol, t, r, q, S, yday, r_q_Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S, strike_minus10_normcdf_d1).strikeCEX;
 
 plot base = if BarNumber() == HighestAll(lastbar - (shift_left*10)) then strike_base_cex[shift_left*-10] else Double.Nan;
 base.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
