@@ -52,7 +52,6 @@ def putOptionVolume18 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) 
 def putOptionVolume19 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 19), agg);
 def putOptionVolume20 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 20), agg);
 
-def putOptionVolumea = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 0), agg);
 def putOptionVolume1a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 1), agg);
 def putOptionVolume2a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 2), agg);
 def putOptionVolume3a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 3), agg);
@@ -98,7 +97,6 @@ def callOptionVolume18 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString)
 def callOptionVolume19 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 19), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 19), agg);
 def callOptionVolume20 = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 20), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 20), agg);
 
-def callOptionVolumea = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 0), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 0), agg);
 def callOptionVolume1a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 1), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 1), agg);
 def callOptionVolume2a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 2), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 2), agg);
 def callOptionVolume3a = if IsNaN(volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 3), agg)) then 0 else volume("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 3), agg);
@@ -229,7 +227,7 @@ AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(pu
 
 
 def itmcallstrike1 = CallStrike - strikeSpacing;
-plot itmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolumea / division, 0)) then itmcallstrike1 else Double.NaN;
+plot itmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1a / division, 0)) then itmcallstrike1 else Double.NaN;
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionVolume1a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionVolume1a / division, 0)) then yes else no, itmcallstrike1, callOptionVolume1a, Color.green, yes);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionVolume1 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionVolume1 / division, 0)) then yes else no, itmcallstrike1-space, putOptionVolume1, Color.red, no);
 
