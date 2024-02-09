@@ -52,7 +52,6 @@ def putOptionopen_interest18 = if IsNaN(open_interest("." + GetSymbol() + AsPric
 def putOptionopen_interest19 = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 19), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 19), agg);
 def putOptionopen_interest20 = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 20), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike - strikeSpacing * 20), agg);
 
-def putOptionopen_interesta = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 0), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 0), agg);
 def putOptionopen_interest1a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 1), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 1), agg);
 def putOptionopen_interest2a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 2), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 2), agg);
 def putOptionopen_interest3a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 3), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "P"+ AsPrice(PutStrike + strikeSpacing * 3), agg);
@@ -98,7 +97,6 @@ def callOptionopen_interest18 = if IsNaN(open_interest("." + GetSymbol() + AsPri
 def callOptionopen_interest19 = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 19), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 19), agg);
 def callOptionopen_interest20 = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 20), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike + strikeSpacing * 20), agg);
 
-def callOptionopen_interesta = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 0), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 0), agg);
 def callOptionopen_interest1a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 1), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 1), agg);
 def callOptionopen_interest2a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 2), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 2), agg);
 def callOptionopen_interest3a = if IsNaN(open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 3), agg)) then 0 else open_interest("." + GetSymbol() + AsPrice(DateString) + "C"+ AsPrice(CallStrike - strikeSpacing * 3), agg);
@@ -135,10 +133,8 @@ AddVerticalLine(BarNumber() >= HighestAll(lastbar +  shift_line_right) and  BarN
 def atmcallstrike = CallStrike;
 plot atmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionopen_interest / division, 0)) then atmcallstrike else Double.NaN;
 
-
-
-
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionopen_interest / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionopen_interest / division, 0)) then yes else no, atmcallstrike, callOptionopen_interest, Color.green, yes);
+
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionopen_interest / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionopen_interest / division, 0)) then yes else no, atmcallstrike-space, putOptionopen_interest, Color.red, no);
 
 def otmcallstrike1 = CallStrike + strikeSpacing;
@@ -229,7 +225,8 @@ AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(pu
 
 
 def itmcallstrike1 = CallStrike - strikeSpacing;
-plot itmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionopen_interesta / division, 0)) then itmcallstrike1 else Double.NaN;
+#addlabel(yes, "itmcallstrike1: " + itmcallstrike1);
+plot itmcall = if BarNumber() >= HighestAll(lastbar + shift_line_right) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionopen_interest1a / division, 0)) then itmcallstrike1 else Double.NaN;
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(callOptionopen_interest1a / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(callOptionopen_interest1a / division, 0)) then yes else no, itmcallstrike1, callOptionopen_interest1a, Color.green, yes);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar + shift_line_right+ Round(putOptionopen_interest1 / division, 0)) and  BarNumber() <= HighestAll(lastbar + shift_line_right + Round(putOptionopen_interest1 / division, 0)) then yes else no, itmcallstrike1-space, putOptionopen_interest1, Color.red, no);
 
