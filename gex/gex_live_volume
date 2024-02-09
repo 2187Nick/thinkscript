@@ -2,7 +2,7 @@ def DateString = GetYYYYMMDD()-20000000+getdaystoexpiration()-1;
 
 input threshold = 25; # millions
 
-def gex = if IsNan((volume("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" +getStrike()) -  volume("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + getStrike()))* Gamma() * close(getunderlyingSymbol()) /10000) then 0 else round((volume("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" +getStrike()) -  volume("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + getStrike()))* Gamma() * close(getunderlyingSymbol()) /10000,1);
+def gex = if IsNan((volume("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" + Asprice(getStrike())) -  volume("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + Asprice(getStrike())))* Gamma() * close(getunderlyingSymbol()) /10000) then 0 else round((volume("."+getunderlyingSymbol()+ AsPrice(DateString) + "C" + Asprice(getStrike())) -  volume("."+getunderlyingSymbol()+AsPrice(DateString) + "P" + Asprice(getStrike())))* Gamma() * close(getunderlyingSymbol()) /10000,1);
 
 addlabel(IsPut() and gex <= -.1, gex, if gex <= (-1*threshold) then color.red else color.light_red);
 addlabel(IsPut() and gex >= 0, "", color.black);
