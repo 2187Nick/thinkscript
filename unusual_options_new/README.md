@@ -2,7 +2,7 @@
 
 Category: Option Volume
 
-*** The default setting only shows 1 strike. Adjust the "Strikes" setting to see more than 1 strike.
+*** The default setting only shows 10 strikes. Adjust the "Strikes" setting to see more than 10 strikes.
 
 ![2023-03-23-TOS_CHARTS_2](https://user-images.githubusercontent.com/75052782/227285731-0b805b9a-704c-462f-8780-d08926980c08.png)
 
