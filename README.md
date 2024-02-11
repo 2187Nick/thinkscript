@@ -21,8 +21,8 @@
        <ul>
          <li><a href="#Equities">Equities</a></li>
          <li><a href="#Futures">Futures</a></li>
-         <li><a href="#spyspxcombo">SPY-SPX Combo</a></li>
-          <li><a href="#volume">Volume Only</a></li>
+         <li><a href="#spy-spx-combo">SPY-SPX Combo</a></li>
+          <li><a href="#volume-only">Volume Only</a></li>
       </ul>
     </li>
     <li>
@@ -36,8 +36,8 @@
     <li>
       <a href="#open-interest-volume">Open Interest and Option Volume</a>
       <ul>
-        <li><a href="#openinterest">Open Interest</a></li>
-        <li><a href="#optionvolume">Option Volume</a></li>
+        <li><a href="#open-interest">Open Interest</a></li>
+        <li><a href="#option-volume">Option Volume</a></li>
       </ul>
     </li>
     <li><a href="#contributors">Contributors</a></li>
@@ -52,6 +52,9 @@
 ## Unusual Options
 
 ### Equities
+<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new" target="_blank">
+    <img src="images/spy_uoa.png" alt="Logo">
+</a>
 
 ### Futures
 
