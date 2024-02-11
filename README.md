@@ -52,15 +52,22 @@
 ## Unusual Options
 
 ### Equities
-<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new" target="_blank" rel="noopener noreferrer">
+<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new">
     <img src="images/spy_uoa.png" alt="Logo">
 </a>
 
 ### Futures
+<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_ES">
+    <img src="images/es-futures-options.png" alt="Logo">
+</a>
 
 ### SPY-SPX Combo
+<a href="[https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new](https://github.com/2187Nick/thinkscript/tree/main/unusual_options_new/spy_spx_combo)">
+    <img src="images/spy-spx-combo.png" alt="Logo">
+</a>
 
 ### Volume Only
+https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_volume_only
 
 
 
