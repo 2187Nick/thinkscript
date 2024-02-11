@@ -10,6 +10,7 @@
   </a>
 
   <h1 align="center">Indicators and Strategies</h1>
+  <p>Clicking an image links to the code</p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
