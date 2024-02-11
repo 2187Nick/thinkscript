@@ -98,13 +98,20 @@ https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_vo
 ## Open Interest and Option Volume
 
 ### Open Interest
+<a href="https://github.com/2187Nick/thinkscript/tree/main/option_volume_and_openInterest_vertical_axis">
+    <img src="images/spy-open-interest.png" alt="Logo">
+</a>
 
 ### Option Volume
-
+<a href="https://github.com/2187Nick/thinkscript/tree/main/option_volume_and_openInterest_vertical_axis/es_nq">
+    <img src="images/es-vertical-volume-oi.png" alt="Logo">
+</a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Installation
+
+### How to add indicators to TOS:
 
 https://github.com/2187Nick/thinkscript/blob/main/Instructions.md
 
@@ -123,7 +130,9 @@ https://github.com/2187Nick/thinkscript/blob/main/Instructions.md
 Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request.
+
 You can also join discord to give ideas and feedback.
+
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
