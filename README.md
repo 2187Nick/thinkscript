@@ -75,10 +75,19 @@ https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_vo
 ## Greeks
 
 ### Gamma
+<a href="https://github.com/2187Nick/thinkscript/tree/main/gex_chart/lower">
+    <img src="images/gamma-exposure-horizontal.png" alt="Logo">
+</a>
     
 ### Vanna
+<a href="https://github.com/2187Nick/thinkscript/tree/main/vanna/vanna_chart">
+    <img src="images/vanna-exposure-horizontal.png" alt="Logo">
+</a>
 
 ### Charm
+<a href="https://github.com/2187Nick/thinkscript/tree/main/charm">
+    <img src="images/charm-option-chain.png" alt="Logo">
+</a>
     
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
