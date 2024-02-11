@@ -52,7 +52,7 @@
 ## Unusual Options
 
 ### Equities
-<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new" target="_blank">
+<a href="https://github.com/2187Nick/thinkscript/blob/main/unusual_options_new/unusual_options_new" target="_blank" rel="noopener noreferrer">
     <img src="images/spy_uoa.png" alt="Logo">
 </a>
 
