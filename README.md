@@ -150,7 +150,9 @@ Don't forget to give the project a star! Thanks again!
 
   [@2187Nick](https://twitter.com/2187Nick) - nick@2187.io
 
-  [https://github.com/2187Nick](https://github.com/2187Nick)
+  [Discord](https://discord.com/invite/vxKepZ6XNC)
+
+  [Github](https://github.com/2187Nick)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
