@@ -1,33 +1,64 @@
-#Option Volume x Price Plotted ES Feb 9, 2024
-# Contract automatically selected
+#Option Volume x Price Plotted ES Feb 10, 2024
+#Updated option code calculation. Added manual expiration option,
+#Contract automatically selected
 #Twitter @2187Nick
 
-### Should automatically capture 0dte contract except for EOM day.
+### Should automatically capture 0dte contract except for EOM day. - ## Modified by Glefdar on 02-10-2024: with help from @tifoji's date logic to check if it's the last day of the month, now also works automatically on EOM days
 
 declare once_per_bar;
 input strikeSpacing = 5;
 input tradesize = 100000;
 input strikes = 10;
-def roundup = no;
-
-def yyyymmdd = getYYYYMMDD();
-def month = getMonth();
+input manual = {default false, true};
+input setyyyymmdd = 20240108;
+def month = if manual then Round(setyyyymmdd / 100, 0) % 100 else getMonth();
+def year = if manual then Round(setyyyymmdd / 10000, 0) % 100 else getYear();
+def yyyymmdd = if manual then setyyyymmdd else getYYYYMMDD();
+def yy = year % 100;
 def yearandmonth = Round(yyyymmdd/ 100,0);
 def currentDayofMonth = getDayOfMonth(yyyymmdd);
 def dow = getDayOfWeek(yyyymmdd);
 def monthfirstDayofWeek = GetDayOfWeek(yearandmonth*100+1);
-def totalDaysElapsed = currentDayofMonth - 1 + ((dow - monthfirstDayofWeek + 6) % 7);
-def currentWeek = floor((totalDaysElapsed / 7) + 1);
+def daysInFirstWeek = if monthfirstDayofWeek == 6 then 7 else if     monthfirstDayofWeek == 7 then 6
+                      else if monthfirstDayofWeek == 1 then 5 
+                      else 6 - monthfirstDayofWeek;
 
-addlabel(yes, ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+"24C", color.Green);
-addlabel(yes, ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+"24P", color.Red);
+def isFirstWeek = currentDayofMonth <= daysInFirstWeek;
+
+def currentWeek = if isFirstWeek then 1 else 1 + Ceil((currentDayofMonth - daysInFirstWeek) / 7);
+
+#### Code from @tifoji to check if it's the last day of the month
+
+# Get Today's Date Components
+def currentYear = year;
+def currentMonth = month;
+def currentDay = GetDayOfMonth(yyyymmdd);
+
+# Determine if it's the beginning of a month 
+def isBeginningOfMonth = currentDay == 1;
+
+def isJanuary = currentMonth == 1;
+def adjustedYear = if isBeginningOfMonth and isJanuary then currentYear - 1 else currentYear;
+def adjustedYearShort = adjustedYear % 100;  # Get last two digits of the year
+
+# Adjust Month and Day
+def adjustedMonth = if isBeginningOfMonth then (if isJanuary then 12 else currentMonth - 1) else currentMonth;
+def daysInMonth = if adjustedMonth == 2 then (if (adjustedYear % 4 == 0) and (adjustedYear % 100 != 0 or adjustedYear % 400 == 0) then 29 else 28)
+                  else if adjustedMonth == 4 or adjustedMonth == 6 or adjustedMonth == 9 or adjustedMonth == 11 then 30
+                  else 31;
+
+### End tifoji's code
+
+def last_DOM_check = if currentDayofMonth == daysInMonth then 1 else if GetDayofWeek(yyyymmdd)==5 and (currentDayofMonth == daysInMonth-2) then 1 else if GetDayofWeek(yyyymmdd)==5 and (currentDayofMonth == daysInMonth-1) then 1 else 0;
+#addlabel(yes, "Last_DOM?: " + last_DOM_check, color.green);
+
+addlabel(yes, if last_DOM_check == 1 then ("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + yy + "C") else ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+ yy + "C", color.Green);
+addlabel(yes,  if last_DOM_check == 1 then ("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + yy + "P") else ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+ yy + "P", color.Red);
 DefineGlobalColor("CallColor", Color.GREEN);
 DefineGlobalColor("PutColor", Color.RED);
-#Addlabel(yes,  Symbol + "C" , GlobalColor("CallColor"));
-#Addlabel(yes,  Symbol + "P" , GlobalColor("PutColor"));
 
 def agg = AggregationPeriod.DAY;
-
+def roundup = no;
 def openlevel = close(period=agg);
 def base_strike = if roundup then Ceil(openlevel/10)*10 else Floor(openlevel/10)*10;
 
@@ -80,108 +111,125 @@ plot strike_minus20 = base_strike - strikeSpacing * 20;
 plot strike_minus21 = base_strike - strikeSpacing * 21;
 
 Script UOA {
+    input last_DOM_check = 0;
     input currentweek = 0;
     input strike = 0;
     input dow = 0;
     input month = 0;
+    input year = 0;
     input isput = 0;
 
-    plot trade = (volume("./E"+ (if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + "24" + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))*(ohlc4("./E"+ (if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + "24" + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))/2;
+    plot trade = 
+
+if last_DOM_check == 0 then 
+
+(volume("./E"+ 
+(if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))
+*
+(ohlc4("./E"+ 
+(if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))/2
+
+else
+
+(volume("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))
+*
+(ohlc4("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))/2
+;
 
 
 }
 
-def put = UOA(currentweek,strike_base,dow, month, 1).trade;
-def put1 = if strikes > 0 then UOA(currentweek,strike_plus1,dow, month, 1).trade else 0;
-def put2 = if strikes > 1 then UOA(currentweek,strike_plus2,dow, month, 1).trade else 0;
-def put3 = if strikes > 2 then UOA(currentweek,strike_plus3,dow, month, 1).trade else 0;
-def put4 = if strikes > 3 then UOA(currentweek,strike_plus4,dow, month, 1).trade else 0;
-def put5 = if strikes > 4 then UOA(currentweek,strike_plus5,dow, month, 1).trade else 0;
-def put6 = if strikes > 5 then UOA(currentweek,strike_plus6,dow, month, 1).trade else 0;
-def put7 = if strikes > 6 then UOA(currentweek,strike_plus7,dow, month, 1).trade else 0;
-def put8 = if strikes > 7 then UOA(currentweek,strike_plus8,dow, month, 1).trade else 0;
-def put9 = if strikes > 8 then UOA(currentweek,strike_plus9,dow, month, 1).trade else 0;
-def put10 = if strikes > 9 then UOA(currentweek,strike_plus10,dow, month, 1).trade else 0;
-def put11 = if strikes > 10 then UOA(currentweek,strike_plus11,dow, month, 1).trade else 0;
-def put12 = if strikes > 11 then UOA(currentweek,strike_plus12,dow, month, 1).trade else 0;
-def put13 = if strikes > 12 then UOA(currentweek,strike_plus13,dow, month, 1).trade else 0;
-def put14 = if strikes > 13 then UOA(currentweek,strike_plus14,dow, month, 1).trade else 0;
-def put15 = if strikes > 14 then UOA(currentweek,strike_plus15,dow, month, 1).trade else 0;
-def put16 = if strikes > 15 then UOA(currentweek,strike_plus16,dow, month, 1).trade else 0;
-def put17 = if strikes > 16 then UOA(currentweek,strike_plus17,dow, month, 1).trade else 0;
-def put18 = if strikes > 17 then UOA(currentweek,strike_plus18,dow, month, 1).trade else 0;
-def put19 = if strikes > 18 then UOA(currentweek,strike_plus19,dow, month, 1).trade else 0;
-def put20 = if strikes > 19 then UOA(currentweek,strike_plus20,dow, month, 1).trade else 0;
-def put21 = if strikes > 20 then UOA(currentweek,strike_plus21,dow, month, 1).trade else 0;
+def put = UOA(last_DOM_check,currentweek,strike_base,dow, month, yy, 1).trade;
+def put1 = if strikes > 0 then UOA(last_DOM_check,currentweek,strike_plus1,dow, month, yy, 1).trade else 0;
+def put2 = if strikes > 1 then UOA(last_DOM_check,currentweek,strike_plus2,dow, month, yy, 1).trade else 0;
+def put3 = if strikes > 2 then UOA(last_DOM_check,currentweek,strike_plus3,dow, month, yy, 1).trade else 0;
+def put4 = if strikes > 3 then UOA(last_DOM_check,currentweek,strike_plus4,dow, month, yy, 1).trade else 0;
+def put5 = if strikes > 4 then UOA(last_DOM_check,currentweek,strike_plus5,dow, month, yy, 1).trade else 0;
+def put6 = if strikes > 5 then UOA(last_DOM_check,currentweek,strike_plus6,dow, month, yy, 1).trade else 0;
+def put7 = if strikes > 6 then UOA(last_DOM_check,currentweek,strike_plus7,dow, month, yy, 1).trade else 0;
+def put8 = if strikes > 7 then UOA(last_DOM_check,currentweek,strike_plus8,dow, month, yy, 1).trade else 0;
+def put9 = if strikes > 8 then UOA(last_DOM_check,currentweek,strike_plus9,dow, month, yy, 1).trade else 0;
+def put10 = if strikes > 9 then UOA(last_DOM_check,currentweek,strike_plus10,dow, month, yy, 1).trade else 0;
+def put11 = if strikes > 10 then UOA(last_DOM_check,currentweek,strike_plus11,dow, month, yy, 1).trade else 0;
+def put12 = if strikes > 11 then UOA(last_DOM_check,currentweek,strike_plus12,dow, month, yy, 1).trade else 0;
+def put13 = if strikes > 12 then UOA(last_DOM_check,currentweek,strike_plus13,dow, month, yy, 1).trade else 0;
+def put14 = if strikes > 13 then UOA(last_DOM_check,currentweek,strike_plus14,dow, month, yy, 1).trade else 0;
+def put15 = if strikes > 14 then UOA(last_DOM_check,currentweek,strike_plus15,dow, month, yy, 1).trade else 0;
+def put16 = if strikes > 15 then UOA(last_DOM_check,currentweek,strike_plus16,dow, month, yy, 1).trade else 0;
+def put17 = if strikes > 16 then UOA(last_DOM_check,currentweek,strike_plus17,dow, month, yy, 1).trade else 0;
+def put18 = if strikes > 17 then UOA(last_DOM_check,currentweek,strike_plus18,dow, month, yy, 1).trade else 0;
+def put19 = if strikes > 18 then UOA(last_DOM_check,currentweek,strike_plus19,dow, month, yy, 1).trade else 0;
+def put20 = if strikes > 19 then UOA(last_DOM_check,currentweek,strike_plus20,dow, month, yy, 1).trade else 0;
+def put21 = if strikes > 20 then UOA(last_DOM_check,currentweek,strike_plus21,dow, month, yy, 1).trade else 0;
 
-def put_otm = UOA(currentweek,strike_base,dow, month, 1).trade;
-def put_otm1 = if strikes > 0 then UOA(currentweek,strike_minus1,dow, month, 1).trade else 0;
-def put_otm2 = if strikes > 1 then UOA(currentweek,strike_minus2,dow, month, 1).trade else 0;
-def put_otm3 = if strikes > 2 then UOA(currentweek,strike_minus3,dow, month, 1).trade else 0;
-def put_otm4 = if strikes > 3 then UOA(currentweek,strike_minus4,dow, month, 1).trade else 0;
-def put_otm5 = if strikes > 4 then UOA(currentweek,strike_minus5,dow, month, 1).trade else 0;
-def put_otm6 = if strikes > 5 then UOA(currentweek,strike_minus6,dow, month, 1).trade else 0;
-def put_otm7 = if strikes > 6 then UOA(currentweek,strike_minus7,dow, month, 1).trade else 0;
-def put_otm8 = if strikes > 7 then UOA(currentweek,strike_minus8,dow, month, 1).trade else 0;
-def put_otm9 = if strikes > 8 then UOA(currentweek,strike_minus9,dow, month, 1).trade else 0;
-def put_otm10 = if strikes > 9 then UOA(currentweek,strike_minus10,dow, month, 1).trade else 0;
-def put_otm11 = if strikes > 10 then UOA(currentweek,strike_minus11,dow, month, 1).trade else 0;
-def put_otm12 = if strikes > 11 then UOA(currentweek,strike_minus12,dow, month, 1).trade else 0;
-def put_otm13 = if strikes > 12 then UOA(currentweek,strike_minus13,dow, month, 1).trade else 0;
-def put_otm14 = if strikes > 13 then UOA(currentweek,strike_minus14,dow, month, 1).trade else 0;
-def put_otm15 = if strikes > 14 then UOA(currentweek,strike_minus15,dow, month, 1).trade else 0;
-def put_otm16 = if strikes > 15 then UOA(currentweek,strike_minus16,dow, month, 1).trade else 0;
-def put_otm17 = if strikes > 16 then UOA(currentweek,strike_minus17,dow, month, 1).trade else 0;
-def put_otm18 = if strikes > 17 then UOA(currentweek,strike_minus18,dow, month, 1).trade else 0;
-def put_otm19 = if strikes > 18 then UOA(currentweek,strike_minus19,dow, month, 1).trade else 0;
-def put_otm20 = if strikes > 19 then UOA(currentweek,strike_minus20,dow, month, 1).trade else 0;
-def put_otm21 = if strikes > 20 then UOA(currentweek,strike_minus21,dow, month, 1).trade else 0;
+def put_otm = UOA(last_DOM_check,currentweek,strike_base,dow, month, yy, 1).trade;
+def put_otm1 = if strikes > 0 then UOA(last_DOM_check,currentweek,strike_minus1,dow, month, yy, 1).trade else 0;
+def put_otm2 = if strikes > 1 then UOA(last_DOM_check,currentweek,strike_minus2,dow, month, yy, 1).trade else 0;
+def put_otm3 = if strikes > 2 then UOA(last_DOM_check,currentweek,strike_minus3,dow, month, yy, 1).trade else 0;
+def put_otm4 = if strikes > 3 then UOA(last_DOM_check,currentweek,strike_minus4,dow, month, yy, 1).trade else 0;
+def put_otm5 = if strikes > 4 then UOA(last_DOM_check,currentweek,strike_minus5,dow, month, yy, 1).trade else 0;
+def put_otm6 = if strikes > 5 then UOA(last_DOM_check,currentweek,strike_minus6,dow, month, yy, 1).trade else 0;
+def put_otm7 = if strikes > 6 then UOA(last_DOM_check,currentweek,strike_minus7,dow, month, yy, 1).trade else 0;
+def put_otm8 = if strikes > 7 then UOA(last_DOM_check,currentweek,strike_minus8,dow, month, yy, 1).trade else 0;
+def put_otm9 = if strikes > 8 then UOA(last_DOM_check,currentweek,strike_minus9,dow, month, yy, 1).trade else 0;
+def put_otm10 = if strikes > 9 then UOA(last_DOM_check,currentweek,strike_minus10,dow, month, yy, 1).trade else 0;
+def put_otm11 = if strikes > 10 then UOA(last_DOM_check,currentweek,strike_minus11,dow, month, yy, 1).trade else 0;
+def put_otm12 = if strikes > 11 then UOA(last_DOM_check,currentweek,strike_minus12,dow, month, yy, 1).trade else 0;
+def put_otm13 = if strikes > 12 then UOA(last_DOM_check,currentweek,strike_minus13,dow, month, yy, 1).trade else 0;
+def put_otm14 = if strikes > 13 then UOA(last_DOM_check,currentweek,strike_minus14,dow, month, yy, 1).trade else 0;
+def put_otm15 = if strikes > 14 then UOA(last_DOM_check,currentweek,strike_minus15,dow, month, yy, 1).trade else 0;
+def put_otm16 = if strikes > 15 then UOA(last_DOM_check,currentweek,strike_minus16,dow, month, yy, 1).trade else 0;
+def put_otm17 = if strikes > 16 then UOA(last_DOM_check,currentweek,strike_minus17,dow, month, yy, 1).trade else 0;
+def put_otm18 = if strikes > 17 then UOA(last_DOM_check,currentweek,strike_minus18,dow, month, yy, 1).trade else 0;
+def put_otm19 = if strikes > 18 then UOA(last_DOM_check,currentweek,strike_minus19,dow, month, yy, 1).trade else 0;
+def put_otm20 = if strikes > 19 then UOA(last_DOM_check,currentweek,strike_minus20,dow, month, yy, 1).trade else 0;
+def put_otm21 = if strikes > 20 then UOA(last_DOM_check,currentweek,strike_minus21,dow, month, yy, 1).trade else 0;
 
-def call = UOA(currentweek,strike_base,dow, month, 0).trade;
-def call1 = if strikes > 0 then UOA(currentweek,strike_plus1,dow, month, 0).trade else 0;
-def call2 = if strikes > 1 then UOA(currentweek,strike_plus2,dow, month, 0).trade else 0;
-def call3 = if strikes > 2 then UOA(currentweek,strike_plus3,dow, month, 0).trade else 0;
-def call4 = if strikes > 3 then UOA(currentweek,strike_plus4,dow, month, 0).trade else 0;
-def call5 = if strikes > 4 then UOA(currentweek,strike_plus5,dow, month, 0).trade else 0;
-def call6 = if strikes > 5 then UOA(currentweek,strike_plus6,dow, month, 0).trade else 0;
-def call7 = if strikes > 6 then UOA(currentweek,strike_plus7,dow, month, 0).trade else 0;
-def call8 = if strikes > 7 then UOA(currentweek,strike_plus8,dow, month, 0).trade else 0;
-def call9 = if strikes > 8 then UOA(currentweek,strike_plus9,dow, month, 0).trade else 0;
-def call10 = if strikes > 9 then UOA(currentweek,strike_plus10,dow, month, 0).trade else 0;
-def call11 = if strikes > 10 then UOA(currentweek,strike_plus11,dow, month, 0).trade else 0;
-def call12 = if strikes > 11 then UOA(currentweek,strike_plus12,dow, month, 0).trade else 0;
-def call13 = if strikes > 12 then UOA(currentweek,strike_plus13,dow, month, 0).trade else 0;
-def call14 = if strikes > 13 then UOA(currentweek,strike_plus14,dow, month, 0).trade else 0;
-def call15 = if strikes > 14 then UOA(currentweek,strike_plus15,dow, month, 0).trade else 0;
-def call16 = if strikes > 15 then UOA(currentweek,strike_plus16,dow, month, 0).trade else 0;
-def call17 = if strikes > 16 then UOA(currentweek,strike_plus17,dow, month, 0).trade else 0;
-def call18 = if strikes > 17 then UOA(currentweek,strike_plus18,dow, month, 0).trade else 0;
-def call19 = if strikes > 18 then UOA(currentweek,strike_plus19,dow, month, 0).trade else 0;
-def call20 = if strikes > 19 then UOA(currentweek,strike_plus20,dow, month, 0).trade else 0;
-def call21 = if strikes > 20 then UOA(currentweek,strike_plus21,dow, month, 0).trade else 0;
+def call = UOA(last_DOM_check,currentweek,strike_base,dow, month, yy, 0).trade;
+def call1 = if strikes > 0 then UOA(last_DOM_check,currentweek,strike_plus1,dow, month, yy, 0).trade else 0;
+def call2 = if strikes > 1 then UOA(last_DOM_check,currentweek,strike_plus2,dow, month, yy, 0).trade else 0;
+def call3 = if strikes > 2 then UOA(last_DOM_check,currentweek,strike_plus3,dow, month, yy, 0).trade else 0;
+def call4 = if strikes > 3 then UOA(last_DOM_check,currentweek,strike_plus4,dow, month, yy, 0).trade else 0;
+def call5 = if strikes > 4 then UOA(last_DOM_check,currentweek,strike_plus5,dow, month, yy, 0).trade else 0;
+def call6 = if strikes > 5 then UOA(last_DOM_check,currentweek,strike_plus6,dow, month, yy, 0).trade else 0;
+def call7 = if strikes > 6 then UOA(last_DOM_check,currentweek,strike_plus7,dow, month, yy, 0).trade else 0;
+def call8 = if strikes > 7 then UOA(last_DOM_check,currentweek,strike_plus8,dow, month, yy, 0).trade else 0;
+def call9 = if strikes > 8 then UOA(last_DOM_check,currentweek,strike_plus9,dow, month, yy, 0).trade else 0;
+def call10 = if strikes > 9 then UOA(last_DOM_check,currentweek,strike_plus10,dow, month, yy, 0).trade else 0;
+def call11 = if strikes > 10 then UOA(last_DOM_check,currentweek,strike_plus11,dow, month, yy, 0).trade else 0;
+def call12 = if strikes > 11 then UOA(last_DOM_check,currentweek,strike_plus12,dow, month, yy, 0).trade else 0;
+def call13 = if strikes > 12 then UOA(last_DOM_check,currentweek,strike_plus13,dow, month, yy, 0).trade else 0;
+def call14 = if strikes > 13 then UOA(last_DOM_check,currentweek,strike_plus14,dow, month, yy, 0).trade else 0;
+def call15 = if strikes > 14 then UOA(last_DOM_check,currentweek,strike_plus15,dow, month, yy, 0).trade else 0;
+def call16 = if strikes > 15 then UOA(last_DOM_check,currentweek,strike_plus16,dow, month, yy, 0).trade else 0;
+def call17 = if strikes > 16 then UOA(last_DOM_check,currentweek,strike_plus17,dow, month, yy, 0).trade else 0;
+def call18 = if strikes > 17 then UOA(last_DOM_check,currentweek,strike_plus18,dow, month, yy, 0).trade else 0;
+def call19 = if strikes > 18 then UOA(last_DOM_check,currentweek,strike_plus19,dow, month, yy, 0).trade else 0;
+def call20 = if strikes > 19 then UOA(last_DOM_check,currentweek,strike_plus20,dow, month, yy, 0).trade else 0;
+def call21 = if strikes > 20 then UOA(last_DOM_check,currentweek,strike_plus21,dow, month, yy, 0).trade else 0;
 
-def call_itm = UOA(currentweek,strike_base,dow, month, 0).trade;
-def call_itm1 = if strikes > 0 then UOA(currentweek,strike_minus1,dow, month, 0).trade else 0;
-def call_itm2 = if strikes > 1 then UOA(currentweek,strike_minus2,dow, month, 0).trade else 0;
-def call_itm3 = if strikes > 2 then UOA(currentweek,strike_minus3,dow, month, 0).trade else 0;
-def call_itm4 = if strikes > 3 then UOA(currentweek,strike_minus4,dow, month, 0).trade else 0;
-def call_itm5 = if strikes > 4 then UOA(currentweek,strike_minus5,dow, month, 0).trade else 0;
-def call_itm6 = if strikes > 5 then UOA(currentweek,strike_minus6,dow, month, 0).trade else 0;
-def call_itm7 = if strikes > 6 then UOA(currentweek,strike_minus7,dow, month, 0).trade else 0;
-def call_itm8 = if strikes > 7 then UOA(currentweek,strike_minus8,dow, month, 0).trade else 0;
-def call_itm9 = if strikes > 8 then UOA(currentweek,strike_minus9,dow, month, 0).trade else 0;
-def call_itm10 = if strikes > 9 then UOA(currentweek,strike_minus10,dow, month, 0).trade else 0;
-def call_itm11 = if strikes > 10 then UOA(currentweek,strike_minus11,dow, month, 0).trade else 0;
-def call_itm12 = if strikes > 11 then UOA(currentweek,strike_minus12,dow, month, 0).trade else 0;
-def call_itm13 = if strikes > 12 then UOA(currentweek,strike_minus13,dow, month, 0).trade else 0;
-def call_itm14 = if strikes > 13 then UOA(currentweek,strike_minus14,dow, month, 0).trade else 0;
-def call_itm15 = if strikes > 14 then UOA(currentweek,strike_minus15,dow, month, 0).trade else 0;
-def call_itm16 = if strikes > 15 then UOA(currentweek,strike_minus16,dow, month, 0).trade else 0;
-def call_itm17 = if strikes > 16 then UOA(currentweek,strike_minus17,dow, month, 0).trade else 0;
-def call_itm18 = if strikes > 17 then UOA(currentweek,strike_minus18,dow, month, 0).trade else 0;
-def call_itm19 = if strikes > 18 then UOA(currentweek,strike_minus19,dow, month, 0).trade else 0;
-def call_itm20 = if strikes > 19 then UOA(currentweek,strike_minus20,dow, month, 0).trade else 0;
-def call_itm21 = if strikes > 20 then UOA(currentweek,strike_minus21,dow, month, 0).trade else 0;
+def call_itm = UOA(last_DOM_check,currentweek,strike_base,dow, month, yy, 0).trade;
+def call_itm1 = if strikes > 0 then UOA(last_DOM_check,currentweek,strike_minus1,dow, month, yy, 0).trade else 0;
+def call_itm2 = if strikes > 1 then UOA(last_DOM_check,currentweek,strike_minus2,dow, month, yy, 0).trade else 0;
+def call_itm3 = if strikes > 2 then UOA(last_DOM_check,currentweek,strike_minus3,dow, month, yy, 0).trade else 0;
+def call_itm4 = if strikes > 3 then UOA(last_DOM_check,currentweek,strike_minus4,dow, month, yy, 0).trade else 0;
+def call_itm5 = if strikes > 4 then UOA(last_DOM_check,currentweek,strike_minus5,dow, month, yy, 0).trade else 0;
+def call_itm6 = if strikes > 5 then UOA(last_DOM_check,currentweek,strike_minus6,dow, month, yy, 0).trade else 0;
+def call_itm7 = if strikes > 6 then UOA(last_DOM_check,currentweek,strike_minus7,dow, month, yy, 0).trade else 0;
+def call_itm8 = if strikes > 7 then UOA(last_DOM_check,currentweek,strike_minus8,dow, month, yy, 0).trade else 0;
+def call_itm9 = if strikes > 8 then UOA(last_DOM_check,currentweek,strike_minus9,dow, month, yy, 0).trade else 0;
+def call_itm10 = if strikes > 9 then UOA(last_DOM_check,currentweek,strike_minus10,dow, month, yy, 0).trade else 0;
+def call_itm11 = if strikes > 10 then UOA(last_DOM_check,currentweek,strike_minus11,dow, month, yy, 0).trade else 0;
+def call_itm12 = if strikes > 11 then UOA(last_DOM_check,currentweek,strike_minus12,dow, month, yy, 0).trade else 0;
+def call_itm13 = if strikes > 12 then UOA(last_DOM_check,currentweek,strike_minus13,dow, month, yy, 0).trade else 0;
+def call_itm14 = if strikes > 13 then UOA(last_DOM_check,currentweek,strike_minus14,dow, month, yy, 0).trade else 0;
+def call_itm15 = if strikes > 14 then UOA(last_DOM_check,currentweek,strike_minus15,dow, month, yy, 0).trade else 0;
+def call_itm16 = if strikes > 15 then UOA(last_DOM_check,currentweek,strike_minus16,dow, month, yy, 0).trade else 0;
+def call_itm17 = if strikes > 16 then UOA(last_DOM_check,currentweek,strike_minus17,dow, month, yy, 0).trade else 0;
+def call_itm18 = if strikes > 17 then UOA(last_DOM_check,currentweek,strike_minus18,dow, month, yy, 0).trade else 0;
+def call_itm19 = if strikes > 18 then UOA(last_DOM_check,currentweek,strike_minus19,dow, month, yy, 0).trade else 0;
+def call_itm20 = if strikes > 19 then UOA(last_DOM_check,currentweek,strike_minus20,dow, month, yy, 0).trade else 0;
+def call_itm21 = if strikes > 20 then UOA(last_DOM_check,currentweek,strike_minus21,dow, month, yy, 0).trade else 0;
 
 ######################
 #Chart Bubbles Puts
