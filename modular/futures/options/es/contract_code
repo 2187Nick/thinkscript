@@ -1,0 +1,145 @@
+# Modular script to test capturing specific day /ES contract code
+#Twitter @2187Nick
+
+input manual = {default false, true};
+input setyyyymmdd = 20240108;
+
+declare once_per_bar;
+
+input tradesize = 10000;
+
+def month = if manual then Round(setyyyymmdd / 100, 0) % 100 else getMonth();
+def year = if manual then Round(setyyyymmdd / 10000, 0) % 100 else getYear();
+def yyyymmdd = if manual then setyyyymmdd else getYYYYMMDD();
+
+def yy = year % 100;
+#addlabel(yes, "yy: " + yy, color.green);
+def yearandmonth = Round(yyyymmdd/ 100,0);
+#addlabel(yes, "yearandmonth: " + yearandmonth, color.green);
+def currentDayofMonth = getDayOfMonth(yyyymmdd);
+def dow = getDayOfWeek(yyyymmdd);
+def monthfirstDayofWeek = GetDayOfWeek(yearandmonth*100+1);
+
+def daysInFirstWeek = if monthfirstDayofWeek == 6 then 7 else if     monthfirstDayofWeek == 7 then 6
+                      else if monthfirstDayofWeek == 1 then 5 
+                      else 6 - monthfirstDayofWeek;
+
+def isFirstWeek = currentDayofMonth <= daysInFirstWeek;
+
+def adjustment = if isFirstWeek then 0 else currentDayofMonth - daysInFirstWeek;
+#addlabel(yes, "adjustment: " + adjustment, color.violet);
+
+def currentWeek = if isFirstWeek then 1 else 1 + Ceil((currentDayofMonth - daysInFirstWeek) / 7);
+
+#addlabel(yes, "Month: " + month);
+#addlabel(yes, "Year: " + year);
+#addlabel(yes, "YYYYMMDD: " + yyyymmdd);
+#addlabel(yes, "Day of Month: " + currentDayofMonth, color.orange);
+#addlabel(yes, "Day of Week: " + dow);
+#addlabel(yes, "Day of Week first day of month: " + monthfirstDayofWeek);
+#addlabel(yes, "Days in First Week: " + daysInFirstWeek, color.white);
+#addlabel(yes, "We are in 1st Week: " + isFirstWeek, color.cyan);
+#addlabel(yes, "Week: " + currentWeek, color.orange);
+
+########
+
+# Get Today's Date Components
+def currentYear = year;
+def currentMonth = month;
+def currentDay = GetDayOfMonth(yyyymmdd);
+
+# Determine if it's the beginning of a month 
+def isBeginningOfMonth = currentDay == 1;
+
+def isJanuary = currentMonth == 1;
+def adjustedYear = if isBeginningOfMonth and isJanuary then currentYear - 1 else currentYear;
+def adjustedYearShort = adjustedYear % 100;  # Get last two digits of the year
+
+# Adjust Month and Day
+def adjustedMonth = if isBeginningOfMonth then (if isJanuary then 12 else currentMonth - 1) else currentMonth;
+def daysInMonth = if adjustedMonth == 2 then (if (adjustedYear % 4 == 0) and (adjustedYear % 100 != 0 or adjustedYear % 400 == 0) then 29 else 28)
+                  else if adjustedMonth == 4 or adjustedMonth == 6 or adjustedMonth == 9 or adjustedMonth == 11 then 30
+                  else 31;
+
+### End tifoji's code
+
+def last_DOM_check = if currentDayofMonth == daysInMonth then 1 else if GetDayofWeek(yyyymmdd)==5 and (currentDayofMonth == daysInMonth-2) then 1 else if GetDayofWeek(yyyymmdd)==5 and (currentDayofMonth == daysInMonth-1) then 1 else 0;
+#addlabel(yes, "Last_DOM?: " + last_DOM_check, color.green);
+
+addlabel(yes, if last_DOM_check == 1 then ("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + yy + "C") else ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+ yy + "C", color.Green);
+addlabel(yes,  if last_DOM_check == 1 then ("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + yy + "P") else ("/E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+ yy + "P", color.Red);
+DefineGlobalColor("CallColor", Color.GREEN);
+DefineGlobalColor("PutColor", Color.RED);
+
+def agg = AggregationPeriod.DAY;
+
+#def openlevel = close(period=agg);
+def openlevel = 4900;
+
+def base_strike = Floor(openlevel/10)*10;
+#addlabel(yes, "base_strike: " + base_strike);
+
+
+AddChartBubble(yes, high, if last_DOM_check == 1 then ("EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + yy) else ("E"+ (if dow == 5 then "W" + currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z"))+ yy , if currentweek == 1 then color.yellow else if currentweek == 2 then color.violet else if currentweek == 3 then color.blue else if currentweek == 4 then color.green else color.red, yes);
+
+addlabel(yes, "week1", color.yellow);
+addlabel(yes, "week2", color.violet);
+addlabel(yes, "week3", color.blue);
+addlabel(yes, "week4", color.green);
+addlabel(yes, "week5", color.red);
+AddCloud(if currentweek == 1 then Double.POSITIVE_INFINITY else Double.NaN, Double.NEGATIVE_INFINITY, color.yellow,  color.yellow);
+AddCloud(if currentweek == 2 then Double.POSITIVE_INFINITY else Double.NaN, Double.NEGATIVE_INFINITY, color.violet,  color.violet);
+AddCloud(if currentweek == 3 then Double.POSITIVE_INFINITY else Double.NaN, Double.NEGATIVE_INFINITY, color.blue,  color.blue);
+AddCloud(if currentweek == 4 then Double.POSITIVE_INFINITY else Double.NaN, Double.NEGATIVE_INFINITY, color.green,  color.green);
+AddCloud(if currentweek == 5 then Double.POSITIVE_INFINITY else Double.NaN, Double.NEGATIVE_INFINITY, color.red,  color.red);
+
+
+#plot weekline = currentweek;
+#weekline.AssignValueColor(if currentweek == 1 then color.yellow else if currentweek == 2 then color.violet else if currentweek == 3 then color.blue else if currentweek == 4 then color.green else color.white);
+
+Script UOA {
+    input last_DOM_check = 0;
+    input currentweek = 0;
+    input strike = 0;
+    input dow = 0;
+    input month = 0;
+    input year = 0;
+    input isput = 0;
+
+    plot trade = 
+
+if last_DOM_check == 0 then 
+
+(volume("./E"+ 
+(if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))
+*
+(ohlc4("./E"+ 
+(if dow == 5 then "W"+ currentweek else if dow == 4 then currentweek + "D" else if dow == 3 then currentweek + "C"  else if dow == 2 then currentweek + "B" else if dow == 1 then currentweek + "A" else "") + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))/2
+
+else
+
+(volume("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))
+*
+(ohlc4("./EW" + (if month == 1 then "F" else if month == 2 then "G" else if month == 3 then "H" else if month == 4 then "J" else if month == 5 then "K" else if month == 6 then "M" else if month == 7 then "N" else if month == 8 then "Q" else if month == 9 then "U" else if month == 10 then "V" else if month == 11 then "X" else "Z") + year + (if isput == 1 then "P" else "C") + AsPrice(strike)+":XCME"))/2
+;
+
+
+}
+
+#def put = UOA(last_DOM_check,currentweek,base_strike,dow, month, yy, 1).trade;
+
+#def call = UOA(last_DOM_check,currentweek,base_strike,dow, month, yy, 0).trade;
+
+#def plotput = put;
+
+#AddChartBubble(yes, base_strike, "$" + Round((put) / 10, 0) + "K", GlobalColor("PutColor"), no);
+
+######################
+#Chart Bubbles Puts
+
+#AddChartBubble(!IsNan(put) and put * 100 > tradesize, base_strike, "$" + Round((put) / 10, 0) + "K", GlobalColor("PutColor"), no);
+
+#AddChartBubble(!IsNan(call) and call * 100 > tradesize, base_strike, "$" + Round((call) / 10, 0) + "K", GlobalColor("callColor"), yes);
+
+#plot strike_base = base_strike;
+#strike_base.SetDefaultColor(Color.Dark_Gray);
