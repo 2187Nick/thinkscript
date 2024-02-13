@@ -38,7 +38,7 @@ def seconds_left = SecondsTillTime(1615);
 def hours_left = seconds_left / 3600;
 def days_left = if hours_left <= 0 then 0 else hours_left / 24;
 
-def Vol = imp_volatility(symbol="SPY", agg);
+def Vol = imp_volatility(symbol="/ES", agg);
 #addlabel(yes, "Vol: " + Vol, color.white);
 def S = if AfterRTHStart then close(symbol="SPX", agg) else  close(symbol="SPX", agg)[1];
 #def S = close(period = agg);
