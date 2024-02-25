@@ -10,3 +10,7 @@ Thinkscript doesnt have built in functions to draw shapes. Here is what I came u
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/335abd7e-1e62-4a48-8aa9-16ee703af40e)
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/393ec3c4-3391-44c4-b0a5-d39e584853f7)
+
+## Emojis
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/08b41bd2-08fd-44ba-8bf0-214e724f21f7)
+
