@@ -40,9 +40,9 @@ Category: Option Volatility
 
   1. This monitors the 2 strikes closest to current price.
   
-  2. If the stock price is rising and the put option is also rising then bearish divergence.
+  2. If the stock price is rising and the put option is also rising then 🐼 bearish divergence.
   
-  3. If the stock price is falling and the call option is rising then bullish divergence.
+  3. If the stock price is falling and the call option is rising then 🐂 bullish divergence.
   
   4. The manual version of this indicators allows you to set a specific expiration date and strikes
 
