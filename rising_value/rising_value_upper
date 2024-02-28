@@ -5,8 +5,8 @@ input lookback = 10;
 input ManuallySetExpiration = {default "false", "true"};
 input Expiration_YYMMDD = 240315;
 input ManuallySetStrikes = {default "false", "true"};
-input Strike1 = 510;
-input Strike2 = 511;
+input Strike1 = 510.0;
+input Strike2 = 511.0;
 
 def DateString_auto = GetYYYYMMDD()-20000000;
 def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
