@@ -5,9 +5,9 @@ input lookbackperiodstart = 3;
 input lookbackPeriod = 15;
 input ManuallySetExpiration = {default "false", "true"};
 input Expiration_YYMMDD = 240315;
-input Strike1 = 505.0;
-input Strike2 = 506.0;
-input minimum = .01;
+input Strike1 = 5080.0;
+input Strike2 = 5085.0;
+input minimum = .10;
 input bull = "🐂";
 input bear = "🐼";
 
