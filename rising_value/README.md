@@ -4,7 +4,23 @@
 
 Category: Option Volatility
 
-![image](https://github.com/2187Nick/thinkscript/assets/75052782/eb95a1ac-a9ca-475c-9c63-6c2e260ef1b2)
+```
+## Stock Up and Put Value Up == Potential Bear Divergence.
+
+## Stock Down and Call Value Up === Potential Bull Divergence.
+```
+
+"O" indicates alert generated at open of candle
+"C" indicates the alert generated at close of candle.
+
+
+# SPY
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/c84f08a2-b86b-4ad1-9cf6-a0de93fc3ff5)
+
+
+# SPX
+![image](https://github.com/2187Nick/thinkscript/assets/75052782/e376ee2a-966a-4fc0-a525-6c7b5ce01387)
+
 
 
 > Chart requirements for optimal use:
@@ -24,7 +40,8 @@ Category: Option Volatility
 ```bash
 
   1. Lookback Period End: 15; It will monitor this number of bars in history.
-  (It compares the current open price to each close price for previous 15 candles.)
+  (It compares the current open price to each open price for previous 15 candles.)
+  (It compares the current close price to each close price for previous 15 candles.)
   2. Lookback: 3;  This skips the first 3 previous bars. 
   3. Manually Set Expiration = false; (Default this selects current day. Which is good for SPY and QQQ)
         A. Set this to true and then set the Expiration in #3.
