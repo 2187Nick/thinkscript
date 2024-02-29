@@ -10,7 +10,8 @@ Category: Option Volatility
 ## Stock Down and Call Value Up === Potential Bull Divergence.
 ```
 
-"O" indicates alert generated at open of candle
+"O" indicates alert generated at open of candle.
+
 "C" indicates the alert generated at close of candle.
 
 
