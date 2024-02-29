@@ -1,0 +1,73 @@
+# Rising Value Open and Close V1 Feb 29 , 2024
+# Twitter @2187Nick
+
+input lookbackperiodstart = 3;
+input lookbackPeriod = 15;
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 240315;
+input Strike1 = 505.0;
+input Strike2 = 506.0;
+input minimum = .01;
+input bull = "🐂";
+input bear = "🐼";
+
+def DateString_auto = GetYYYYMMDD()-20000000;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+DefineGlobalColor("CallColor", Color.GREEN);
+DefineGlobalColor("CallColor2", Color.CYAN);
+DefineGlobalColor("PutColor", Color.RED);
+DefineGlobalColor("PutColor2", Color.Violet);
+
+addlabel(1, Strike1 + " " + lookbackPeriod + ": " + "🐂",  GlobalColor("CallColor"));
+addlabel(1, Strike2 + " " + lookbackPeriod + ": " + "🐂",  GlobalColor("CallColor2"));
+addlabel(1, Strike1 + " " + lookbackPeriod + ": " + "🐼",  GlobalColor("PutColor"));
+addlabel(1, Strike2 + " " + lookbackPeriod + ": " + "🐼",  GlobalColor("PutColor2"));
+
+def price1 = strike1;
+def price2 = strike2;
+
+def call_option_open = open("." + getSymbol() + AsPrice(DateString) + "C" + AsPrice(price1)); 
+def call_option_close = close("." + getSymbol() + AsPrice(DateString) + "C" + AsPrice(price1));
+def call_option_open2 = open("." + getSymbol() + AsPrice(DateString) + "C" + AsPrice(price2));
+def call_option_close2 = close("." + getSymbol() + AsPrice(DateString) + "C" + AsPrice(price2));
+
+def currentStockPriceOpen = open;
+def currentStockPriceClose = close;
+
+# Bullish divergence
+# Stock current price open is lower than a previous close price AND
+# The call option open price now is higher than option price at that time.
+def bullishDivergence_open = fold g = lookbackperiodstart to lookbackPeriod with bullish = 0 do bullish + (if currentStockPriceOpen < GetValue(currentStockPriceOpen, g) and GetValue(call_option_open, g) + minimum <= call_option_open then 1 else 0);
+def bullishDivergence_close = fold z = lookbackperiodstart to lookbackPeriod with bullishz = 0 do bullishz + (if currentStockPriceClose < GetValue(currentStockPriceClose, z) and GetValue(call_option_close, z) + minimum <= call_option_close then 1 else 0);
+
+def bullishDivergence2_open = fold h = lookbackperiodstart to lookbackPeriod with bullish2 = 0 do bullish2 + (if currentStockPriceOpen < GetValue(currentStockPriceOpen, h) and GetValue(call_option_open2, h) + minimum <= call_option_open2 then 1 else 0);
+def bullishDivergence2_close = fold a = lookbackperiodstart to lookbackPeriod with bullish2a = 0 do bullish2a + (if currentStockPriceClose < GetValue(currentStockPriceClose, a) and GetValue(call_option_close2, a) + minimum <= call_option_close2 then 1 else 0);
+
+# Equity price is up and call option is up.
+addchartbubble(bullishDivergence_open, low, bull + price1 + " O", GlobalColor("CallColor"),no);
+addchartbubble(bullishDivergence_close, low, bull + price1 + " C", GlobalColor("CallColor"),no);
+addchartbubble(bullishDivergence2_open, low, bull + price2 + " O", GlobalColor("CallColor2"), no);
+addchartbubble(bullishDivergence2_close, low, bull + price2 + " C", GlobalColor("CallColor2"), no);
+
+## Bearish divergence
+def put_option_open = open("." + getSymbol() + AsPrice(DateString) + "P" + AsPrice(price1));
+def put_option_close = close("." + getSymbol() + AsPrice(DateString) + "P" + AsPrice(price1));
+
+def put_option_open2 = open("." + getSymbol() + AsPrice(DateString) + "P" + AsPrice(price2));
+def put_option_close2 = close("." + getSymbol() + AsPrice(DateString) + "P" + AsPrice(price2));
+
+# Bearish divergence detection using fold
+# Stock current price open is higher than a previous close price AND
+# The put option open price now is higher than option price at that time.
+def bearishDivergence_open = fold i = lookbackperiodstart to lookbackPeriod with bearish = 0 do bearish + if GetValue(currentStockPriceOpen, i) < currentStockPriceOpen and GetValue(put_option_open, i) + minimum <= put_option_open then 1 else 0;
+def bearishDivergence_close = fold b = lookbackperiodstart to lookbackPeriod with bearishb = 0 do bearishb + if GetValue(currentStockPriceClose, b) < currentStockPriceClose and GetValue(put_option_close, b) + minimum <= put_option_close then 1 else 0;
+
+def bearishDivergence2_open = fold j = lookbackperiodstart to lookbackPeriod with bearish2 = 0 do bearish2 + if GetValue(currentStockPriceOpen, j) < currentStockPriceOpen and GetValue(put_option_open2, j) + minimum <= put_option_open2 then 1 else 0;
+def bearishDivergence2_close = fold c = lookbackperiodstart to lookbackPeriod with bearishc = 0 do bearishc + if GetValue(currentStockPriceClose, c) < currentStockPriceClose and GetValue(put_option_close2, c) + minimum <= put_option_close2 then 1 else 0;
+
+# Equity price is up and call option is up.
+addchartbubble(bearishDivergence_open, high, bear + price1 + " O", GlobalColor("PutColor"));
+addchartbubble(bearishDivergence_close, high, bear + price1 + " C", GlobalColor("PutColor"));
+addchartbubble(bearishDivergence2_open, high, bear + price2+ " O", GlobalColor("PutColor2"));
+addchartbubble(bearishDivergence2_close, high, bear + price2+ " C", GlobalColor("PutColor2"));
