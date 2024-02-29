@@ -1,6 +1,6 @@
-## *** Don't use. Need to make some fixes. Wait for V2
+## Working out the kinks. Testing and feedback. V3 will be improved.
 
-## 🚀 Rising Value. Feb 27, 2024
+## 🚀 Rising Value V2 Feb 28, 2024
 
 Category: Option Volatility
 
@@ -23,14 +23,16 @@ Category: Option Volatility
 
 ```bash
 
-  1. Lookback: 10;  (It compares the current open price to the close price 10 minutes back)
-  2. Manually Set Expiration = false; (Default this selects current day. Which is good for SPY and QQQ)
+  1. Lookback Period End: 15; It will monitor this number of bars in history.
+  (It compares the current open price to each close price for previous 15 candles.)
+  2. Lookback: 3;  This skips the first 3 previous bars. 
+  3. Manually Set Expiration = false; (Default this selects current day. Which is good for SPY and QQQ)
         A. Set this to true and then set the Expiration in #3.
-  3. Expiration_YYMMDD = 230616;
-  4. Manually Set Strikes = false; (Default this selects the 2 closest strikes. Which is good for SPY and QQQ)
-        A. Set this to true and then set the Strikes in #5 and #6.
+  4. Expiration_YYMMDD = 240315;
   5. Strike1 = 510;
   6. Strike2 = 511;
+  7. Bull: 🐂;  Add text or emoji. Windows button and period button at same time to get emoji keyboard
+  8. Bear: 🐼;
 
 
  ```
@@ -40,13 +42,13 @@ Category: Option Volatility
 
 ```bash
 
-  1. This monitors the 2 strikes closest to current price.
+  1. You have to manually set the Strikes for now.
   
   2. If the stock price is rising and the put option is also rising then 🐼 bearish divergence.
   
   3. If the stock price is falling and the call option is rising then 🐂 bullish divergence.
   
-  4. The manual version of this indicators allows you to set a specific expiration date and strikes
+  4. The manual version of this indicators allows you to set a specific expiration date.
 
  ```
  
