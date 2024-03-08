@@ -25,7 +25,7 @@ AddLabel(yes,  "EXP: " + AsPrice(DateString) + "C", GlobalColor("CallColor"));
 AddLabel(yes,  "EXP: " + AsPrice(DateString) + "P", GlobalColor("PutColor"));
 def agg = AggregationPeriod.DAY;
 
-def openlevel = close(period = agg);
+def openlevel = open(period = agg);
 def floor_or_ceiling = if roundup then Ceil(openlevel / 10) * 10 else Floor(openlevel / 10) * 10;
 def PutStrike = floor_or_ceiling;
 def CallStrike = floor_or_ceiling;
