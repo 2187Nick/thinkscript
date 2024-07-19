@@ -1,0 +1,66 @@
+declare lower;
+declare once_per_bar;
+
+def today = GetYYYYMMDD() + 1;
+
+plot ATMPutPrice = close(GetATMOption(GetSymbol(), today, OptionClass.PUT));
+ATMPutPrice.SetDefaultColor(Color.Red);
+ATMPutPrice.SetLineWeight(2);
+addlabel(1, "atm_put_option: " + (getATMOption(GetSymbol(), today, OptionClass.PUT)),color.red);
+
+plot ITMPutPrice = close(GetNextITMOption(GetATMOption(GetSymbol(), today, OptionClass.PUT)));
+ITMPutPrice.SetDefaultColor(Color.dark_red);
+ITMPutPrice.SetLineWeight(2);
+addlabel(1, "itm_put_option: " + (GetNextITMOption(getATMOption(GetSymbol(), today, OptionClass.PUT))),color.dark_red);
+
+plot OTMPutPrice = close(GetNextOTMOption(GetATMOption(GetSymbol(), today, OptionClass.PUT)));
+OTMPutPrice.SetDefaultColor(Color.light_red);
+OTMPutPrice.SetLineWeight(2);
+addlabel(1, "otm_put_option: " + (GetNextOTMOption(getATMOption(GetSymbol(), today, OptionClass.PUT))),color.light_red);
+
+plot ATMNextExpPutPrice = close(GetNextExpirationOption(GetATMOption(GetSymbol(), today, OptionClass.PUT)));
+ATMNextExpPutPrice.SetDefaultcolor(color.orange);
+ATMNextExpPutPrice.SetLineWeight(2);
+addlabel(1, "atm_next_exp_put_option: " + (GetNextExpirationOption(getATMOption(GetSymbol(), today, OptionClass.PUT))), color.orange);
+
+plot ITMNextExpPutPrice = close(GetNextExpirationOption(GetNextITMOption(GetATMOption(GetSymbol(), today, OptionClass.PUT))));
+ITMNextExpPutPrice.SetDefaultcolor(color.light_orange);
+ITMNextExpPutPrice.SetLineWeight(2);
+addlabel(1, "itm_next_exp_put_option: " + (GetNextExpirationOption(GetNextITMOption(getATMOption(GetSymbol(), today, OptionClass.PUT)))), color.light_orange);
+
+plot OTMNextExpPutPrice = close(GetNextExpirationOption(GetNextOTMOption(GetATMOption(GetSymbol(), today, OptionClass.PUT))));
+OTMNextExpPutPrice.SetDefaultcolor(color.dark_orange);
+OTMNextExpPutPrice.SetLineWeight(2);
+addlabel(1, "otm_next_exp_put_option: " + (GetNextExpirationOption(GetNextOTMOption(getATMOption(GetSymbol(), today, OptionClass.PUT)))), color.dark_orange);
+
+
+
+plot ATMCallPrice = close(GetATMOption(GetSymbol(), today, OptionClass.CALL));
+ATMCallPrice.SetDefaultColor(Color.Green);
+ATMCallPrice.SetLineWeight(4);
+addlabel(1, "atm_call_option: " + (getATMOption(GetSymbol(), today, OptionClass.CALL)), color.green);
+
+plot ITMCallPrice = close(GetNextITMOption(GetATMOption(GetSymbol(), today, OptionClass.CALL)));
+ITMCallPrice.SetDefaultColor(Color.dark_green);
+ITMCallPrice.SetLineWeight(2);
+addlabel(1, "itm_call_option: " + (GetNextITMOption(getATMOption(GetSymbol(), today, OptionClass.CALL))),color.dark_green);
+
+plot OTMCallPrice = close(GetNextOTMOption(GetATMOption(GetSymbol(), today, OptionClass.CALL)));
+OTMCallPrice.SetDefaultColor(Color.light_green);
+OTMCallPrice.SetLineWeight(2);
+addlabel(1, "otm_call_option: " + (GetNextOTMOption(getATMOption(GetSymbol(), today, OptionClass.CALL))),color.light_green);
+
+plot ATMNextExpCallPrice = close(GetNextExpirationOption(GetATMOption(GetSymbol(), today, OptionClass.CALL)));
+ATMNextExpCallPrice.SetDefaultColor(Color.blue);
+ATMNextExpCallPrice.SetLineWeight(4);
+addlabel(1, "atm_next_exp_call_option: " + (GetNextExpirationOption(getATMOption(GetSymbol(), today, OptionClass.CALL))), color.blue);
+
+plot ITMNextExpCallPrice = close(GetNextExpirationOption(GetNextITMOption(GetATMOption(GetSymbol(), today, OptionClass.CALL))));
+ITMNextExpCallPrice.SetDefaultColor(Color.cyan);
+ITMNextExpCallPrice.SetLineWeight(2);
+addlabel(1, "itm_next_exp_call_option: " + (GetNextExpirationOption(GetNextITMOption(getATMOption(GetSymbol(), today, OptionClass.CALL)))), color.cyan);
+
+plot OTMNextExpCallPrice = close(GetNextExpirationOption(GetNextOTMOption(GetATMOption(GetSymbol(), today, OptionClass.CALL))));
+OTMNextExpCallPrice.SetDefaultColor(Color.plum);
+OTMNextExpCallPrice.SetLineWeight(2);
+addlabel(1, "otm_next_exp_call_option: " + (GetNextExpirationOption(GetNextOTMOption(getATMOption(GetSymbol(), today, OptionClass.CALL)))), color.plum);
