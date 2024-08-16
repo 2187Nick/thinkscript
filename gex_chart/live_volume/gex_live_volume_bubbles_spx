@@ -3,7 +3,7 @@
 
 declare upper;
 declare once_per_bar;
-input strikeSpacing = 1.0;
+input strikeSpacing = 5.0;
 input setThreshold = 500000;
 def threshold = setThreshold/1000;
 input strikes = 10;
