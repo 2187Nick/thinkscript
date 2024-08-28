@@ -1,8 +1,6 @@
-# GEX Horizontal Axis SPX V2 Feb 12, 2024
+# GEX Horizontal Axis SPX V3 Aug 2024
 # Twitter @2187Nick
-# Adding premarket check. Displays GEX based on previous days Open Interest, until market opens.
-
-
+# Increase # of strikes to 20 up and 20 down
 declare lower;
 declare once_per_bar;
 
@@ -103,6 +101,16 @@ def strike_plus7 = base_strike + strikeSpacing * 7;
 def strike_plus8 = base_strike + strikeSpacing * 8;
 def strike_plus9 = base_strike + strikeSpacing * 9;
 def strike_plus10 = base_strike + strikeSpacing * 10;
+def strike_plus11 = base_strike + strikeSpacing * 11;
+def strike_plus12 = base_strike + strikeSpacing * 12;
+def strike_plus13 = base_strike + strikeSpacing * 13;
+def strike_plus14 = base_strike + strikeSpacing * 14;
+def strike_plus15 = base_strike + strikeSpacing * 15;
+def strike_plus16 = base_strike + strikeSpacing * 16;
+def strike_plus17 = base_strike + strikeSpacing * 17;
+def strike_plus18 = base_strike + strikeSpacing * 18;
+def strike_plus19 = base_strike + strikeSpacing * 19;
+def strike_plus20 = base_strike + strikeSpacing * 20;
 
 def strike_minus1 = base_strike - strikeSpacing;
 def strike_minus2 = base_strike - strikeSpacing * 2;
@@ -114,6 +122,16 @@ def strike_minus7 = base_strike - strikeSpacing * 7;
 def strike_minus8 = base_strike - strikeSpacing * 8;
 def strike_minus9 = base_strike - strikeSpacing * 9;
 def strike_minus10 = base_strike - strikeSpacing * 10;
+def strike_minus11 = base_strike - strikeSpacing * 11;
+def strike_minus12 = base_strike - strikeSpacing * 12;
+def strike_minus13 = base_strike - strikeSpacing * 13;
+def strike_minus14 = base_strike - strikeSpacing * 14;
+def strike_minus15 = base_strike - strikeSpacing * 15;
+def strike_minus16 = base_strike - strikeSpacing * 16;
+def strike_minus17 = base_strike - strikeSpacing * 17;
+def strike_minus18 = base_strike - strikeSpacing * 18;
+def strike_minus19 = base_strike - strikeSpacing * 19;
+def strike_minus20 = base_strike - strikeSpacing * 20;
 
 ### GEX
 def strike_base_gex = if AfterRTHStart then GEX(strike_base, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
@@ -142,6 +160,26 @@ def strike_plus9_gex = if AfterRTHStart then GEX(strike_plus9, dateString, Vol, 
 else GEX(strike_plus9, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 def strike_plus10_gex = if AfterRTHStart then GEX(strike_plus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
 else GEX(strike_plus10, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus11_gex = if AfterRTHStart then GEX(strike_plus11, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus11, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus12_gex = if AfterRTHStart then GEX(strike_plus12, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus12, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus13_gex = if AfterRTHStart then GEX(strike_plus13, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus13, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus14_gex = if AfterRTHStart then GEX(strike_plus14, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus14, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus15_gex = if AfterRTHStart then GEX(strike_plus15, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus15, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus16_gex = if AfterRTHStart then GEX(strike_plus16, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus16, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus17_gex = if AfterRTHStart then GEX(strike_plus17, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus17, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus18_gex = if AfterRTHStart then GEX(strike_plus18, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus18, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus19_gex = if AfterRTHStart then GEX(strike_plus19, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus19, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_plus20_gex = if AfterRTHStart then GEX(strike_plus20, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_plus20, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 
 def strike_minus1_gex = if AfterRTHStart then GEX(strike_minus1, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
 else GEX(strike_minus1, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
@@ -163,6 +201,26 @@ def strike_minus9_gex = if AfterRTHStart then GEX(strike_minus9, dateString, Vol
 else GEX(strike_minus9, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 def strike_minus10_gex = if AfterRTHStart then GEX(strike_minus10, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
 else GEX(strike_minus10, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus11_gex = if AfterRTHStart then GEX(strike_minus11, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus11, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus12_gex = if AfterRTHStart then GEX(strike_minus12, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus12, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus13_gex = if AfterRTHStart then GEX(strike_minus13, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus13, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus14_gex = if AfterRTHStart then GEX(strike_minus14, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus14, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus15_gex = if AfterRTHStart then GEX(strike_minus15, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus15, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus16_gex = if AfterRTHStart then GEX(strike_minus16, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus16, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus17_gex = if AfterRTHStart then GEX(strike_minus17, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus17, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus18_gex = if AfterRTHStart then GEX(strike_minus18, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus18, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus19_gex = if AfterRTHStart then GEX(strike_minus19, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus19, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
+def strike_minus20_gex = if AfterRTHStart then GEX(strike_minus20, dateString, Vol, t, S, day, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX
+else GEX(strike_minus20, dateString, Vol, t, S, yday, Sqr_Vol_2, Vol_Sqrt_t, Vol_Sqrt_t_S).strikeGEX;
 
 plot base = if BarNumber() == HighestAll(lastbar - (shift_left*10)) then strike_base_gex[shift_left*-10] else Double.Nan;
 base.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
@@ -243,6 +301,66 @@ base_plus10.AssignValueColor(if strike_plus10_gex[shift_left-1] > 0 then Color.C
 AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-1)) and  AbsValue(strike_plus10_gex[shift_left-1]) > threshold then yes else no, strike_plus10_gex[shift_left-1], strike_plus10_gex[shift_left-1], if strike_plus10_gex[shift_left-1] > 0 then Color.Cyan else Color.RED, if strike_plus10_gex[shift_left-1] > 0 then yes else no);
 AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-1))  then yes else no, 0, strike_plus10, color.gray, if strike_plus10_gex[shift_left-1] > 0 then no else yes);
 
+plot base_plus11 = if BarNumber() == HighestAll(lastbar - (shift_left-2)) then strike_plus11_gex[shift_left-2] else Double.Nan;
+base_plus11.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus11.setLineWeight(5);
+base_plus11.AssignValueColor(if strike_plus11_gex[shift_left-2] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-2)) and AbsValue(strike_plus11_gex[shift_left-2]) > threshold then yes else no, strike_plus11_gex[shift_left-2], strike_plus11_gex[shift_left-2], if strike_plus11_gex[shift_left-2] > 0 then Color.Cyan else Color.RED, if strike_plus11_gex[shift_left-2] > 0 then yes else no);
+
+plot base_plus12 = if BarNumber() == HighestAll(lastbar - (shift_left-3)) then strike_plus12_gex[shift_left-3] else Double.Nan;
+base_plus12.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus12.setLineWeight(5);
+base_plus12.AssignValueColor(if strike_plus12_gex[shift_left-3] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-3)) and AbsValue(strike_plus12_gex[shift_left-3]) > threshold then yes else no, strike_plus12_gex[shift_left-3], strike_plus12_gex[shift_left-3], if strike_plus12_gex[shift_left-3] > 0 then Color.Cyan else Color.RED, if strike_plus12_gex[shift_left-3] > 0 then yes else no);
+
+plot base_plus13 = if BarNumber() == HighestAll(lastbar - (shift_left-4)) then strike_plus13_gex[shift_left-4] else Double.Nan;
+base_plus13.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus13.setLineWeight(5);
+base_plus13.AssignValueColor(if strike_plus13_gex[shift_left-4] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-4)) and AbsValue(strike_plus13_gex[shift_left-4]) > threshold then yes else no, strike_plus13_gex[shift_left-4], strike_plus13_gex[shift_left-4], if strike_plus13_gex[shift_left-4] > 0 then Color.Cyan else Color.RED, if strike_plus13_gex[shift_left-4] > 0 then yes else no);
+
+plot base_plus14 = if BarNumber() == HighestAll(lastbar - (shift_left-5)) then strike_plus14_gex[shift_left-5] else Double.Nan;
+base_plus14.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus14.setLineWeight(5);
+base_plus14.AssignValueColor(if strike_plus14_gex[shift_left-5] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-5)) and AbsValue(strike_plus14_gex[shift_left-5]) > threshold then yes else no, strike_plus14_gex[shift_left-5], strike_plus14_gex[shift_left-5], if strike_plus14_gex[shift_left-5] > 0 then Color.Cyan else Color.RED, if strike_plus14_gex[shift_left-5] > 0 then yes else no);
+
+plot base_plus15 = if BarNumber() == HighestAll(lastbar - (shift_left-6)) then strike_plus15_gex[shift_left-6] else Double.Nan;
+base_plus15.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus15.setLineWeight(5);
+base_plus15.AssignValueColor(if strike_plus15_gex[shift_left-6] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-6)) and AbsValue(strike_plus15_gex[shift_left-6]) > threshold then yes else no, strike_plus15_gex[shift_left-6], strike_plus15_gex[shift_left-6], if strike_plus15_gex[shift_left-6] > 0 then Color.Cyan else Color.RED, if strike_plus15_gex[shift_left-6] > 0 then yes else no);
+
+plot base_plus16 = if BarNumber() == HighestAll(lastbar - (shift_left-7)) then strike_plus16_gex[shift_left-7] else Double.Nan;
+base_plus16.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus16.setLineWeight(5);
+base_plus16.AssignValueColor(if strike_plus16_gex[shift_left-7] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-7)) and AbsValue(strike_plus16_gex[shift_left-7]) > threshold then yes else no, strike_plus16_gex[shift_left-7], strike_plus16_gex[shift_left-7], if strike_plus16_gex[shift_left-7] > 0 then Color.Cyan else Color.RED, if strike_plus16_gex[shift_left-7] > 0 then yes else no);
+
+plot base_plus17 = if BarNumber() == HighestAll(lastbar - (shift_left-8)) then strike_plus17_gex[shift_left-8] else Double.Nan;
+base_plus17.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus17.setLineWeight(5);
+base_plus17.AssignValueColor(if strike_plus17_gex[shift_left-8] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-8)) and AbsValue(strike_plus17_gex[shift_left-8]) > threshold then yes else no, strike_plus17_gex[shift_left-8], strike_plus17_gex[shift_left-8], if strike_plus17_gex[shift_left-8] > 0 then Color.Cyan else Color.RED, if strike_plus17_gex[shift_left-8] > 0 then yes else no);
+
+plot base_plus18 = if BarNumber() == HighestAll(lastbar - (shift_left-9)) then strike_plus18_gex[shift_left-9] else Double.Nan;
+base_plus18.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus18.setLineWeight(5);
+base_plus18.AssignValueColor(if strike_plus18_gex[shift_left-9] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-9)) and AbsValue(strike_plus18_gex[shift_left-9]) > threshold then yes else no, strike_plus18_gex[shift_left-9], strike_plus18_gex[shift_left-9], if strike_plus18_gex[shift_left-9] > 0 then Color.Cyan else Color.RED, if strike_plus18_gex[shift_left-9] > 0 then yes else no);
+
+plot base_plus19 = if BarNumber() == HighestAll(lastbar - (shift_left-10)) then strike_plus19_gex[shift_left-10] else Double.Nan;
+base_plus19.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus19.setLineWeight(5);
+base_plus19.AssignValueColor(if strike_plus19_gex[shift_left-10] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-10)) and AbsValue(strike_plus19_gex[shift_left-10]) > threshold then yes else no, strike_plus19_gex[shift_left-10], strike_plus19_gex[shift_left-10], if strike_plus19_gex[shift_left-10] > 0 then Color.Cyan else Color.RED, if strike_plus19_gex[shift_left-10] > 0 then yes else no);
+
+plot base_plus20 = if BarNumber() == HighestAll(lastbar - (shift_left-11)) then strike_plus20_gex[shift_left-11] else Double.Nan;
+base_plus20.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_plus20.setLineWeight(5);
+base_plus20.AssignValueColor(if strike_plus20_gex[shift_left-11] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-11)) and AbsValue(strike_plus20_gex[shift_left-11]) > threshold then yes else no, strike_plus20_gex[shift_left-11], strike_plus20_gex[shift_left-11], if strike_plus20_gex[shift_left-11] > 0 then Color.Cyan else Color.RED, if strike_plus20_gex[shift_left-11] > 0 then yes else no);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left-11))  then yes else no, 0, strike_plus20, color.gray, if strike_plus20_gex[shift_left-11] > 0 then no else yes);
 
 plot base_minus1 = if BarNumber() == HighestAll(lastbar - (shift_left*11)) then strike_minus1_gex[shift_left*-11] else Double.Nan;
 base_minus1.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
@@ -310,6 +428,67 @@ base_minus10.setLineWeight(5);
 base_minus10.AssignValueColor(if strike_minus10_gex[shift_left*-20] > 0 then Color.Cyan else Color.RED);
 AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*20)) and AbsValue(strike_minus10_gex[shift_left*-20]) > threshold  then yes else no, strike_minus10_gex[shift_left*-20],  strike_minus10_gex[shift_left*-20], if strike_minus10_gex[shift_left*-20] > 0 then Color.Cyan else Color.RED, if strike_minus10_gex[shift_left*-20] > 0 then yes else no);
 AddChartBubble(if BarNumber() >= HighestAll(lastbar - (shift_left*20)) and  BarNumber() <= HighestAll(lastbar - (shift_left*20)) then yes else no, 0, strike_minus10, color.gray, if strike_minus10 > 0 then yes else no);
+
+plot base_minus11 = if BarNumber() == HighestAll(lastbar - (shift_left*21)) then strike_minus11_gex[shift_left*-21] else Double.Nan;
+base_minus11.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus11.setLineWeight(5);
+base_minus11.AssignValueColor(if strike_minus11_gex[shift_left*-21] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*21)) and AbsValue(strike_minus11_gex[shift_left*-21]) > threshold then yes else no, strike_minus11_gex[shift_left*-21], strike_minus11_gex[shift_left*-21], if strike_minus11_gex[shift_left*-21] > 0 then Color.Cyan else Color.RED, if strike_minus11_gex[shift_left*-21] > 0 then yes else no);
+
+plot base_minus12 = if BarNumber() == HighestAll(lastbar - (shift_left*22)) then strike_minus12_gex[shift_left*-22] else Double.Nan;
+base_minus12.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus12.setLineWeight(5);
+base_minus12.AssignValueColor(if strike_minus12_gex[shift_left*-22] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*22)) and AbsValue(strike_minus12_gex[shift_left*-22]) > threshold then yes else no, strike_minus12_gex[shift_left*-22], strike_minus12_gex[shift_left*-22], if strike_minus12_gex[shift_left*-22] > 0 then Color.Cyan else Color.RED, if strike_minus12_gex[shift_left*-22] > 0 then yes else no);
+
+plot base_minus13 = if BarNumber() == HighestAll(lastbar - (shift_left*23)) then strike_minus13_gex[shift_left*-23] else Double.Nan;
+base_minus13.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus13.setLineWeight(5);
+base_minus13.AssignValueColor(if strike_minus13_gex[shift_left*-23] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*23)) and AbsValue(strike_minus13_gex[shift_left*-23]) > threshold then yes else no, strike_minus13_gex[shift_left*-23], strike_minus13_gex[shift_left*-23], if strike_minus13_gex[shift_left*-23] > 0 then Color.Cyan else Color.RED, if strike_minus13_gex[shift_left*-23] > 0 then yes else no);
+
+plot base_minus14 = if BarNumber() == HighestAll(lastbar - (shift_left*24)) then strike_minus14_gex[shift_left*-24] else Double.Nan;
+base_minus14.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus14.setLineWeight(5);
+base_minus14.AssignValueColor(if strike_minus14_gex[shift_left*-24] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*24)) and AbsValue(strike_minus14_gex[shift_left*-24]) > threshold then yes else no, strike_minus14_gex[shift_left*-24], strike_minus14_gex[shift_left*-24], if strike_minus14_gex[shift_left*-24] > 0 then Color.Cyan else Color.RED, if strike_minus14_gex[shift_left*-24] > 0 then yes else no);
+
+plot base_minus15 = if BarNumber() == HighestAll(lastbar - (shift_left*25)) then strike_minus15_gex[shift_left*-25] else Double.Nan;
+base_minus15.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus15.setLineWeight(5);
+base_minus15.AssignValueColor(if strike_minus15_gex[shift_left*-25] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*25)) and AbsValue(strike_minus15_gex[shift_left*-25]) > threshold then yes else no, strike_minus15_gex[shift_left*-25], strike_minus15_gex[shift_left*-25], if strike_minus15_gex[shift_left*-25] > 0 then Color.Cyan else Color.RED, if strike_minus15_gex[shift_left*-25] > 0 then yes else no);
+
+plot base_minus16 = if BarNumber() == HighestAll(lastbar - (shift_left*26)) then strike_minus16_gex[shift_left*-26] else Double.Nan;
+base_minus16.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus16.setLineWeight(5);
+base_minus16.AssignValueColor(if strike_minus16_gex[shift_left*-26] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*26)) and AbsValue(strike_minus16_gex[shift_left*-26]) > threshold then yes else no, strike_minus16_gex[shift_left*-26], strike_minus16_gex[shift_left*-26], if strike_minus16_gex[shift_left*-26] > 0 then Color.Cyan else Color.RED, if strike_minus16_gex[shift_left*-26] > 0 then yes else no);
+
+plot base_minus17 = if BarNumber() == HighestAll(lastbar - (shift_left*27)) then strike_minus17_gex[shift_left*-27] else Double.Nan;
+base_minus17.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus17.setLineWeight(5);
+base_minus17.AssignValueColor(if strike_minus17_gex[shift_left*-27] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*27)) and AbsValue(strike_minus17_gex[shift_left*-27]) > threshold then yes else no, strike_minus17_gex[shift_left*-27], strike_minus17_gex[shift_left*-27], if strike_minus17_gex[shift_left*-27] > 0 then Color.Cyan else Color.RED, if strike_minus17_gex[shift_left*-27] > 0 then yes else no);
+
+plot base_minus18 = if BarNumber() == HighestAll(lastbar - (shift_left*28)) then strike_minus18_gex[shift_left*-28] else Double.Nan;
+base_minus18.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus18.setLineWeight(5);
+base_minus18.AssignValueColor(if strike_minus18_gex[shift_left*-28] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*28)) and AbsValue(strike_minus18_gex[shift_left*-28]) > threshold then yes else no, strike_minus18_gex[shift_left*-28], strike_minus18_gex[shift_left*-28], if strike_minus18_gex[shift_left*-28] > 0 then Color.Cyan else Color.RED, if strike_minus18_gex[shift_left*-28] > 0 then yes else no);
+
+plot base_minus19 = if BarNumber() == HighestAll(lastbar - (shift_left*29)) then strike_minus19_gex[shift_left*-29] else Double.Nan;
+base_minus19.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus19.setLineWeight(5);
+base_minus19.AssignValueColor(if strike_minus19_gex[shift_left*-29] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*29)) and AbsValue(strike_minus19_gex[shift_left*-29]) > threshold then yes else no, strike_minus19_gex[shift_left*-29], strike_minus19_gex[shift_left*-29], if strike_minus19_gex[shift_left*-29] > 0 then Color.Cyan else Color.RED, if strike_minus19_gex[shift_left*-29] > 0 then yes else no);
+
+plot base_minus20 = if BarNumber() == HighestAll(lastbar - (shift_left*30)) then strike_minus20_gex[shift_left*-30] else Double.Nan;
+base_minus20.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+base_minus20.setLineWeight(5);
+base_minus20.AssignValueColor(if strike_minus20_gex[shift_left*-30] > 0 then Color.Cyan else Color.RED);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*30)) and AbsValue(strike_minus20_gex[shift_left*-30]) > threshold then yes else no, strike_minus20_gex[shift_left*-30], strike_minus20_gex[shift_left*-30], if strike_minus20_gex[shift_left*-30] > 0 then Color.Cyan else Color.RED, if strike_minus20_gex[shift_left*-30] > 0 then yes else no);
+AddChartBubble(if BarNumber() == HighestAll(lastbar - (shift_left*30))  then yes else no, 0, strike_minus20, color.gray, if strike_minus20_gex[shift_left*-30] > 0 then no else yes);
 
 #######
 plot zeroline = 0;
