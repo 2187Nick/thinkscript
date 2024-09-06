@@ -1,6 +1,6 @@
-# GEX Horizontal Axis SPX V3 Aug 2024
-# Twitter @2187Nick
-# Increase # of strikes to 20 up and 20 down
+# GEX Horizontal Axis SPX V3 Sep 6 2024
+# Twitter @2187Nick  
+# Setting the base strike to latest price. Instead of open price.
 declare lower;
 declare once_per_bar;
 
@@ -18,7 +18,7 @@ AddLabel(!AfterRTHStart ,"Premarket: Using Prev. Day OI",Color.Gray);
 input symbol = "SPX";
 
 input strikeSpacing = 5.0;
-input strikes = 10;
+input strikes = 20;
 input shift_left = 1;
 input threshold = 20;
 
@@ -70,7 +70,8 @@ def openPrice = if !IsNaN(todayOpen) then todayOpen
 #def openlevel = open(period = agg);
 #addlabel(yes, "yesterdayOpen: " + yesterdayOpen, color.cyan);
 def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
-def floor_or_ceiling =  Round(openPrice, rounding_factor);
+#def floor_or_ceiling =  Round(openPrice, rounding_factor);
+def floor_or_ceiling =  Round(S, rounding_factor);
 def base_strike = floor_or_ceiling;
 #addlabel(yes, "centerStrike: " + base_strike);
 
