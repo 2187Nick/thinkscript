@@ -1,3 +1,7 @@
+# Gex on chain September 9, 2024
+# Twitter @2187Nick
+# This is a temporary gex indicator to use until TOS fixes 0dte Gamma()
+
 def CurrentYear = GetYear()-2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
