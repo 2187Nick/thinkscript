@@ -1,0 +1,36 @@
+def CurrentYear = GetYear()-2000;
+def CurrentMonth = GetMonth();
+def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString = CurrentYear*10000+CurrentMonth*100+CurrentDOM+getdaystoexpiration()-1;
+
+#def DateString = 231215;
+input symbol = "SPXW";
+
+input threshold = 0; # millions
+def q = if getYield() then  getYield() else 0;
+def r = getInterestRate();
+def dte = getdaystoexpiration();
+def k = getStrike();
+def iv = imp_volatility(getUnderlyingSymbol());
+#def iv = seriesVolatility(series=1);
+
+def S = close(getUnderlyingSymbol());
+def t = dte/365;
+
+def d1 = (Log(S / k) + ((r - q + (Power(IV, 2)) / 2) * t)) / (IV * Sqrt(t));
+def d2 = d1 - IV * Sqrt(t);
+def phi_d1 = Exp(-(Power(d1, 2)) / 2) / Sqrt(2 * Double.Pi);
+
+def bsmGamma = Exp(-q * t) * phi_d1 / (S * IV * Sqrt(t));
+#addlabel(yes, bsmGamma);
+
+#Based on $10 move
+plot GEX = if IsNan((open_interest("."+symbol+ AsPrice(DateString) + "C" +AsPrice(getStrike())) -  open_interest("."+symbol+AsPrice(DateString) + "P" + AsPrice(getStrike())))* bsmGamma * close(getunderlyingSymbol()) /10000) then 0 else round((open_interest("."+symbol+ AsPrice(DateString) + "C" +AsPrice(getStrike())) -  open_interest("."+symbol+AsPrice(DateString) + "P" + AsPrice(getStrike())))* bsmGamma * close(getunderlyingSymbol()) /1000,0);
+
+addlabel(IsPut() and gex <= -.1, gex, if gex <= (-1*threshold) then color.red else color.light_red);
+addlabel(IsPut() and gex >= 0, "", color.black);
+
+addlabel(!IsPut() and gex >= .1, gex,  if gex >= threshold then color.green else color.light_green);
+addlabel(!IsPut() and gex < 0, "", color.black);
+
+assignBackgroundColor(color.black);
