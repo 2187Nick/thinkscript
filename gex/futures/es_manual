@@ -1,6 +1,7 @@
 input threshold = 0; # millions
 input base_symbol = "E3DU";
-input exchange = {default XCME, XNYM, XCEC, XCBT}; ;
+
+input exchange = "XCME"; # XNYM, XCEC, XCBT
 def year =  getYear() - 2000;
 
 ## ES options are half the cost of contract price I believe
