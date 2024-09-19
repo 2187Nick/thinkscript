@@ -1,7 +1,5 @@
 input threshold = 0; # millions
 input base_symbol = "E3DU";
-
-# exchange = {default NYSE, NASDAQ, AMEX}; 
 input exchange = {default XCME, XNYM, XCEC, XCBT}; ;
 def year =  getYear() - 2000;
 
