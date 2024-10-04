@@ -68,8 +68,8 @@ def openPrice = if !IsNaN(todayOpen) then todayOpen
 #def openlevel = open(period = agg);
 #addlabel(yes, "open: " + openPrice, color.cyan);
 def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
-#def floor_or_ceiling =  Round(openPrice, rounding_factor);
-def floor_or_ceiling =  Round(S, rounding_factor);
+def floor_or_ceiling =  Round(openPrice, rounding_factor);
+#def floor_or_ceiling =  Round(S, rounding_factor);
 def base_strike = floor_or_ceiling;
 addlabel(yes, "center:" + base_strike);
 
