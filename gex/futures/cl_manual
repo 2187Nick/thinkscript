@@ -1,0 +1,35 @@
+input threshold = 0; # millions
+input base_symbol = "LOZ";  #"WL5V";
+# ./WL5V24C67.5:XNYM
+#./LOZ24C68:XNYM
+
+input exchange = "XNYM"; #"XCME"; # XNYM, XCEC, XCBT
+def year =  getYear() - 2000;
+
+## Formula:
+## ((Call_OI - Put_OI) * Gamma * Contract_Size * Underlying_Price) 
+
+## This can be modified to work with other futures options
+## Adjust the for contract size and pricing
+
+def gex = 
+    if IsNan(
+        (
+            open_interest("./"+base_symbol+ year + "C" +AsPrice(getStrike())+":"+exchange) -  
+            open_interest("./"+base_symbol+ year + "P" +AsPrice(getStrike())+":"+exchange)
+        ) * Gamma() * close(getunderlyingSymbol())
+    ) then 0 
+    else round(
+        (
+            open_interest("./"+base_symbol+ year + "C" +AsPrice(getStrike())+":"+exchange) -  
+            open_interest("./"+base_symbol+ year + "P" +AsPrice(getStrike())+":"+exchange)
+        ) * Gamma() * close(getunderlyingSymbol()) / 10000,
+        1
+    );
+
+addlabel(IsPut() and gex <= -.1, gex, if gex <= (-1*threshold) then color.red else color.light_red);
+addlabel(IsPut() and gex >= 0, "", color.black);
+
+addlabel(!IsPut() and gex >= .1, gex,  if gex >= threshold then color.green else color.light_green);
+addlabel(!IsPut() and gex < 0, "", color.black);
+assignBackgroundColor(color.black);
