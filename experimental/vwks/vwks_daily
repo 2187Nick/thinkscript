@@ -1,0 +1,117 @@
+# VWKS Nov 15, 2024
+# volume-weighted average strike-spot price ratio
+# https://ink.library.smu.edu.sg/lkcsb_research/6568/
+# Twitter 2187Nick
+
+# There is an issue with this concept i think.
+# If market rallies at end of day. Then it would likely create a bearish signal.
+# Because traders normally dont trade to far out of the money.
+# During the day they would have been taken the otm calls and itm puts. Which would below considered bullish.
+# But since we run up late in the day. Then all those otm calls could be itm and no longer considered bullish.
+
+declare once_per_bar;
+input strikes = 10;
+input strikeSpacing = 1;
+input daystoexpiration = 1; # Set the Days to Expiration
+
+def CurrentYear = GetYear()-2000;
+def CurrentMonth = GetMonth();
+def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
+def DateString_auto = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM+daystoexpiration;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 241231;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+def agg = aggregationPeriod.Day;
+
+def S = close(period=agg);
+
+def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else if strikeSpacing > 24 then -2 else 0;
+def floor_or_ceiling =  Round(S, rounding_factor);
+def base_strike = floor_or_ceiling;
+
+def strike_base = base_strike;
+def strike_plus1 = base_strike + strikeSpacing;
+def strike_plus2 = base_strike + strikeSpacing * 2;
+def strike_plus3 = base_strike + strikeSpacing * 3;
+def strike_plus4 = base_strike + strikeSpacing * 4;
+def strike_plus5 = base_strike + strikeSpacing * 5;
+def strike_plus6 = base_strike + strikeSpacing * 6;
+def strike_plus7 = base_strike + strikeSpacing * 7;
+def strike_plus8 = base_strike + strikeSpacing * 8;
+def strike_plus9 = base_strike + strikeSpacing * 9;
+def strike_plus10 = base_strike + strikeSpacing * 10;
+
+def strike_minus1 = base_strike - strikeSpacing;
+def strike_minus2 = base_strike - strikeSpacing * 2;
+def strike_minus3 = base_strike - strikeSpacing * 3;
+def strike_minus4 = base_strike - strikeSpacing * 4;
+def strike_minus5 = base_strike - strikeSpacing * 5;
+def strike_minus6 = base_strike - strikeSpacing * 6;
+def strike_minus7 = base_strike - strikeSpacing * 7;
+def strike_minus8 = base_strike - strikeSpacing * 8;
+def strike_minus9 = base_strike - strikeSpacing * 9;
+def strike_minus10 = base_strike - strikeSpacing * 10;
+
+def base_v  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_base))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_base))+ (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_base))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_base)));
+
+def plus1_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus1))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus1)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus1))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus1)));
+def plus2_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus2))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus2)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus2))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus2)));
+def plus3_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus3))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus3)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus3))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus3)));
+def plus4_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus4))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus4)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus4))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus4)));
+def plus5_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus5))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus5)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus5))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus5)));
+def plus6_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus6))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus6)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus6))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus6)));
+def plus7_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus7))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus7)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus7))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus7)));
+def plus8_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus8))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus8)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus8))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus8)));
+def plus9_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus9))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus9)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus9))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus9)));
+def plus10_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus10))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_plus10)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus10))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_plus10)));
+
+def minus1_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus1))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus1)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus1))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus1)));
+def minus2_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus2))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus2)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus2))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus2)));
+def minus3_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus3))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus3)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus3))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus3)));
+def minus4_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus4))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus4)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus4))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus4)));
+def minus5_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus5))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus5)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus5))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus5)));
+def minus6_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus6))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus6)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus6))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus6)));
+def minus7_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus7))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus7)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus7))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus7)));
+def minus8_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus8))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus8)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus8))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus8)));
+def minus9_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus9))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus9)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus9))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus9)));
+def minus10_V  = if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus10))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "C" + AsPrice(strike_minus10)) + (if IsNan(volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus10))) then 0 else volume("." + GetSymbol() + AsPrice(dateString) + "P" + AsPrice(strike_minus10)));
+
+
+def base =  (base_strike/S) * base_v;
+#addlabel(1, "base_v: " + base_v, color.orange);
+#addlabel(1, "(base_strike/S)  : " +  (base_strike/S) , color.white);
+#addlabel(1, "base: " + base, color.orange);
+
+def plus1 =  (strike_plus1/S) * plus1_V;
+def plus2 =  (strike_plus2/S) * plus2_V;
+def plus3 =  (strike_plus3/S) * plus3_V;
+def plus4 =  (strike_plus4/S) * plus4_V;
+def plus5 =  (strike_plus5/S) * plus5_V;
+def plus6 =  (strike_plus6/S) * plus6_V;
+def plus7 =  (strike_plus7/S) * plus7_V;
+def plus8 =  (strike_plus8/S) * plus8_V;
+def plus9 =  (strike_plus9/S) * plus9_V;
+def plus10 =  (strike_plus10/S) * plus10_V;
+def minus1 =  (strike_minus1/S) * minus1_V;
+def minus2 =  (strike_minus2/S) * minus2_V;
+def minus3 =  (strike_minus3/S) * minus3_V;
+def minus4 =  (strike_minus4/S) * minus4_V;
+def minus5 =  (strike_minus5/S) * minus5_V;
+def minus6 =  (strike_minus6/S) * minus6_V;
+def minus7 =  (strike_minus7/S) * minus7_V;
+def minus8 =  (strike_minus8/S) * minus8_V;
+def minus9 =  (strike_minus9/S) * minus9_V;
+def minus10 =  (strike_minus10/S) * minus10_V;
+
+def totalWeightedVolume = base + plus1 + plus2 + plus3 + plus4 + plus5 + plus6 + plus7 + plus8 + plus9 + plus10 + minus1 + minus2 + minus3 + minus4 + minus5 + minus6 + minus7 + minus8 + minus9 + minus10;
+addlabel(1, "totalWeightedVolume: " + round(totalWeightedVolume,0), color. cyan);
+def totalVolume = base_v + plus1_v + plus2_v + plus3_v + plus4_v + plus5_v + plus6_v + plus7_v + plus8_v + plus9_v + plus10_v +minus1_v + minus2_v + minus3_v + minus4_v + minus5_v + minus6_v + minus7_v + minus8_v + minus9_v + minus10_v;
+addlabel(1, "totalVolume: " + totalVolume, color. orange);
+
+def vwks_num = totalWeightedVolume/totalVolume;
+addlabel(1, "VWKS: " + vwks_num, color. cyan);
+plot VWKS = if totalVolume > 0 then totalWeightedVolume / totalVolume else Double.NaN;
+
+plot zeroline = 1;
