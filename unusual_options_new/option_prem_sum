@@ -260,5 +260,4 @@ put_prem.SetPaintingStrategy(PaintingStrategy.LINE_VS_POINTS);
 
 plot call_prem = totalcall_prem*100;
 call_prem.SetDefaultColor(Color.GREEN);
-call_prem.SetPaintingStrategy(PaintingStrategy.HISTOGRAM);olor(Color.GREEN);
-call_prem.SetStyle(Curve.FIRM);
+call_prem.SetPaintingStrategy(PaintingStrategy.HISTOGRAM);
