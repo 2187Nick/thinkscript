@@ -17,11 +17,11 @@ def CurrentYear = GetYear() - 2000;
 def CurrentMonth = GetMonth();
 def CurrentDOM = GetDayOfMonth(GetYYYYMMDD());
 #addlabel(1, CurrentDom);
-def DateString_auto0 = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM;
-addlabel(1, "DateString0" + DateString_auto0);
+#def DateString_auto0 = CurrentYear * 10000 + CurrentMonth * 100 + CurrentDOM;
+#addlabel(1, "DateString0" + DateString_auto0);
 
 def DateString_auto = GetYYYYMMDD()-20000000;
-addlabel(1, "DateStringNew" + DateString_auto);
+#addlabel(1, "DateStringNew" + DateString_auto);
 
 def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
 
