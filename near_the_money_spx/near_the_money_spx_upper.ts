@@ -83,5 +83,5 @@ def puts_current_total =  put_itm_volumexclose + put_itm_volumexclose1 + put_vol
 
 def moving_up = if close[1] > close[2] then 1 else 0;
 def moving_down = close[1] < close[2];
-AddChartBubble(puts_current_total > Premium_Extreme_Level and moving_down, low, "BULLISH" , color.Green);
-AddChartBubble(calls_current_total > Premium_Extreme_Level and moving_up ==1, high, "BEARISH" , color.red);
+AddChartBubble(puts_current_total > Premium_Extreme_Level and moving_down, low, "BULL" , color.Green);
+AddChartBubble(calls_current_total > Premium_Extreme_Level and moving_up ==1, high, "BEAR" , color.red);
