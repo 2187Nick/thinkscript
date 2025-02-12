@@ -48,5 +48,5 @@ def moving_down = close[1] < close[2];
 def calls_current_total = if after945 then Call_VolumexOHLC*100 else 0;
 def puts_current_total = if after945 then  put_VolumexOHLC*100 else 0;
 
-AddChartBubble(puts_current_total > premium_extreme_level and moving_down, low, "Extreme" , color.Green);
+AddChartBubble(puts_current_total > premium_extreme_level and moving_down, low, "Extreme" , color.Green, no);
 AddChartBubble(calls_current_total > premium_extreme_level and moving_up ==1, high+.1, "Extreme" , color.red);
