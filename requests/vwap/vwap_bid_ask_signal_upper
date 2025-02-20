@@ -5,6 +5,9 @@
 # this is only monitoring for buy signals. 
 # Can easily adapt to monitor for sell signals
 
+declare once_per_bar;
+declare upper;
+
 input threshold = 38000000;
 
 def current_vwap = reference VWAP();
