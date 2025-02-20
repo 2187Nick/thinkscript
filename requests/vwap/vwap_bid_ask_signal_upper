@@ -5,6 +5,8 @@
 # this is only monitoring for buy signals. 
 # Can easily adapt to monitor for sell signals
 
+# 1 min chart
+
 declare once_per_bar;
 declare upper;
 
