@@ -1,0 +1,32 @@
+# Request to demystify a harlind twitter post Feb 20, 2025
+# Price is 1 std dev  below vwap
+# bid x volume > threshold
+# @2187Nick
+# this is only monitoring for buy signals. 
+# Can easily adapt to monitor for sell signals
+
+input threshold = 38000000;
+
+def current_vwap = reference VWAP();
+def lower_band = reference VWAP(numdevdn=-1.0,numdevup=1.0, timeFrame="DAY")."LowerBand";
+def upper_band = reference VWAP(numdevdn=-1.0,numdevup=1.0, timeFrame="DAY")."UpperBand";
+#addlabel(1, "lowerband_1std: " + lower_band);
+#addlabel(1, "upperband_1std: " + upper_band);
+
+plot vwap = current_vwap;
+vwap.setDefaultColor(color.plum);
+plot lower = lower_band;
+lower.setPaintingStrategy(PaintingStrategy.LINE);
+lower.setDefaultColor(color.yellow);
+
+def bidX = close(priceType = priceType.BID);
+def askX = close(priceType = priceType.ASK);
+def spread  = askX - bidX;
+# he mentions .01 spread. We can add that in as a factor if needed.
+
+def bid_volume = bidX * volume();
+def both = if bid_volume > threshold and (low() <= lower_band) then 1 else 0;
+
+plot signal = if both then low() - .1 else double.nan;
+signal.setDefaultColor(color.green);
+signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
