@@ -1,0 +1,13 @@
+declare once_per_bar;
+declare lower;
+
+def bidX = close(priceType = priceType.BID);
+def askX = close(priceType = priceType.ASK);
+def spread  = askX - bidX;
+
+plot thespread = bidX * volume();
+thespread.setPaintingStrategy(PaintingStrategy.HISTOGRAM);
+thespread.SetDefaultColor(color.plum);
+
+plot threshold = 38000000;
+threshold.setDefaultColor(color.white);
