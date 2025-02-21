@@ -1,11 +1,13 @@
 # Request to demystify a harlind twitter post Feb 20, 2025
 # Price is 1 std dev  below vwap
 # bid x volume > threshold
+# (ask - bid) <= 0.01
+# wide range down bar
 # @2187Nick
 # this is only monitoring for buy signals. 
 # Can easily adapt to monitor for sell signals
 
-# 1 min chart
+# 1min chart
 
 declare once_per_bar;
 declare upper;
@@ -13,8 +15,8 @@ declare upper;
 input threshold = 38000000;
 
 def current_vwap = reference VWAP();
-def lower_band = reference VWAP(numdevdn=-1.0,numdevup=1.0, timeFrame="DAY")."LowerBand";
-def upper_band = reference VWAP(numdevdn=-1.0,numdevup=1.0, timeFrame="DAY")."UpperBand";
+def lower_band = reference VWAP(numdevdn=-1.5,numdevup=1.0, timeFrame="DAY")."LowerBand";
+def upper_band = reference VWAP(numdevdn=-1.5,numdevup=1.0, timeFrame="DAY")."UpperBand";
 #addlabel(1, "lowerband_1std: " + lower_band);
 #addlabel(1, "upperband_1std: " + upper_band);
 
@@ -32,6 +34,33 @@ def spread  = askX - bidX;
 def bid_volume = bidX * volume();
 def both = if bid_volume > threshold and (low() <= lower_band) then 1 else 0;
 
-plot signal = if both then low() - .1 else double.nan;
-signal.setDefaultColor(color.green);
-signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+#plot signal = if both then low() else double.nan;
+#signal.setDefaultColor(color.green);
+#signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+#signal.setLineWeight(5);
+
+def cent_spread = if spread <= .01 then 1 else 0;
+
+#plot signal2 = if cent_spread then low() else double.nan;
+#signal2.setDefaultColor(color.red);
+#signal2.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+#signal2.setLineWeight(5);
+
+input lengthForAverage = 20;  # Period to calculate average range
+input multiplier = 1.5;       # How much wider than average to trigger alert
+
+def highLowRange = high - low;
+def averageRange = Average(highLowRange, lengthForAverage);
+def isDownBar = close < open;
+def isWideRange = highLowRange > (averageRange * multiplier);
+
+#plot Signal3 = isDownBar && isWideRange;
+#Signal3.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+#Signal3.SetDefaultColor(Color.BLUE);
+
+
+plot finalSignal = isDownBar && isWideRange && cent_spread && both;
+
+finalSignal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+finalSignal.SetDefaultColor(Color.GREEN);
+finalSignal.setLineWeight(5);
