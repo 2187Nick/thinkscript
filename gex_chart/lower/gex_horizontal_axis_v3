@@ -36,8 +36,8 @@ def days_left = if hours_left <= 0 then 0 else hours_left / 24;
 
 def Vol = imp_volatility(getSymbol());
 #addlabel(yes, "Vol: " + Vol, color.white);
-def S = close();
-#def S = close(period = agg);
+#def S = close();
+def S = close(period = agg);
 #addlabel(yes, "S_close: " + S, color.white);
 
 def t = ((DateString - DateString_auto) + days_left) / 365;
