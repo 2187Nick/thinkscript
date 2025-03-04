@@ -47,7 +47,7 @@ Peter Gap Rule #3. If we are in a "DOWN" cycle on 30min and Daily.
 Peter Gap Rule #4. If we are in an "DOWN" cycle on 30min and Daily.
 
     1. Price gaps down. Atleast $2.
-    2. MarketForecast breadth is roughly -1200 or lower.
+    2. Market breadth is roughly -1200 or lower.
     Potential for High of day in the 1st hour. Low of day after 200pm EST.
 
 
