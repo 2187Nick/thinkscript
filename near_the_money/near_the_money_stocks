@@ -1,0 +1,94 @@
+# near_the_money_stocks
+# 2187Nick
+# Mar 7, 2025
+declare upper;
+declare once_per_bar;
+
+input Strike_Spacing = 1.0;
+input Premium_Extreme_Level = 1000000;
+
+input ManuallySetExpiration = {default "false", "true"};
+input Expiration_YYMMDD = 250620;
+
+def DateString_auto = GetYYYYMMDD()-20000000;
+def DateString = if manuallysetexpiration then Expiration_YYMMDD else  DateString_auto;
+
+def rounding_factor = if Strike_Spacing > 1 and Strike_Spacing < 25 then -1 else if Strike_Spacing > 24 then -2 else 0;
+
+plot highline = Premium_Extreme_Level;
+plot lowline = -Premium_Extreme_Level;
+highline.SetDefaultColor(Color.red);
+lowline.SetDefaultColor(Color.green);
+
+def base = Round(close, rounding_factor);
+#addlabel(yes, "ATM: " + base);
+
+def strike_atm = base;
+def strike_itm1_call = base - Strike_Spacing;
+def strike_itm2_call = base - Strike_Spacing*2;
+def strike_otm1_call = Strike_Spacing + base;
+def strike_otm2_call = Strike_Spacing + Strike_Spacing * 1 + base;
+#def strike_otm3_call = Strike_Spacing + Strike_Spacing * 2 + base;
+
+def strike_itm1_put = base + Strike_Spacing;
+def strike_itm2_put = base + Strike_Spacing*2;
+def strike_otm1_put = base - Strike_Spacing;
+def strike_otm2_put = base - Strike_Spacing - Strike_Spacing * 1;
+#def strike_otm3_put = base - Strike_Spacing - Strike_Spacing * 2;
+
+
+def call_close_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + strike_itm1_call);
+def call_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + strike_itm1_call);
+
+def call_close_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + strike_itm2_call);
+def call_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + strike_itm2_call);
+
+def call_close_price = close("." + GetSymbol() + AsPrice(DateString) +"C" + strike_atm);
+def call_volume = volume("." + GetSymbol() + AsPrice(DateString) +"C" + strike_atm);
+
+def call_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"C" + strike_otm1_call);
+def call_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + strike_otm1_call);
+
+def call_close_otm2 = close("." + GetSymbol() + AsPrice(DateString) +"C" + strike_otm2_call); 
+def call_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"C" + strike_otm2_call);
+
+def put_close_price_itm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + strike_itm1_put);
+def put_volume_itm1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + strike_itm1_put);
+
+def put_close_price_itm2 = close("." + GetSymbol() + AsPrice(DateString) +"P" + strike_itm2_put);
+def put_volume_itm2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + strike_itm2_put);
+
+def put_close_price = close("." + GetSymbol() + AsPrice(DateString) +"P" + strike_atm);
+def put_volume = volume("." + GetSymbol() + AsPrice(DateString) +"P" + strike_atm);
+
+def put_close_otm1 = close("." + GetSymbol() + AsPrice(DateString) +"P" + strike_otm1_put);
+def put_volume1 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + strike_otm1_put);
+
+def put_close_otm2= close("." + GetSymbol() + AsPrice(DateString) +"P" + strike_otm2_put);
+def put_volume2 = volume("." + GetSymbol() + AsPrice(DateString) +"P" + strike_otm2_put);
+
+def call_itm_volumexclose = if isNaN(call_volume_itm1 * call_close_itm1 * 100) then 0 else call_volume_itm1 * call_close_itm1 * 100;
+def call_itm_volumexclose1 = if isNaN(call_volume_itm2 * call_close_itm2 * 100) then 0 else call_volume_itm2 * call_close_itm2 * 100;
+def call_volumexclose = if IsNan(call_volume * call_close_price * 100) then 0 else call_volume * call_close_price * 100 ;
+def call_plusone_volumexclose = if IsNan(call_volume1 * call_close_otm1) then 0 else call_volume1 * call_close_otm1 * 100 ;
+def call_plustwo_volumexclose = if IsNan(call_volume2 * call_close_otm2 * 100) then 0 else call_volume2 * call_close_otm2 * 100;
+
+def calls_current_total = call_itm_volumexclose + call_itm_volumexclose1 + call_volumexclose + call_plusone_volumexclose + call_plustwo_volumexclose;
+
+plot oneperiodcalls = calls_current_total;
+oneperiodcalls.SetPaintingStrategy(PaintingStrategy.HISTOGRAM);
+oneperiodcalls.SetLineWeight(5);
+oneperiodcalls.setdefaultcolor(color.green);
+
+def put_itm_volumexclose = if isNaN(put_volume_itm1 * put_close_price_itm1 * 100) then 0 else put_volume_itm1 * put_close_price_itm1 * 100;
+def put_itm_volumexclose1 = if isNaN(put_volume_itm2 * put_close_price_itm2 * 100) then 0 else put_volume_itm2 * put_close_price_itm2 * 100;
+def put_volumexclose = if isNaN(put_volume * put_close_price * 100) then 0 else put_volume * put_close_price * 100;
+def put_minusone_volumexclose = if isNaN(put_volume1 * put_close_otm1 * 100) then 0 else put_volume1 * put_close_otm1 * 100;
+def put_minustwo_volumexclose = if isNaN(put_volume2 * put_close_otm2 * 100) then 0 else put_volume2 * put_close_otm2 * 100;
+
+def puts_current_total =  put_itm_volumexclose + put_itm_volumexclose1 + put_volumexclose + put_minusone_volumexclose + put_minustwo_volumexclose;
+
+plot puts_1min = 1 - puts_current_total;
+puts_1min.SetPaintingStrategy(PaintingStrategy.histogram);
+puts_1min.SetLineWeight(5);
+puts_1min.setdefaultcolor(color.red);
