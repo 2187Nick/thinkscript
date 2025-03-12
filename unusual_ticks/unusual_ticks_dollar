@@ -28,6 +28,6 @@ def isUp = lastDirection > 0;
 def isDown = lastDirection < 0;
 
 # Dollar value bubble
-def dollarValue = lastPrice * tradeVolume * 100;
+def dollarValue = lastPrice * tradeVolume;
 AddChartBubble(dollarValue > dollar_threshold, lastPrice, "$"+round(dollarValue/1000,0) +"K" + "\n"  +tradeVolume,  if isUp then Color.GREEN 
     else Color.RED , if isDown then yes else no);
