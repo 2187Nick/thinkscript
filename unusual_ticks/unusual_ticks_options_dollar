@@ -1,0 +1,33 @@
+# unusual_ticks_options_dollar
+# @2187Nick w/grok3 assisting
+# This version we try to not have a flat direction.
+# Not sure if this is ideal. It is not bad. Seems to get alot correct
+# Mar 6, 2025
+
+input dollar_threshold = 10000;
+
+def lastPrice = close;
+def prevPrice = close[1];
+def priceChange = lastPrice - prevPrice;
+def tradeVolume = volume();
+
+# Track direction with persistence
+def isUpNow = priceChange > 0;
+def isDownNow = priceChange < 0;
+def isFlatNow = priceChange == 0;
+
+# Carry forward previous direction using a recursive definition
+def lastDirection = if isUpNow then 1 
+                    else if isDownNow then -1 
+                    else if isFlatNow then lastDirection[1] 
+                    else 0;
+# 1 = UP, -1 = DOWN, 0 = initial/no data
+
+# Resolve direction (no FLAT)
+def isUp = lastDirection > 0;
+def isDown = lastDirection < 0;
+
+# Dollar value bubble
+def dollarValue = lastPrice * tradeVolume * 100;
+AddChartBubble(dollarValue > dollar_threshold, lastPrice, "$"+round(dollarValue/1000,0) +"K" + "\n"  +tradeVolume,  if isUp then Color.GREEN 
+    else Color.RED , if isDown then yes else no);
