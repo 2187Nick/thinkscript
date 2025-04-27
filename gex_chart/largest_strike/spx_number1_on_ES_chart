@@ -1,5 +1,7 @@
-# spx_number1_on_ES_chart Jan 29, 2024
+# spx_number1_on_ES_chart Jan 29, 2024  Updated Apr 27, 2025
 # Modified by Glefdar on 01-28: Plots highest GEX SPX strike on /ES instead of SPY. Added toggle to show strike bubbles. Also added automatic detection of premarket and label explaining that prev. day's OI is used during premarket, which replaced manual premarket toggle.
+
+# 4-27-2025. Line 51: change from open to close.
 
 # Need to add this to ES chart
 
@@ -46,7 +48,7 @@ def es_close_price =  if isSaturday then close(symbol = "/ES", period = aggregat
 
 def es_fv =    Round(es_close_price - spx_close_price, 0);
 
-def SPX_open_nonan = if isNan(open(symbol = "SPX", AggregationPeriod.DAY)) then SPX_open_nonan[1] else open(symbol = "SPX", AggregationPeriod.DAY);
+def SPX_open_nonan = if isNan(close(symbol = "SPX", AggregationPeriod.DAY)) then SPX_open_nonan[1] else close(symbol = "SPX", AggregationPeriod.DAY);
 
 def ES_spx_diff = es_fv[1];
 
