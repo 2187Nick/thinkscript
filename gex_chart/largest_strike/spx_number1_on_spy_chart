@@ -1,4 +1,6 @@
-# spy_spx_combo_gex_v1a Jan 29, 2024
+# spy_spx_combo_gex_v1a Jan 29, 2024 Update Apr 27, 2025
+# Update change from using open price to close price. 
+# Lines: 40 & 42. Line: 70 switch to daily aggregation.
 # Add gex_number1 indicator to see largest SPY GEX Strike
 # Need to add this to SPY chart
 # Twitter @2187Nick
@@ -35,9 +37,9 @@ def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else i
 def floor_or_ceiling =  Round(openPrice, rounding_factor);
 
 ####
-def spy_spx_diff = ABSValue((open(symbol = "SPY", AggregationPeriod.DAY) * 10) - (open(symbol = "SPX", AggregationPeriod.DAY)));
+def spy_spx_diff = ABSValue((close(symbol = "SPY", AggregationPeriod.DAY) * 10) - (close(symbol = "SPX", AggregationPeriod.DAY)));
 
-def spx_open = open(symbol = "SPX", period = AggregationPeriod.DAY);
+def spx_open = close(symbol = "SPX", period = AggregationPeriod.DAY);
 def base_strike = (Round((spx_open / 5), 0) * 5);
 #addlabel(yes, "center: " + base_strike);
 
@@ -65,7 +67,7 @@ def days_left = if hours_left <= 0 then 0 else hours_left / 24;
 
 def Vol = imp_volatility(symbol="SPY", agg);
 #addlabel(yes, "Vol: " + Vol, color.white);
-def S = close(symbol="SPX"); #, agg);
+def S = close(symbol="SPX", agg);
 #def S = close(period = agg);
 #(yes, "S_close: " + S, color.white);
 
@@ -283,6 +285,8 @@ maxStrikeLine.setDefaultColor(color.Green);
 maxStrikeLine.setLineWeight(5);
 maxStrikeLine.setPaintingStrategy(paintingStrategy.Horizontal);
 
+AddCloud(lowestall(maxStrikeLine), highestall(maxStrikeLine), color.RED, color.GREEN, yes);
+
 AddChartBubble(showBubbleNow[offset], strike_base_spy, strike_base, color.gray);
 #AddChartBubble(showBubbleNow[offset], strike_base_spy, "OPEN", color.gray,no);
 AddChartBubble(showBubbleNow[offset], strike_plus1_spy, strike_plus1, color.gray);
@@ -299,8 +303,7 @@ AddChartBubble(showBubbleNow[offset] and strikes >10, strike_plus11_spy, strike_
 AddChartBubble(showBubbleNow[offset] and strikes >11, strike_plus12_spy, strike_plus12, color.gray);
 AddChartBubble(showBubbleNow[offset] and strikes >12, strike_plus13_spy, strike_plus13, color.gray);
 AddChartBubble(showBubbleNow[offset] and strikes >13, strike_plus14_spy, strike_plus14, color.gray);
-AddChartBubble(showBubbleNow[offset] and strikes >14, strike_plus15_spy, strike_plus15, color.gray);
-AddChartBubble(showBubbleNow[offset], strike_minus1_spy, strike_minus1, color.gray);
+AddChartBubble(showBubbleNow[offset] and strikes >14, strike_plus15_spy, strike_plus15, color.gray);AddChartBubble(showBubbleNow[offset], strike_minus1_spy, strike_minus1, color.gray);
 AddChartBubble(showBubbleNow[offset] and strikes >1, strike_minus2_spy, strike_minus2, color.gray);
 AddChartBubble(showBubbleNow[offset] and strikes >2, strike_minus3_spy, strike_minus3, color.gray);
 AddChartBubble(showBubbleNow[offset] and strikes >3, strike_minus4_spy, strike_minus4, color.gray);
