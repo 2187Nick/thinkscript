@@ -1,5 +1,7 @@
 # Gamma Exposure (Naive)
 
+## Update Jan 2, 2026. If the indicators are not working, turn off "Show Extended-Hours Trading Session"
+
 This calculates gex per $1 move in the underlying asset. Based on open interest.
 
 It automatically selects todays date for the option contract. 
