@@ -72,12 +72,12 @@ def rounding_factor = if strikeSpacing > 1 and strikeSpacing < 25 then -1 else i
 #def floor_or_ceiling =  Round(openPrice, rounding_factor);
 def floor_or_ceiling =  Round(S, rounding_factor);
 def base_strike = floor_or_ceiling;
-addlabel(yes, "center:" + base_strike);
+#addlabel(yes, "center:" + base_strike);
 
 def std1 = Round(GetMarketMakerMove(), 0);
 def std1_up = Round(S[1],0) + std1;
-addlabel(1, "std1: " + std1);
-addlabel(1, "std1_up: " + std1_up, color.green);
+#addlabel(1, "std1: " + std1);
+#addlabel(1, "std1_up: " + std1_up, color.green);
 def std1_down = Round(S,0) - std1;
 
 Script GEX {
