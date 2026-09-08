@@ -1,0 +1,288 @@
+# COSMIC EVENT HORIZON | Codex | 2026-09-07
+# Paste this entire file into a new thinkorswim desktop STUDY.
+# A mathematical space scene, anchored to the most recent canvasBars.
+# Default art mode replaces candles with a thin trail of actual closing prices.
+# Set hideCandles = no for a conventional price-chart overlay.
+# Artwork repositions/rescales with the latest window; it is not a signal.
+
+declare upper;
+declare once_per_bar;
+
+input canvasBars = 360;
+input horizontalShiftBars = 0;
+input heightPercent = 100.0;
+input verticalCenterPercent = 50.0;
+input phaseDegrees = 0.0;
+input starSeed = 7;
+input darkBackground = yes;
+input hideCandles = yes;
+input showPriceTrail = yes;
+input showNebula = yes;
+input showStars = yes;
+input showPlanet = yes;
+input showConstellations = yes;
+
+DefineGlobalColor("Space", CreateColor(3, 6, 18));
+DefineGlobalColor("DeepViolet", CreateColor(52, 24, 111));
+DefineGlobalColor("Violet", CreateColor(114, 49, 193));
+DefineGlobalColor("Orchid", CreateColor(211, 84, 219));
+DefineGlobalColor("Teal", CreateColor(20, 102, 153));
+DefineGlobalColor("Ice", CreateColor(107, 233, 255));
+DefineGlobalColor("Amber", CreateColor(255, 157, 69));
+DefineGlobalColor("Gold", CreateColor(255, 206, 121));
+DefineGlobalColor("White", CreateColor(246, 241, 223));
+
+# X is measured in bars. Y is a normalized canvas mapped into price units.
+# Only real bars determine the anchor and scale; expansion bars can draw art.
+def bn = BarNumber();
+def lastBar = HighestAll(if !IsNaN(close) then bn else 0);
+def width = Min(Max(120, Round(canvasBars, 0)), Max(2, lastBar));
+def endBar = lastBar + Round(horizontalShiftBars, 0);
+def firstBar = endBar - width + 1;
+def x = (bn - firstBar) / Max(1, width - 1);
+def active = lastBar >= 2 and x >= 0 and x <= 1;
+def scaleWindow = bn > lastBar - width and bn <= lastBar and !IsNaN(close);
+def hi = HighestAll(if scaleWindow then high else Double.NaN);
+def lo = LowestAll(if scaleWindow then low else Double.NaN);
+def span = Max(hi - lo, Max(AbsValue((hi + lo) / 2) * 0.01, TickSize() * 20));
+def canvasHeight = span * Max(10, Min(200, heightPercent)) / 100;
+def centerPrice = (hi + lo) / 2 + span * (verticalCenterPercent - 50) / 100;
+def yBase = centerPrice - canvasHeight / 2;
+def phase = phaseDegrees * Double.Pi / 180;
+def nan = Double.NaN;
+
+AssignBackgroundColor(if darkBackground then GlobalColor("Space") else Color.CURRENT);
+HidePricePlot(hideCandles);
+
+# A dark core is made by leaving a hole in the background geometry.
+# Unlike an opaque image, this works with translucent native clouds.
+def holeCenterBar = Round(firstBar + 0.58 * (width - 1), 0);
+def holeCenterX = (holeCenterBar - firstBar) / Max(1, width - 1);
+def hx = (bn - holeCenterBar) / Max(1, Round(0.088 * (width - 1), 0));
+def coreHalf = 0.197 * Sin(ACos(Max(-1, Min(1, hx))));
+def cutHigh = if AbsValue(hx) <= 1 then 0.54 + coreHalf else 0.54;
+def cutLow = if AbsValue(hx) <= 1 then 0.54 - coreHalf else 0.54;
+
+# Three nested nebula veils. Each is split above/below the dark core.
+def mist = 0.37 + 0.14 * Sin(2 * Double.Pi * x - 0.7 + phase)
+    + 0.045 * Cos(7 * Double.Pi * x + phase);
+def envelope = 0.055 + 0.09 * Sqr(Sin(Double.Pi * x));
+def n1u = mist + envelope * 1.6;
+def n1l = mist - envelope * 1.6;
+def n2u = mist + envelope;
+def n2l = mist - envelope;
+def n3u = mist + envelope * 0.42;
+def n3l = mist - envelope * 0.42;
+
+def n1au = if active and showNebula and n1u > cutHigh then yBase + canvasHeight * n1u else nan;
+def n1al = if active and showNebula and n1u > cutHigh then yBase + canvasHeight * Max(n1l, cutHigh) else nan;
+def n1bu = if active and showNebula and n1l < cutLow then yBase + canvasHeight * Min(n1u, cutLow) else nan;
+def n1bl = if active and showNebula and n1l < cutLow then yBase + canvasHeight * n1l else nan;
+AddCloud(n1au, n1al, GlobalColor("DeepViolet"), GlobalColor("DeepViolet"));
+AddCloud(n1bu, n1bl, GlobalColor("DeepViolet"), GlobalColor("DeepViolet"));
+
+def n2au = if active and showNebula and n2u > cutHigh then yBase + canvasHeight * n2u else nan;
+def n2al = if active and showNebula and n2u > cutHigh then yBase + canvasHeight * Max(n2l, cutHigh) else nan;
+def n2bu = if active and showNebula and n2l < cutLow then yBase + canvasHeight * Min(n2u, cutLow) else nan;
+def n2bl = if active and showNebula and n2l < cutLow then yBase + canvasHeight * n2l else nan;
+AddCloud(n2au, n2al, GlobalColor("Violet"), GlobalColor("Violet"));
+AddCloud(n2bu, n2bl, GlobalColor("Violet"), GlobalColor("Violet"));
+
+def n3au = if active and showNebula and n3u > cutHigh then yBase + canvasHeight * n3u else nan;
+def n3al = if active and showNebula and n3u > cutHigh then yBase + canvasHeight * Max(n3l, cutHigh) else nan;
+def n3bu = if active and showNebula and n3l < cutLow then yBase + canvasHeight * Min(n3u, cutLow) else nan;
+def n3bl = if active and showNebula and n3l < cutLow then yBase + canvasHeight * n3l else nan;
+AddCloud(n3au, n3al, GlobalColor("Orchid"), GlobalColor("Orchid"));
+AddCloud(n3bu, n3bl, GlobalColor("Orchid"), GlobalColor("Orchid"));
+
+# A second, cooler veil crosses beneath the main nebula.
+def coolMid = 0.24 + 0.085 * Cos(2.8 * Double.Pi * x + phase);
+def coolWide = 0.022 + 0.025 * Sqr(Sin(4 * Double.Pi * x));
+def coolAU = if active and showNebula and coolMid + coolWide > cutHigh then yBase + canvasHeight * (coolMid + coolWide) else nan;
+def coolAL = if active and showNebula and coolMid + coolWide > cutHigh then yBase + canvasHeight * Max(coolMid - coolWide, cutHigh) else nan;
+def coolBU = if active and showNebula and coolMid - coolWide < cutLow then yBase + canvasHeight * Min(coolMid + coolWide, cutLow) else nan;
+def coolBL = if active and showNebula and coolMid - coolWide < cutLow then yBase + canvasHeight * (coolMid - coolWide) else nan;
+AddCloud(coolAU, coolAL, GlobalColor("Teal"), GlobalColor("Teal"));
+AddCloud(coolBU, coolBL, GlobalColor("Teal"), GlobalColor("Teal"));
+
+# Turbulent filaments add fine structure inside the broad nebula veils.
+def thread1 = mist + envelope * 0.58 * Sin(13 * Double.Pi * x + phase)
+    + 0.007 * Sin(103 * Double.Pi * x);
+def thread2 = mist - envelope * 0.64 * Cos(11 * Double.Pi * x + phase)
+    + 0.006 * Cos(127 * Double.Pi * x);
+def thread3 = coolMid + coolWide * 0.35 * Sin(37 * Double.Pi * x + phase);
+plot VioletFilament = if active and showNebula and (thread1 >= cutHigh or thread1 <= cutLow) then yBase + canvasHeight * thread1 else nan;
+plot OrchidFilament = if active and showNebula and (thread2 >= cutHigh or thread2 <= cutLow) then yBase + canvasHeight * thread2 else nan;
+plot BlueFilament = if active and showNebula and (thread3 >= cutHigh or thread3 <= cutLow) then yBase + canvasHeight * thread3 else nan;
+VioletFilament.SetDefaultColor(CreateColor(104, 57, 157));
+OrchidFilament.SetDefaultColor(CreateColor(151, 68, 181));
+BlueFilament.SetDefaultColor(CreateColor(27, 92, 129));
+VioletFilament.HideBubble();
+VioletFilament.HideTitle();
+OrchidFilament.HideBubble();
+OrchidFilament.HideTitle();
+BlueFilament.HideBubble();
+BlueFilament.HideTitle();
+
+# Photon sphere: elliptical annuli, not a filled disk.
+# Snap ellipse extrema to bars so the upper and lower branches meet.
+def haloX = (bn - holeCenterBar) / Max(1, Round(0.121 * (width - 1), 0));
+def ringX = (bn - holeCenterBar) / Max(1, Round(0.102 * (width - 1), 0));
+def lightX = (bn - holeCenterBar) / Max(1, Round(0.093 * (width - 1), 0));
+def haloH = 0.268 * Sin(ACos(Max(-1, Min(1, haloX))));
+def ringH = 0.227 * Sin(ACos(Max(-1, Min(1, ringX))));
+def lightH = 0.207 * Sin(ACos(Max(-1, Min(1, lightX))));
+def haloU = if active and AbsValue(haloX) <= 1 then yBase + canvasHeight * (0.54 + haloH) else nan;
+def haloUi = if active and AbsValue(haloX) <= 1 then yBase + canvasHeight * (0.54 + ringH) else nan;
+def haloLi = if active and AbsValue(haloX) <= 1 then yBase + canvasHeight * (0.54 - ringH) else nan;
+def haloL = if active and AbsValue(haloX) <= 1 then yBase + canvasHeight * (0.54 - haloH) else nan;
+AddCloud(haloU, haloUi, GlobalColor("Violet"), GlobalColor("Violet"));
+AddCloud(haloLi, haloL, GlobalColor("Violet"), GlobalColor("Violet"));
+
+def ringU = if active and AbsValue(ringX) <= 1 then yBase + canvasHeight * (0.54 + ringH) else nan;
+def ringUi = if active and AbsValue(ringX) <= 1 then yBase + canvasHeight * (0.54 + lightH) else nan;
+def ringLi = if active and AbsValue(ringX) <= 1 then yBase + canvasHeight * (0.54 - lightH) else nan;
+def ringL = if active and AbsValue(ringX) <= 1 then yBase + canvasHeight * (0.54 - ringH) else nan;
+AddCloud(ringU, ringUi, GlobalColor("Amber"), GlobalColor("Amber"));
+AddCloud(ringLi, ringL, GlobalColor("Amber"), GlobalColor("Amber"));
+
+plot PhotonUpper = if active and AbsValue(lightX) <= 1 then yBase + canvasHeight * (0.54 + lightH) else nan;
+plot PhotonLower = if active and AbsValue(lightX) <= 1 then yBase + canvasHeight * (0.54 - lightH) else nan;
+PhotonUpper.SetDefaultColor(GlobalColor("Gold"));
+PhotonLower.SetDefaultColor(GlobalColor("Gold"));
+PhotonUpper.SetLineWeight(2);
+PhotonLower.SetLineWeight(2);
+PhotonUpper.HideBubble();
+PhotonUpper.HideTitle();
+PhotonLower.HideBubble();
+PhotonLower.HideTitle();
+
+# Tilted accretion disk. Tan determines slope; the angle stays far from poles.
+def diskX = (bn - holeCenterBar) / Max(1, Round(0.31 * (width - 1), 0));
+def diskCenter = 0.54 + (x - holeCenterX) * Tan(-8 * Double.Pi / 180);
+def diskH = 0.047 * Sin(ACos(Max(-1, Min(1, diskX))));
+def diskOn = active and AbsValue(diskX) <= 1;
+def backOn = diskOn and AbsValue(hx) > 1;
+def front = diskCenter - diskH;
+def back = diskCenter + diskH;
+def diskGlowU = if diskOn then yBase + canvasHeight * (front + 0.017) else nan;
+def diskGlowL = if diskOn then yBase + canvasHeight * (front - 0.017) else nan;
+def diskInkU = if diskOn then yBase + canvasHeight * (front + 0.006) else nan;
+def diskInkL = if diskOn then yBase + canvasHeight * (front - 0.006) else nan;
+def backU = if backOn then yBase + canvasHeight * (back + 0.005) else nan;
+def backL = if backOn then yBase + canvasHeight * (back - 0.005) else nan;
+AddCloud(diskGlowU, diskGlowL, GlobalColor("Amber"), GlobalColor("Amber"));
+AddCloud(diskInkU, diskInkL, GlobalColor("Gold"), GlobalColor("Gold"));
+AddCloud(backU, backL, GlobalColor("Violet"), GlobalColor("Violet"));
+
+plot AccretionFront = if diskOn then yBase + canvasHeight * front else nan;
+plot AccretionBack = if backOn then yBase + canvasHeight * back else nan;
+AccretionFront.AssignValueColor(if x < holeCenterX then GlobalColor("Ice") else GlobalColor("White"));
+AccretionFront.SetLineWeight(2);
+AccretionBack.SetDefaultColor(GlobalColor("Orchid"));
+AccretionFront.HideBubble();
+AccretionFront.HideTitle();
+AccretionBack.HideBubble();
+AccretionBack.HideTitle();
+
+# A distant blue planet with a tilted ring. The back ring omits the body.
+def planetCenterBar = Round(firstBar + 0.17 * (width - 1), 0);
+def planetCenterX = (planetCenterBar - firstBar) / Max(1, width - 1);
+def planetX = (bn - planetCenterBar) / Max(1, Round(0.031 * (width - 1), 0));
+def planetH = 0.069 * Cos(ASin(Max(-1, Min(1, planetX))));
+def planetOn = active and showPlanet and AbsValue(planetX) <= 1;
+def planetU = if planetOn then yBase + canvasHeight * (0.80 + planetH) else nan;
+def planetL = if planetOn then yBase + canvasHeight * (0.80 - planetH) else nan;
+AddCloud(planetU, planetL, GlobalColor("Teal"), GlobalColor("Teal"));
+def pLightU = if planetOn then yBase + canvasHeight * (0.80 + planetH) else nan;
+def pLightL = if planetOn then yBase + canvasHeight * (0.80 + planetH * 0.28) else nan;
+AddCloud(pLightU, pLightL, GlobalColor("Ice"), GlobalColor("Ice"));
+def prx = (bn - planetCenterBar) / Max(1, Round(0.068 * (width - 1), 0));
+def prh = 0.019 * Sin(ACos(Max(-1, Min(1, prx))));
+def prc = 0.80 + (x - planetCenterX) * Tan(14 * Double.Pi / 180);
+plot PlanetRingFront = if active and showPlanet and AbsValue(prx) <= 1 then yBase + canvasHeight * (prc - prh) else nan;
+plot PlanetRingBack = if active and showPlanet and AbsValue(prx) <= 1 and AbsValue(planetX) > 1 then yBase + canvasHeight * (prc + prh) else nan;
+PlanetRingFront.SetDefaultColor(GlobalColor("Ice"));
+PlanetRingBack.SetDefaultColor(GlobalColor("Violet"));
+PlanetRingFront.HideBubble();
+PlanetRingFront.HideTitle();
+PlanetRingBack.HideBubble();
+PlanetRingBack.HideTitle();
+
+# Deterministic star field: fractional sine hashes, no Random() flicker.
+def cell = bn - firstBar + starSeed * 31;
+def a = Sin(cell * 12.9898 + 2.17) * 43758.5453;
+def b = Sin(cell * 39.3467 + 9.13) * 23421.631;
+def c = Sin(cell * 73.156 + 1.77) * 951.1357;
+def d = Sin(cell * 17.719 + 4.31) * 15731.743;
+def e = Sin(cell * 91.133 + 7.73) * 31337.137;
+def f = Sin(cell * 53.817 + 6.29) * 19717.371;
+def ha = a - Floor(a);
+def hb = b - Floor(b);
+def hc = c - Floor(c);
+def hd = d - Floor(d);
+def he = e - Floor(e);
+def hf = f - Floor(f);
+def sy1 = 0.055 + 0.89 * hb;
+def sy2 = 0.045 + 0.91 * hd;
+def sy3 = 0.060 + 0.88 * hf;
+def clear1 = Sqr(hx) + Sqr((sy1 - 0.54) / 0.207) > 1 and (!showPlanet or Sqr(planetX) + Sqr((sy1 - 0.80) / 0.075) > 1);
+def clear2 = Sqr(hx) + Sqr((sy2 - 0.54) / 0.207) > 1 and (!showPlanet or Sqr(planetX) + Sqr((sy2 - 0.80) / 0.075) > 1);
+def clear3 = Sqr(hx) + Sqr((sy3 - 0.54) / 0.207) > 1 and (!showPlanet or Sqr(planetX) + Sqr((sy3 - 0.80) / 0.075) > 1);
+plot DistantStars = if active and showStars and ha < 0.38 and clear1 then yBase + canvasHeight * sy1 else nan;
+plot BlueStars = if active and showStars and hc < 0.22 and clear2 then yBase + canvasHeight * sy2 else nan;
+plot WarmStars = if active and showStars and he < 0.10 and clear3 then yBase + canvasHeight * sy3 else nan;
+plot StarHalos = if active and showStars and he < 0.028 and clear3 then yBase + canvasHeight * sy3 else nan;
+plot StarCores = if active and showStars and he < 0.028 and clear3 then yBase + canvasHeight * sy3 else nan;
+DistantStars.SetPaintingStrategy(PaintingStrategy.POINTS);
+BlueStars.SetPaintingStrategy(PaintingStrategy.POINTS);
+WarmStars.SetPaintingStrategy(PaintingStrategy.POINTS);
+StarHalos.SetPaintingStrategy(PaintingStrategy.POINTS);
+StarCores.SetPaintingStrategy(PaintingStrategy.POINTS);
+DistantStars.SetDefaultColor(CreateColor(95, 116, 164));
+BlueStars.SetDefaultColor(GlobalColor("Ice"));
+WarmStars.SetDefaultColor(GlobalColor("Gold"));
+StarHalos.SetDefaultColor(CreateColor(76, 64, 96));
+StarCores.SetDefaultColor(GlobalColor("White"));
+DistantStars.SetLineWeight(1);
+BlueStars.SetLineWeight(2);
+WarmStars.SetLineWeight(2);
+StarHalos.SetLineWeight(5);
+StarCores.SetLineWeight(2);
+DistantStars.HideBubble();
+DistantStars.HideTitle();
+BlueStars.HideBubble();
+BlueStars.HideTitle();
+WarmStars.HideBubble();
+WarmStars.HideTitle();
+StarHalos.HideBubble();
+StarHalos.HideTitle();
+StarCores.HideBubble();
+StarCores.HideTitle();
+
+# A small constellation in the upper right. Vertices snap to actual bars.
+def k1 = Round((width - 1) * 0.76, 0);
+def k2 = Round((width - 1) * 0.81, 0);
+def k3 = Round((width - 1) * 0.86, 0);
+def k4 = Round((width - 1) * 0.92, 0);
+def k = bn - firstBar;
+def cy = if k <= k2 then 0.82 + (0.91 - 0.82) * (k - k1) / Max(1, k2 - k1)
+    else if k <= k3 then 0.91 + (0.77 - 0.91) * (k - k2) / Max(1, k3 - k2)
+    else 0.77 + (0.83 - 0.77) * (k - k3) / Max(1, k4 - k3);
+plot Constellation = if active and showConstellations and k >= k1 and k <= k4 then yBase + canvasHeight * cy else nan;
+plot ConstellationNodes = if active and showConstellations and (k == k1 or k == k2 or k == k3 or k == k4) then yBase + canvasHeight * cy else nan;
+Constellation.SetDefaultColor(CreateColor(55, 81, 124));
+ConstellationNodes.SetPaintingStrategy(PaintingStrategy.POINTS);
+ConstellationNodes.SetLineWeight(3);
+ConstellationNodes.SetDefaultColor(GlobalColor("Ice"));
+Constellation.HideBubble();
+Constellation.HideTitle();
+ConstellationNodes.HideBubble();
+ConstellationNodes.HideTitle();
+
+# This is actual close, not a transformed oscillator or synthetic forecast.
+plot PriceTrail = if active and showPriceTrail and !IsNaN(close) then close else nan;
+PriceTrail.SetDefaultColor(CreateColor(77, 127, 148));
+PriceTrail.SetLineWeight(1);
+PriceTrail.HideBubble();
+PriceTrail.HideTitle();
