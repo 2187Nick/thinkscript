@@ -1,7 +1,13 @@
 
 # Shapes and Art
 
-Thinkscript doesnt have built in functions to draw shapes. Here is what I came up with using GPT4.
+Thinkscript doesnt have built in functions to draw shapes. Here is what Astra came up with. 
+Below you can compare what GPT4 was able to create.
+
+<img width="970" height="882" alt="starrynight_best" src="https://github.com/user-attachments/assets/d6938d70-28a4-4e73-9351-877d0e64b3c7" />
+<img width="1059" height="929" alt="cosmic" src="https://github.com/user-attachments/assets/be9074ec-b9dd-478d-897b-2b7398ad2231" />
+
+Here is what I came up with using GPT4.
 
 ![image](https://github.com/2187Nick/thinkscript/assets/75052782/ae96a3f2-b4f7-41b4-8dfa-99f3c6e941ff)
 
