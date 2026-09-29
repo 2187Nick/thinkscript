@@ -7,6 +7,9 @@ Below you can compare what other models were able to create.
 ## GPT-6 Pro:
 <img width="1104" height="987" alt="tsla_event_horizon_gpt6pro" src="https://github.com/user-attachments/assets/20c888ab-7b40-408b-998f-6e8bb4b51570" />
 
+## GPT-6.1 Sol(Max)
+Sep 29, 2026
+<img width="926" height="987" alt="chronoglass_gallery" src="https://github.com/user-attachments/assets/c5bd9c4c-0faf-4d72-983d-12637e4dabe3" />
 
 ## GPT-6 Astra Light:
 <img width="970" height="882" alt="starrynight_best" src="https://github.com/user-attachments/assets/d6938d70-28a4-4e73-9351-877d0e64b3c7" />
