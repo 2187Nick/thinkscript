@@ -4,6 +4,10 @@
 Thinkscript doesnt have built in functions to draw shapes.
 Below you can compare what other models were able to create.
 
+## Opus 5.5
+Oct 1, 2026: [THE CLOSE](the_close/), a per-pixel ray tracer in thinkScript. The treeline is the chart's own closing prices.
+<img width="981" height="987" alt="the_close_opus5_5" src="the_close/the_close_tsla_live.png" />
+
 ## GPT-6 Pro:
 <img width="1104" height="987" alt="tsla_event_horizon_gpt6pro" src="https://github.com/user-attachments/assets/20c888ab-7b40-408b-998f-6e8bb4b51570" />
 
