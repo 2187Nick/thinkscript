@@ -1,0 +1,91 @@
+# PART 3/4: VISIBLE EDGES
+# Add ALL FOUR studies to the SAME chart. Keep canvas settings identical.
+# CHRONOGLASS | GPT-6.1 | 2026-09-29
+# A native ThinkScript sculpture: projected (2,3) torus knot, ten-sided
+# prismatic tube, analytically clipped over/under crossings, reflected dais.
+# Create four DESKTOP STUDIES; each study name matches its part's filename.
+# Art mode: 640+ loaded bars, linear price axis, Fit studies, zero expansion.
+# Decorative geometry reanchors to the latest window; this is not a signal.
+
+declare upper;
+declare once_per_bar;
+
+input canvasBars = 640;
+input horizontalShiftBars = 0;
+input heightPercent = 100.0;
+input verticalCenterPercent = 50.0;
+input darkBackground = yes;
+input hideCandles = yes;
+input showKnot = yes;
+input showWireframe = yes;
+input showReflection = yes;
+input showGallery = yes;
+input showCrystal = yes;
+input showLabels = yes;
+input showPriceTrail = no;
+
+DefineGlobalColor("Night", CreateColor(7, 13, 23));
+DefineGlobalColor("Frame", CreateColor(24, 39, 52));
+DefineGlobalColor("Brass", CreateColor(102, 86, 68));
+DefineGlobalColor("Aqua", CreateColor(66, 148, 156));
+DefineGlobalColor("Pearl", CreateColor(244, 222, 186));
+def bn = BarNumber();
+def lastBar = HighestAll(if !IsNaN(close) then bn else 0);
+def width = Min(Max(240, Round(canvasBars, 0)), Max(2, lastBar));
+def firstBar = lastBar + Round(horizontalShiftBars, 0) - width + 1;
+def x = (bn - firstBar) / Max(1, width - 1);
+def active = lastBar >= 2 and x >= 0 and x <= 1;
+def scaleWindow = bn > lastBar - width and bn <= lastBar and !IsNaN(close);
+def hi = HighestAll(if scaleWindow then high else Double.NaN);
+def lo = LowestAll(if scaleWindow then low else Double.NaN);
+def span = Max(hi - lo, Max(AbsValue((hi + lo) / 2) * 0.01, TickSize() * 20));
+def h = span * Max(10, Min(200, heightPercent)) / 100;
+def base = (hi + lo) / 2 + span * (verticalCenterPercent - 50) / 100 - h / 2;
+def nan = Double.NaN;
+def art = active and showKnot;
+def gallery = active and showGallery;
+def reflect = active and showKnot and showReflection;
+def mesh = active and showKnot and showWireframe;
+def penWidth = Max(0.0009, 1.05 / Max(1, width - 1));
+
+plot Seam30 = if mesh then if x>=0.362353 and x<=0.365827 then base+h*(0.057251*x+0.670391) else if x>=0.378565 and x<=0.405397 then base+h*(-0.023489*x+0.702794) else if x>=0.418407 and x<=0.423498 then base+h*(-2.173516*x+1.465148) else if x>=0.453413 and x<=0.477142 then base+h*(-0.175112*x+0.794591) else if x>=0.486329 and x<=0.499372 then base+h*(-0.549784*x+1.155500) else if x>=0.535407 and x<=0.568097 then base+h*(0.05266*x+0.663799) else if x>=0.581707 and x<=0.604948 then base+h*(1.218952*x-0.287651) else if x>=0.610888 and x<=0.618658 then base+h*(2.896259*x-1.120595) else if x>=0.640085 and x<=0.675135 then base+h*(-0.114297*x+0.757008) else nan else nan;
+
+Seam30.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam30.HideBubble();
+Seam30.HideTitle();
+plot Seam31 = if mesh then if x >= 0.362353 and x <= 0.366059 then base + h * (0.082827 * x + 0.662547) else if x >= 0.378986 and x <= 0.413979 then base + h * (-0.034069 * x + 0.757656) else if x >= 0.418875 and x <= 0.42702 then base + h * (1.704195 * x - 0.195439) else if x >= 0.453413 and x <= 0.460253 then base + h * (2.121522 * x - 0.246733) else if x >= 0.467183 and x <= 0.492921 then base + h * (-0.527873 * x + 0.700181) else if x >= 0.582203 and x <= 0.588332 then base + h * (1.64345 * x - 0.376312) else if x >= 0.604787 and x <= 0.611326 then base + h * (2.64579 * x - 1.004480) else if x >= 0.619507 and x <= 0.627233 then base + h * (3.603133 * x - 1.753260) else if x >= 0.640631 and x <= 0.642746 then base + h * (9.469149 * x - 5.543056) else nan else nan;
+Seam31.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam31.HideBubble();
+Seam31.HideTitle();
+plot Seam32 = if mesh then if x >= 0.363826 and x <= 0.376318 then base + h * (0.102545 * x + 0.666375) else if x >= 0.380549 and x <= 0.382831 then base + h * (-4.72149 * x + 2.307534) else if x >= 0.401125 and x <= 0.403268 then base + h * (-5.042889 * x + 2.533018) else if x >= 0.408442 and x <= 0.417871 then base + h * (-1.51671 * x + 1.106418) else if x >= 0.454114 and x <= 0.482817 then base + h * (-0.529255 * x + 0.681017) else if x >= 0.582203 and x <= 0.588767 then base + h * (3.03897 * x - 1.188788) else if x >= 0.604948 and x <= 0.619507 then base + h * (2.002422 * x - 0.761609) else nan else nan;
+Seam32.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam32.HideBubble();
+Seam32.HideTitle();
+plot Seam33 = if mesh then if x >= 0.364196 and x <= 0.408612 then base + h * (-0.15303 * x + 0.457273) else if x >= 0.418875 and x <= 0.421317 then base + h * (-4.625574 * x + 2.455945) else if x >= 0.455109 and x <= 0.473205 then base + h * (-0.777539 * x + 0.834525) else if x >= 0.486329 and x <= 0.53517 then base + h * (0.038419 * x + 0.869439) else if x >= 0.583178 and x <= 0.588332 then base + h * (3.7848 * x - 1.636138) else if x >= 0.60763 and x <= 0.617305 then base + h * (2.591786 * x - 0.931264) else nan else nan;
+Seam33.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam33.HideBubble();
+Seam33.HideTitle();
+plot Seam34 = if mesh then if x >= 0.365006 and x <= 0.380549 then base + h * (-0.589693 * x + 0.735184) else if x >= 0.403268 and x <= 0.408442 then base + h * (-2.406759 * x + 1.469950) else if x >= 0.462494 and x <= 0.471195 then base + h * (0.169848 * x + 0.335579) else if x >= 0.583178 and x <= 0.598947 then base + h * (0.402344 * x + 0.336435) else if x >= 0.611455 and x <= 0.667712 then base + h * (0.174285 * x + 0.285673) else nan else nan;
+Seam34.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam34.HideBubble();
+Seam34.HideTitle();
+plot Seam35 = if mesh then if x >= 0.365006 and x <= 0.367811 then base + h * (-3.994884 * x + 1.978100) else if x >= 0.379493 and x <= 0.380549 then base + h * (-8.317426 * x + 3.675963) else if x >= 0.403288 and x <= 0.411233 then base + h * (-1.314738 * x + 1.110231) else if x >= 0.470277 and x <= 0.493053 then base + h * (-0.119447 * x + 0.793057) else if x >= 0.619568 and x <= 0.625282 then base + h * (2.917549 * x - 1.230491) else nan else nan;
+Seam35.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam35.HideBubble();
+Seam35.HideTitle();
+plot Seam36 = if mesh then if x >= 0.367135 and x <= 0.375098 then base + h * (-2.663803 * x + 1.621163) else if x >= 0.379493 and x <= 0.400077 then base + h * (0.027852 * x + 0.508986) else if x >= 0.408612 and x <= 0.451968 then base + h * (0.0377 * x + 0.379338) else if x >= 0.619568 and x <= 0.637164 then base + h * (-0.387029 * x + 0.816921) else nan else nan;
+Seam36.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam36.HideBubble();
+Seam36.HideTitle();
+plot Seam37 = if mesh then if x >= 0.367354 and x <= 0.376951 then base + h * (-2.465821 * x + 1.542570) else if x >= 0.403879 and x <= 0.429578 then base + h * (-0.087947 * x + 0.756696) else if x >= 0.619834 and x <= 0.62131 then base + h * (4.164034 * x - 1.904914) else nan else nan;
+Seam37.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam37.HideBubble();
+Seam37.HideTitle();
+plot Seam38 = if mesh then if x >= 0.367572 and x <= 0.375559 then base + h * (0.105034 * x + 0.681747) else if x >= 0.408803 and x <= 0.449186 then base + h * (0.055254 * x + 0.380156) else nan else nan;
+Seam38.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam38.HideBubble();
+Seam38.HideTitle();
+plot Seam39 = if mesh then if x >= 0.367811 and x <= 0.373487 then base + h * (-2.67891 * x + 1.494071) else nan else nan;
+Seam39.AssignValueColor(if x < 0.38 then CreateColor(87, 160, 178) else if x < 0.62 then CreateColor(181, 163, 125) else CreateColor(162, 112, 109));
+Seam39.HideBubble();
+Seam39.HideTitle();
