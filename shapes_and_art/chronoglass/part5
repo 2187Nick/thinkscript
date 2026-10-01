@@ -1,0 +1,214 @@
+# PART 4/4: GALLERY + CRYSTAL
+# Add ALL FOUR studies to the SAME chart. Keep canvas settings identical.
+# CHRONOGLASS | GPT-6.1 | 2026-09-29
+# A native ThinkScript sculpture: projected (2,3) torus knot, ten-sided
+# prismatic tube, analytically clipped over/under crossings, reflected dais.
+# Create four DESKTOP STUDIES; each study name matches its part's filename.
+# Art mode: 640+ loaded bars, linear price axis, Fit studies, zero expansion.
+# Decorative geometry reanchors to the latest window; this is not a signal.
+
+declare upper;
+declare once_per_bar;
+
+input canvasBars = 640;
+input horizontalShiftBars = 0;
+input heightPercent = 100.0;
+input verticalCenterPercent = 50.0;
+input darkBackground = yes;
+input hideCandles = yes;
+input showKnot = yes;
+input showWireframe = yes;
+input showReflection = yes;
+input showGallery = yes;
+input showCrystal = yes;
+input showLabels = yes;
+input showPriceTrail = no;
+
+DefineGlobalColor("Night", CreateColor(7, 13, 23));
+DefineGlobalColor("Frame", CreateColor(24, 39, 52));
+DefineGlobalColor("Brass", CreateColor(102, 86, 68));
+DefineGlobalColor("Aqua", CreateColor(66, 148, 156));
+DefineGlobalColor("Pearl", CreateColor(244, 222, 186));
+def bn = BarNumber();
+def lastBar = HighestAll(if !IsNaN(close) then bn else 0);
+def width = Min(Max(240, Round(canvasBars, 0)), Max(2, lastBar));
+def firstBar = lastBar + Round(horizontalShiftBars, 0) - width + 1;
+def x = (bn - firstBar) / Max(1, width - 1);
+def active = lastBar >= 2 and x >= 0 and x <= 1;
+def scaleWindow = bn > lastBar - width and bn <= lastBar and !IsNaN(close);
+def hi = HighestAll(if scaleWindow then high else Double.NaN);
+def lo = LowestAll(if scaleWindow then low else Double.NaN);
+def span = Max(hi - lo, Max(AbsValue((hi + lo) / 2) * 0.01, TickSize() * 20));
+def h = span * Max(10, Min(200, heightPercent)) / 100;
+def base = (hi + lo) / 2 + span * (verticalCenterPercent - 50) / 100 - h / 2;
+def nan = Double.NaN;
+def art = active and showKnot;
+def gallery = active and showGallery;
+def reflect = active and showKnot and showReflection;
+def mesh = active and showKnot and showWireframe;
+def penWidth = Max(0.0009, 1.05 / Max(1, width-1));
+
+# Geometry is evaluated in normalized coordinates, then mapped to prices.
+# Each f*u/f*l pair is one convex visible surface, with hidden faces removed.
+# Clouds never rely on opaque painting order to fake the crossing topology.
+
+
+plot ReflectFar = if reflect and x>=0.155 and x<=0.845 and Sin(210*x)>-0.15 then base+h*(0.300-0.16*((if x<0.155336 then (8.878947*x-0.803303) else if x<0.157589 then (3.994877*x-0.044632) else if x<0.164655 then (4.628523*x-0.144487) else if x<0.186383 then (1.838736*x+0.314865) else if x<0.217853 then (1.051883*x+0.461521) else if x<0.256159 then (0.652025*x+0.548632) else if x<0.258704 then (0.48431*x+0.591593) else if x<0.299409 then (0.3982*x+0.613870) else if x<0.305527 then (0.215421*x+0.668596) else if x<0.306613 then (4.87665*x-0.755534) else if x<0.323666 then (2.289483*x+0.037724) else if x<0.350125 then (1.386829*x+0.329883) else if x<0.385254 then (0.898918*x+0.500712) else if x<0.385507 then (0.53131*x+0.642335) else if x<0.393255 then (0.567945*x+0.628221) else if x<0.427316 then (0.569028*x+0.627804) else if x<0.437979 then (0.382527*x+0.707499) else if x<0.45907 then (0.270657*x+0.756495) else if x<0.473725 then (0.308223*x+0.739250) else if x<0.486329 then (0.226982*x+0.777736) else if x<0.53517 then (0.038419*x+0.869439) else if x<0.58112 then (-0.202024*x+0.998117) else if x<0.621169 then (-0.485078*x+1.162605) else if x<0.653032 then (-0.870818*x+1.402215) else if x<0.675387 then (-1.506802*x+1.817533) else if x<0.687982 then (-2.93676*x+2.783308) else if x<0.691323 then (-10.428875*x+7.937746) else if x<0.728849 then (-0.258062*x+0.906431) else if x<0.768431 then (-0.446146*x+1.043516) else if x<0.80266 then (-0.728004*x+1.260104) else if x<0.828488 then (-1.229104*x+1.662317) else if x<0.843247 then (-2.526537*x+2.737225) else if x<0.844121 then (-10.685326*x+9.617103) else (-23.277886*x+20.235747))-0.35)+0.002*Sin(260*x)) else nan;
+ReflectFar.SetDefaultColor(GlobalColor("Frame")); ReflectFar.HideBubble(); ReflectFar.HideTitle();
+plot ReflectNear = if reflect and x>=0.155 and x<=0.845 and Sin(210*x)>-0.15 then base+h*(0.300-0.16*((if x<0.15601 then (-12.117671*x+2.451173) else if x<0.157428 then (-22.578697*x+4.083198) else if x<0.173465 then (-2.918033*x+0.988051) else if x<0.202905 then (-1.467149*x+0.736374) else if x<0.244008 then (-0.892563*x+0.619787) else if x<0.294 then (-0.557076*x+0.537926) else if x<0.349387 then (-0.316131*x+0.467088) else if x<0.406362 then (-0.11647*x+0.397329) else if x<0.46123 then (0.069196*x+0.321881) else if x<0.510812 then (0.260667*x+0.233569) else if x<0.550416 then (0.478985*x+0.122050) else if x<0.554846 then (0.473871*x+0.124865) else if x<0.560118 then (0.763134*x-0.035632) else if x<0.611455 then (0.008317*x+0.387155) else if x<0.667712 then (0.174285*x+0.285673) else if x<0.691715 then (0.358923*x+0.162388) else if x<0.717299 then (0.329511*x+0.182733) else if x<0.721492 then (0.538418*x+0.032884) else if x<0.722477 then (0.589224*x-0.003772) else if x<0.764494 then (0.548089*x+0.025947) else if x<0.803039 then (0.858638*x-0.211466) else if x<0.830166 then (1.408813*x-0.653278) else if x<0.844072 then (2.927923*x-1.914390) else (9.64116*x-7.580846))-0.35)+0.002*Sin(260*x)) else nan;
+ReflectNear.SetDefaultColor(GlobalColor("Aqua")); ReflectNear.HideBubble(); ReflectNear.HideTitle();
+
+
+# Architectural frame and dais. These are analytical native chart plots.
+plot FrameRoof = if gallery then base+h*(if x>=0.045 and x<0.11 then 0.89+(x-0.045)*0.923076923 else if x>=0.11 and x<=0.89 then 0.95 else if x>0.89 and x<=0.955 then 0.95-(x-0.89)*0.923076923 else nan) else nan;
+FrameRoof.SetDefaultColor(GlobalColor("Frame")); FrameRoof.SetLineWeight(1); FrameRoof.HideBubble(); FrameRoof.HideTitle();
+plot FrameInner = if gallery then base+h*(if x>=0.066 and x<0.117 then 0.87+(x-0.066)*0.980392157 else if x>=0.117 and x<=0.883 then 0.92 else if x>0.883 and x<=0.934 then 0.92-(x-0.883)*0.980392157 else nan) else nan;
+FrameInner.SetDefaultColor(GlobalColor("Frame")); FrameInner.SetLineWeight(1); FrameInner.HideBubble(); FrameInner.HideTitle();
+AddCloud(if gallery and AbsValue(x-0.045)<=penWidth then base+h*0.87 else nan, if gallery and AbsValue(x-0.045)<=penWidth then base+h*0.27 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+AddCloud(if gallery and AbsValue(x-0.066)<=penWidth then base+h*0.87 else nan, if gallery and AbsValue(x-0.066)<=penWidth then base+h*0.27 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+AddCloud(if gallery and AbsValue(x-0.934)<=penWidth then base+h*0.87 else nan, if gallery and AbsValue(x-0.934)<=penWidth then base+h*0.27 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+AddCloud(if gallery and AbsValue(x-0.955)<=penWidth then base+h*0.87 else nan, if gallery and AbsValue(x-0.955)<=penWidth then base+h*0.27 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+plot Tick0 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.3 else nan) else nan;
+Tick0.SetDefaultColor(GlobalColor("Brass")); Tick0.SetLineWeight(1); Tick0.HideBubble(); Tick0.HideTitle();
+plot Tick1 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.335 else nan) else nan;
+Tick1.SetDefaultColor(GlobalColor("Brass")); Tick1.SetLineWeight(1); Tick1.HideBubble(); Tick1.HideTitle();
+plot Tick2 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.37 else nan) else nan;
+Tick2.SetDefaultColor(GlobalColor("Brass")); Tick2.SetLineWeight(1); Tick2.HideBubble(); Tick2.HideTitle();
+plot Tick3 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.405 else nan) else nan;
+Tick3.SetDefaultColor(GlobalColor("Brass")); Tick3.SetLineWeight(1); Tick3.HideBubble(); Tick3.HideTitle();
+plot Tick4 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.44 else nan) else nan;
+Tick4.SetDefaultColor(GlobalColor("Brass")); Tick4.SetLineWeight(1); Tick4.HideBubble(); Tick4.HideTitle();
+plot Tick5 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.475 else nan) else nan;
+Tick5.SetDefaultColor(GlobalColor("Brass")); Tick5.SetLineWeight(1); Tick5.HideBubble(); Tick5.HideTitle();
+plot Tick6 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.51 else nan) else nan;
+Tick6.SetDefaultColor(GlobalColor("Brass")); Tick6.SetLineWeight(1); Tick6.HideBubble(); Tick6.HideTitle();
+plot Tick7 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.545 else nan) else nan;
+Tick7.SetDefaultColor(GlobalColor("Brass")); Tick7.SetLineWeight(1); Tick7.HideBubble(); Tick7.HideTitle();
+plot Tick8 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.58 else nan) else nan;
+Tick8.SetDefaultColor(GlobalColor("Brass")); Tick8.SetLineWeight(1); Tick8.HideBubble(); Tick8.HideTitle();
+plot Tick9 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.615 else nan) else nan;
+Tick9.SetDefaultColor(GlobalColor("Brass")); Tick9.SetLineWeight(1); Tick9.HideBubble(); Tick9.HideTitle();
+plot Tick10 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.65 else nan) else nan;
+Tick10.SetDefaultColor(GlobalColor("Brass")); Tick10.SetLineWeight(1); Tick10.HideBubble(); Tick10.HideTitle();
+plot Tick11 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.685 else nan) else nan;
+Tick11.SetDefaultColor(GlobalColor("Brass")); Tick11.SetLineWeight(1); Tick11.HideBubble(); Tick11.HideTitle();
+plot Tick12 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.72 else nan) else nan;
+Tick12.SetDefaultColor(GlobalColor("Brass")); Tick12.SetLineWeight(1); Tick12.HideBubble(); Tick12.HideTitle();
+plot Tick13 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.755 else nan) else nan;
+Tick13.SetDefaultColor(GlobalColor("Brass")); Tick13.SetLineWeight(1); Tick13.HideBubble(); Tick13.HideTitle();
+plot Tick14 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.79 else nan) else nan;
+Tick14.SetDefaultColor(GlobalColor("Brass")); Tick14.SetLineWeight(1); Tick14.HideBubble(); Tick14.HideTitle();
+plot Tick15 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.825 else nan) else nan;
+Tick15.SetDefaultColor(GlobalColor("Brass")); Tick15.SetLineWeight(1); Tick15.HideBubble(); Tick15.HideTitle();
+plot Tick16 = if gallery then base+h*(if (x>=0.045 and x<=0.057) or (x>=0.943 and x<=0.955) then 0.86 else nan) else nan;
+Tick16.SetDefaultColor(GlobalColor("Brass")); Tick16.SetLineWeight(1); Tick16.HideBubble(); Tick16.HideTitle();
+plot Reg0 = if gallery then base+h*(if x>=0.095 and x<=0.119 then 0.875 else nan) else nan;
+Reg0.SetDefaultColor(GlobalColor("Aqua")); Reg0.SetLineWeight(1); Reg0.HideBubble(); Reg0.HideTitle();
+AddCloud(if gallery and AbsValue(x-0.107)<=penWidth then base+h*0.887 else nan,if gallery and AbsValue(x-0.107)<=penWidth then base+h*0.863 else nan,GlobalColor("Aqua"),GlobalColor("Aqua"));
+plot Reg1 = if gallery then base+h*(if x>=0.881 and x<=0.905 then 0.875 else nan) else nan;
+Reg1.SetDefaultColor(GlobalColor("Aqua")); Reg1.SetLineWeight(1); Reg1.HideBubble(); Reg1.HideTitle();
+AddCloud(if gallery and AbsValue(x-0.893)<=penWidth then base+h*0.887 else nan,if gallery and AbsValue(x-0.893)<=penWidth then base+h*0.863 else nan,GlobalColor("Aqua"),GlobalColor("Aqua"));
+AddCloud(if gallery and AbsValue(x-0.39)<=penWidth then base+h*0.91 else nan,if gallery and AbsValue(x-0.39)<=penWidth then base+h*0.855 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+AddCloud(if gallery and AbsValue(x-0.61)<=penWidth then base+h*0.91 else nan,if gallery and AbsValue(x-0.61)<=penWidth then base+h*0.855 else nan,GlobalColor("Frame"),GlobalColor("Frame"));
+def daisTop = if gallery and x>=0.24 and x<=0.76 then base+h*(if x<=0.5 then 0.279+(x-0.24)*0.161538462 else 0.321-(x-0.5)*0.161538462) else nan;
+def daisLow = if gallery and x>=0.24 and x<=0.76 then base+h*(if x<=0.5 then 0.279-(x-0.24)*0.223076923 else 0.221+(x-0.5)*0.223076923) else nan;
+AddCloud(daisTop,daisLow,CreateColor(24,49,58),CreateColor(24,49,58));
+AddCloud(daisLow,daisLow-h*0.033,CreateColor(40,38,37),CreateColor(40,38,37));
+plot DaisRear = if gallery then base+h*(if x>=0.24 and x<=0.76 then if x<=0.5 then 0.279+(x-0.24)*0.161538462 else 0.321-(x-0.5)*0.161538462 else nan) else nan;
+DaisRear.SetDefaultColor(GlobalColor("Aqua")); DaisRear.SetLineWeight(1); DaisRear.HideBubble(); DaisRear.HideTitle();
+plot DaisFront = if gallery then base+h*(if x>=0.24 and x<=0.76 then if x<=0.5 then 0.279-(x-0.24)*0.223076923 else 0.221+(x-0.5)*0.223076923 else nan) else nan;
+DaisFront.SetDefaultColor(GlobalColor("Aqua")); DaisFront.SetLineWeight(1); DaisFront.HideBubble(); DaisFront.HideTitle();
+plot DaisFoot = if gallery then base+h*(if x>=0.24 and x<=0.76 then (if x<=0.5 then 0.279-(x-0.24)*0.223076923 else 0.221+(x-0.5)*0.223076923)-0.033 else nan) else nan;
+DaisFoot.SetDefaultColor(GlobalColor("Brass")); DaisFoot.SetLineWeight(1); DaisFoot.HideBubble(); DaisFoot.HideTitle();
+AddCloud(if gallery and AbsValue(x-0.24)<=penWidth then base+h*0.279 else nan,if gallery and AbsValue(x-0.24)<=penWidth then base+h*0.246 else nan,GlobalColor("Brass"),GlobalColor("Brass"));
+AddCloud(if gallery and AbsValue(x-0.5)<=penWidth then base+h*0.221 else nan,if gallery and AbsValue(x-0.5)<=penWidth then base+h*0.188 else nan,GlobalColor("Brass"),GlobalColor("Brass"));
+AddCloud(if gallery and AbsValue(x-0.76)<=penWidth then base+h*0.279 else nan,if gallery and AbsValue(x-0.76)<=penWidth then base+h*0.246 else nan,GlobalColor("Brass"),GlobalColor("Brass"));
+plot DaisGrid0_0 = if gallery then base+h*(if x>=0.2738 and x<=0.5338 then (-0.215077*x+0.343348) else nan) else nan;
+DaisGrid0_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid0_0.SetLineWeight(1); DaisGrid0_0.HideBubble(); DaisGrid0_0.HideTitle();
+plot DaisGrid0_1 = if gallery then base+h*(if x>=0.2738 and x<=0.5338 then (0.169538*x+0.225040) else nan) else nan;
+DaisGrid0_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid0_1.SetLineWeight(1); DaisGrid0_1.HideBubble(); DaisGrid0_1.HideTitle();
+plot DaisGrid1_0 = if gallery then base+h*(if x>=0.305867 and x<=0.565867 then (-0.207487*x+0.353103) else nan) else nan;
+DaisGrid1_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid1_0.SetLineWeight(1); DaisGrid1_0.HideBubble(); DaisGrid1_0.HideTitle();
+plot DaisGrid1_1 = if gallery then base+h*(if x>=0.305867 and x<=0.565867 then (0.177128*x+0.210129) else nan) else nan;
+DaisGrid1_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid1_1.SetLineWeight(1); DaisGrid1_1.HideBubble(); DaisGrid1_1.HideTitle();
+plot DaisGrid2_0 = if gallery then base+h*(if x>=0.337933 and x<=0.597933 then (-0.199897*x+0.362372) else nan) else nan;
+DaisGrid2_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid2_0.SetLineWeight(1); DaisGrid2_0.HideBubble(); DaisGrid2_0.HideTitle();
+plot DaisGrid2_1 = if gallery then base+h*(if x>=0.337933 and x<=0.597933 then (0.184718*x+0.194731) else nan) else nan;
+DaisGrid2_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid2_1.SetLineWeight(1); DaisGrid2_1.HideBubble(); DaisGrid2_1.HideTitle();
+plot DaisGrid3_0 = if gallery then base+h*(if x>=0.37 and x<=0.63 then (-0.192308*x+0.371154) else nan) else nan;
+DaisGrid3_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid3_0.SetLineWeight(1); DaisGrid3_0.HideBubble(); DaisGrid3_0.HideTitle();
+plot DaisGrid3_1 = if gallery then base+h*(if x>=0.37 and x<=0.63 then (0.192308*x+0.178846) else nan) else nan;
+DaisGrid3_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid3_1.SetLineWeight(1); DaisGrid3_1.HideBubble(); DaisGrid3_1.HideTitle();
+plot DaisGrid4_0 = if gallery then base+h*(if x>=0.402067 and x<=0.662067 then (-0.184718*x+0.379449) else nan) else nan;
+DaisGrid4_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid4_0.SetLineWeight(1); DaisGrid4_0.HideBubble(); DaisGrid4_0.HideTitle();
+plot DaisGrid4_1 = if gallery then base+h*(if x>=0.402067 and x<=0.662067 then (0.199897*x+0.162475) else nan) else nan;
+DaisGrid4_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid4_1.SetLineWeight(1); DaisGrid4_1.HideBubble(); DaisGrid4_1.HideTitle();
+plot DaisGrid5_0 = if gallery then base+h*(if x>=0.434133 and x<=0.694133 then (-0.177128*x+0.387257) else nan) else nan;
+DaisGrid5_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid5_0.SetLineWeight(1); DaisGrid5_0.HideBubble(); DaisGrid5_0.HideTitle();
+plot DaisGrid5_1 = if gallery then base+h*(if x>=0.434133 and x<=0.694133 then (0.207487*x+0.145616) else nan) else nan;
+DaisGrid5_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid5_1.SetLineWeight(1); DaisGrid5_1.HideBubble(); DaisGrid5_1.HideTitle();
+plot DaisGrid6_0 = if gallery then base+h*(if x>=0.4662 and x<=0.7262 then (-0.169538*x+0.394579) else nan) else nan;
+DaisGrid6_0.SetDefaultColor(GlobalColor("Frame")); DaisGrid6_0.SetLineWeight(1); DaisGrid6_0.HideBubble(); DaisGrid6_0.HideTitle();
+plot DaisGrid6_1 = if gallery then base+h*(if x>=0.4662 and x<=0.7262 then (0.215077*x+0.128271) else nan) else nan;
+DaisGrid6_1.SetDefaultColor(GlobalColor("Frame")); DaisGrid6_1.SetLineWeight(1); DaisGrid6_1.HideBubble(); DaisGrid6_1.HideTitle();
+plot FloorRay0 = if gallery then base+h*(if x>=0.045 and x<=0.5 then (0.296703*x+0.011648) else nan) else nan;
+FloorRay0.SetDefaultColor(GlobalColor("Frame")); FloorRay0.SetLineWeight(1); FloorRay0.HideBubble(); FloorRay0.HideTitle();
+plot FloorRay1 = if gallery then base+h*(if x>=0.11 and x<=0.5 then (0.346154*x-0.013077) else nan) else nan;
+FloorRay1.SetDefaultColor(GlobalColor("Frame")); FloorRay1.SetLineWeight(1); FloorRay1.HideBubble(); FloorRay1.HideTitle();
+plot FloorRay2 = if gallery then base+h*(if x>=0.175 and x<=0.5 then (0.415385*x-0.047692) else nan) else nan;
+FloorRay2.SetDefaultColor(GlobalColor("Frame")); FloorRay2.SetLineWeight(1); FloorRay2.HideBubble(); FloorRay2.HideTitle();
+plot FloorRay3 = if gallery then base+h*(if x>=0.24 and x<=0.5 then (0.519231*x-0.099615) else nan) else nan;
+FloorRay3.SetDefaultColor(GlobalColor("Frame")); FloorRay3.SetLineWeight(1); FloorRay3.HideBubble(); FloorRay3.HideTitle();
+plot FloorRay4 = if gallery then base+h*(if x>=0.305 and x<=0.5 then (0.692308*x-0.186154) else nan) else nan;
+FloorRay4.SetDefaultColor(GlobalColor("Frame")); FloorRay4.SetLineWeight(1); FloorRay4.HideBubble(); FloorRay4.HideTitle();
+plot FloorRay5 = if gallery then base+h*(if x>=0.37 and x<=0.5 then (1.038462*x-0.359231) else nan) else nan;
+FloorRay5.SetDefaultColor(GlobalColor("Frame")); FloorRay5.SetLineWeight(1); FloorRay5.HideBubble(); FloorRay5.HideTitle();
+plot FloorRay6 = if gallery then base+h*(if x>=0.435 and x<=0.5 then (2.076923*x-0.878462) else nan) else nan;
+FloorRay6.SetDefaultColor(GlobalColor("Frame")); FloorRay6.SetLineWeight(1); FloorRay6.HideBubble(); FloorRay6.HideTitle();
+plot FloorRay8 = if gallery then base+h*(if x>=0.5 and x<=0.565 then (-2.076923*x+1.198462) else nan) else nan;
+FloorRay8.SetDefaultColor(GlobalColor("Frame")); FloorRay8.SetLineWeight(1); FloorRay8.HideBubble(); FloorRay8.HideTitle();
+plot FloorRay9 = if gallery then base+h*(if x>=0.5 and x<=0.63 then (-1.038462*x+0.679231) else nan) else nan;
+FloorRay9.SetDefaultColor(GlobalColor("Frame")); FloorRay9.SetLineWeight(1); FloorRay9.HideBubble(); FloorRay9.HideTitle();
+plot FloorRay10 = if gallery then base+h*(if x>=0.5 and x<=0.695 then (-0.692308*x+0.506154) else nan) else nan;
+FloorRay10.SetDefaultColor(GlobalColor("Frame")); FloorRay10.SetLineWeight(1); FloorRay10.HideBubble(); FloorRay10.HideTitle();
+plot FloorRay11 = if gallery then base+h*(if x>=0.5 and x<=0.76 then (-0.519231*x+0.419615) else nan) else nan;
+FloorRay11.SetDefaultColor(GlobalColor("Frame")); FloorRay11.SetLineWeight(1); FloorRay11.HideBubble(); FloorRay11.HideTitle();
+plot FloorRay12 = if gallery then base+h*(if x>=0.5 and x<=0.825 then (-0.415385*x+0.367692) else nan) else nan;
+FloorRay12.SetDefaultColor(GlobalColor("Frame")); FloorRay12.SetLineWeight(1); FloorRay12.HideBubble(); FloorRay12.HideTitle();
+plot FloorRay13 = if gallery then base+h*(if x>=0.5 and x<=0.89 then (-0.346154*x+0.333077) else nan) else nan;
+FloorRay13.SetDefaultColor(GlobalColor("Frame")); FloorRay13.SetLineWeight(1); FloorRay13.HideBubble(); FloorRay13.HideTitle();
+plot FloorRay14 = if gallery then base+h*(if x>=0.5 and x<=0.955 then (-0.296703*x+0.308352) else nan) else nan;
+FloorRay14.SetDefaultColor(GlobalColor("Frame")); FloorRay14.SetLineWeight(1); FloorRay14.HideBubble(); FloorRay14.HideTitle();
+plot FloorStep0 = if gallery then base+h*(if x>=0.18375 and x<=0.81625 then 0.045 else nan) else nan;
+FloorStep0.SetDefaultColor(GlobalColor("Frame")); FloorStep0.SetLineWeight(1); FloorStep0.HideBubble(); FloorStep0.HideTitle();
+plot FloorStep1 = if gallery then base+h*(if x>=0.258 and x<=0.742 then 0.072 else nan) else nan;
+FloorStep1.SetDefaultColor(GlobalColor("Frame")); FloorStep1.SetLineWeight(1); FloorStep1.HideBubble(); FloorStep1.HideTitle();
+plot FloorStep2 = if gallery then base+h*(if x>=0.34875 and x<=0.65125 then 0.105 else nan) else nan;
+FloorStep2.SetDefaultColor(GlobalColor("Frame")); FloorStep2.SetLineWeight(1); FloorStep2.HideBubble(); FloorStep2.HideTitle();
+plot FloorStep3 = if gallery then base+h*(if x>=0.445 and x<=0.555 then 0.14 else nan) else nan;
+FloorStep3.SetDefaultColor(GlobalColor("Frame")); FloorStep3.SetLineWeight(1); FloorStep3.HideBubble(); FloorStep3.HideTitle();
+plot CompassTop = if gallery then base+h*(if x>=0.48 and x<=0.52 then 0.176-0.8*AbsValue(x-0.5) else nan) else nan;
+CompassTop.SetDefaultColor(GlobalColor("Aqua")); CompassTop.SetLineWeight(1); CompassTop.HideBubble(); CompassTop.HideTitle();
+plot CompassBottom = if gallery then base+h*(if x>=0.48 and x<=0.52 then 0.144+0.8*AbsValue(x-0.5) else nan) else nan;
+CompassBottom.SetDefaultColor(GlobalColor("Aqua")); CompassBottom.SetLineWeight(1); CompassBottom.HideBubble(); CompassBottom.HideTitle();
+
+
+# A small faceted seed crystal suspended inside the trefoil's central void.
+def gemOn = gallery and showCrystal and AbsValue(x-0.5)<=0.018;
+def gemTop = 0.664-2*AbsValue(x-0.5)+0.10*(x-0.5);
+def gemLow = 0.596+1.777777778*AbsValue(x-0.5)+0.10*(x-0.5);
+def gemWaist = 0.628+0.10*(x-0.5);
+AddCloud(if gemOn and x<=0.5 then base+h*gemTop else nan,if gemOn and x<=0.5 then base+h*gemWaist else nan,CreateColor(144,161,154),CreateColor(144,161,154));
+AddCloud(if gemOn and x>=0.5 then base+h*gemTop else nan,if gemOn and x>=0.5 then base+h*gemWaist else nan,CreateColor(250,226,173),CreateColor(250,226,173));
+AddCloud(if gemOn and x>=0.5 then base+h*gemTop else nan,if gemOn and x>=0.5 then base+h*gemWaist else nan,CreateColor(250,226,173),CreateColor(250,226,173));
+AddCloud(if gemOn and x<=0.5 then base+h*gemWaist else nan,if gemOn and x<=0.5 then base+h*gemLow else nan,CreateColor(44,102,115),CreateColor(44,102,115));
+AddCloud(if gemOn and x>=0.5 then base+h*gemWaist else nan,if gemOn and x>=0.5 then base+h*gemLow else nan,CreateColor(124,85,83),CreateColor(124,85,83));
+plot GemUpper = if gemOn then base+h*gemTop else nan;
+plot GemLower = if gemOn then base+h*gemLow else nan;
+plot GemWaistLine = if gemOn then base+h*gemWaist else nan;
+GemUpper.SetDefaultColor(GlobalColor("Pearl")); GemLower.SetDefaultColor(GlobalColor("Aqua")); GemWaistLine.SetDefaultColor(GlobalColor("Brass"));
+GemUpper.HideBubble(); GemUpper.HideTitle(); GemLower.HideBubble(); GemLower.HideTitle(); GemWaistLine.HideBubble(); GemWaistLine.HideTitle();
+plot GemHaloU = if gallery and showCrystal and AbsValue(x-0.5)<=0.035 then base+h*(0.678-1.428571429*AbsValue(x-0.5)) else nan;
+plot GemHaloL = if gallery and showCrystal and AbsValue(x-0.5)<=0.035 then base+h*(0.578+1.428571429*AbsValue(x-0.5)) else nan;
+GemHaloU.SetDefaultColor(GlobalColor("Frame")); GemHaloL.SetDefaultColor(GlobalColor("Frame"));
+GemHaloU.HideBubble(); GemHaloU.HideTitle(); GemHaloL.HideBubble(); GemHaloL.HideTitle();
